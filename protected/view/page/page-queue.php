@@ -56,7 +56,7 @@
         </div>
 
         <div class="filter fl_l but_search">
-            <input type="submit" name="search" id="button-search" value="Показать" />
+            <input type="submit" name="search" id="button-search" class="button" value="Показать" />
         </div>
 
         <input type="hidden" name="sort" value="<?php echo $this->sort; ?>" />

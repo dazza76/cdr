@@ -1,14 +1,12 @@
 <?php
 $config = array(
-    "database" => array(
-    )
+    'debug'=>0,
 );
-define('DEBUG', 0);
 require_once 'protected/bootstrap.php';
 
 
 
-$app = new Application($config);
+$app = new Application();
 $app->controller = new QueueController();
 $app->controller->init();
 $app->controller->render();

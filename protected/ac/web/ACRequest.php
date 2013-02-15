@@ -68,6 +68,19 @@ class ACRequest {
         $this->host    = $_SERVER["SERVER_NAME"];
         $this->query   = $_SERVER["QUERY_STRING"];
         $this->url     = $_SERVER["REQUEST_URI"];
-    }
 
+        $url     = substr($this->url, strlen($webpath));
+        $pattern = array(
+            '|/+|',
+            '|^/|',
+            '|/$|',
+            '|\?.*|'
+        );
+        $replace = array('/', '');
+        $page    = preg_replace($pattern, $replace, $url);
+        if ( ! $page) {
+            $page       = 'index';
+        }
+        $this->page = $page;
+    }
 }

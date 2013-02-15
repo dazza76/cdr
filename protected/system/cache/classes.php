@@ -43,6 +43,7 @@ return array(
     'queue' => 'model/Queue.php', 
     'queueagents' => 'model/QueueAgents.php', 
     'queuecontroller' => 'controller/QueueController.php', 
+    'settingscontroller' => 'controller/SettingsController.php', 
     'timemancontroller' => 'controller/TimemanController.php', 
     'utils' => 'Utils.php', 
 );

@@ -37,5 +37,9 @@ if ($c['queue']) {
         <li class="<?php echo $c['timeman']; ?>">
             <a href="timeman.php" class="header_icon icon_reports_big"> Профиль вызовов </a>
         </li>
+<!--        <li class="<?php echo $c['settings']; ?>">
+            <a href="settings.php" class="header_icon icon_reports_big"> Настройки </a>
+        </li>-->
+
     </ul>
 </div>

@@ -1,7 +1,7 @@
 * { margin: 0px; padding: 0px;}
 html { }
 body { font: 12px Tahoma, Geneva, sans-serif; }
-div { display: block; border: solid #000 0px;}
+div { display: block; border: solid #000 0px; }
 img { border: 0px; }
 a { text-decoration: underline; cursor: pointer; color: #069; border-style: none;}
 a:hover { text-decoration: none; cursor: pointer; color: #E80005;}
@@ -9,7 +9,7 @@ a:hover { text-decoration: none; cursor: pointer; color: #E80005;}
 /* ------------------------------------------------------------------------- */
 .clear { clear: both; }
 .clear_fix { display: block; }
-.clear_fix::after {    visibility: hidden; display: block; font-size: 0; content: " "; clear: both; height: 0;}
+.clear_fix::after {    visibility: hidden; display: block; font-size: 0; content: "."; clear: both; height: 0;}
 .fixed { position: fixed; }
 .absolute { position:absolute; }
 .fl_l { float: left; }
@@ -57,7 +57,7 @@ a:hover { text-decoration: none; cursor: pointer; color: #E80005;}
 #header ul.menu li.submenu li {padding-left: 0; }
 #header ul.menu .submenu_title { font-weight: bold; }
 #header ul.menu .submenu_title a { color: #333; }
-#header ul.menu li.submenu li.current a { font-weight: normal; color: #111; text-decoration: none; }
+#header ul.menu li.submenu li.current a { color: #777; text-decoration: none; font-weight:bold; }
 #header ul.menu li.submenu li a { text-decoration: underline; }
 #header ul.menu li.current a { font-weight:bold; color: #333 }
 #header ul.menu a {color:#666666; text-decoration: none; line-height: 28px;}

@@ -1,7 +1,6 @@
 <?php
 $config = array(
-    "database" => array(
-    )
+    'debug'=>0,
 );
 require_once 'protected/bootstrap.php';
 // ----------------------------------------------------------------------------

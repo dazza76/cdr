@@ -28,7 +28,6 @@ $this->dataPage['js'] .= <<<HTML
             });
 HTML;
 
-//$sort[$this->sort]  = "data-sort=\"{$this->sort}\" data-desc=\"{$this->desc}\"";
 ?>
 <div class="filters clear_fix">
     <form method="get" action="" class="of_h">
@@ -87,7 +86,7 @@ HTML;
         </div>
 
         <div class="filter fl_l but_search">
-            <input type="submit" name="search" id="button-search" value="Показать" />
+            <input type="submit" name="search" id="button-search" class="button" class="button" value="Показать" />
         </div>
 
         <input type="hidden" name="sort" value="<?php echo $this->sort; ?>" />

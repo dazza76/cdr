@@ -1,8 +1,6 @@
 <?php
 return array(
-    "debug" => 0,
     "charset"  => "utf-8",
-    // --------------------
     "webpath"  => "/cdr",
     // CDR
     "cdr"      => array(

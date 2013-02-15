@@ -399,7 +399,7 @@ class QueueController extends Controller {
     protected function _parseCompareType($type) {
         switch ($type) {
             case 'month':
-            case 'week': return $chart;
+            case 'week': return $type;
             case 'day':
             default: return 'day';
         }
