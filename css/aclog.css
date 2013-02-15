@@ -1,0 +1,76 @@
+/**
+ * Стиль окнов дебагера трасировки ACLogger
+ *
+ * Фон панели вкладок      = #dfdfdf
+ * верхняя граница вкладок =  #646464
+ * нижняя граница вкладок  = #505050
+ * фон панели текста сообщений  = #ffffff
+ * Цвет границы между номером и строкой #bbbbbb
+ * фон номера = #f0f0f0
+ * Цвет шрифта номеров = #808080
+ *
+  -widget
+ -content
+*/
+
+
+#ac-logger-switch {
+	position: fixed;
+	background: #FF0000;
+	top: 5px;
+	left: 0px;
+	width: 30px;
+	height: 15px;
+	z-index: 1000001;
+	cursor: pointer;
+}
+#ac-logger-slider {
+	position: fixed;
+	z-index: 1000005;
+	top: 5px;
+	left: 20px;
+}
+#ac-logger {
+	position: fixed;
+	top: 0px;
+	left: 0px;
+	z-index: 1000000;
+    font: 9px Tahoma, Geneva, sans-serif;
+    border-bottom: 3px solid black;
+    background: #CCC;
+    width: 100%;
+    height: 40%;
+    overflow: auto;
+}
+#ac-logger thead {
+	background: #999;
+}
+#ac-logger table tr {
+	font-family: monospace;
+	font-size: 11px;
+}
+#ac-logger thead tr th {
+    vertical-align: top;
+    white-space: pre;
+    font-weight: bold;
+    text-align: left;
+}
+#ac-logger tbody tr td {
+    vertical-align: top;
+    text-align: left;
+}
+#ac-logger  tr .number {
+	color: #888a85;
+}
+#ac-logger  tr .time {
+	color: #f57900;
+}
+#ac-logger  tr .category {
+	color: #4e9a06;
+}
+#ac-logger  tr .level {
+	color: #3465a4;
+}
+#ac-logger  tr .messag {
+	color: #888a85;
+}

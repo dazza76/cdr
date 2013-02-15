@@ -1,0 +1,17 @@
+.ui-dropdownchecklist {font-size: inherit; color: inherit; }
+.ui-dropdownchecklist-selector {height: 18px; border: 1px solid #c6c6c6; background: #fff; font-size: inherit; line-height: 18px; background: url('images/magnifier.png') #fff no-repeat 99% 50%; padding: 0px 28px 1px 1px; vertical-align: middle; }
+/* IE7-8 hack */
+html > body .ui-dropdownchecklist-selector {vertical-align: baseline\0/; background: url('images/magnifier.png') #fff no-repeat 98% 50%\0/; background: url('images/magnifier.png') #fff no-repeat 98% 50% !ie; }
+/* Firefox hack */
+@-moz-document url-prefix() {
+  .ui-dropdownchecklist-selector { vertical-align: middle !important; margin: 0; margin-bottom: 2px; }
+}
+.ui-state-hover, .ui-state-active {border-color: #c6c6c6; }
+.ui-dropdownchecklist-dropcontainer {background-color: #fff; border: 1px solid #999; }
+.ui-widget-content .ui-dropdownchecklist-item {background: none; border: none; padding: 1px 5px 1px 1px; }
+.ui-state-disabled label {color: #ccc; }
+.ui-dropdownchecklist-group {font-weight: bold; font-style: italic; }
+.ui-dropdownchecklist-indent {padding-left: 7px; }
+.ui-dropdownchecklist-selector-wrapper {vertical-align: middle; font-size: inherit; }
+.ui-dropdownchecklist-text {font-size: inherit; }
+.ui-dropdownchecklist-group {padding: 1px 2px 2px 2px; }

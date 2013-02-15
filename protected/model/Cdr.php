@@ -1,0 +1,148 @@
+<?php
+/**
+ * Свк class  - Свк.php file
+ *
+ * @author     Tyurin D. <fobia3d@gmail.com>
+ * @copyright   (c) 2013, CMRI
+ */
+
+/**
+ * Cdr class
+ *
+ * @property string $id            - id
+ * @property string $calldate      - дата и время вызова
+ * @property string $clid          - Так называемый CALLERID (Имя в кавычках, номер в скобках).
+ *                                   Выводится на телефон, по факту в самой странице не используется
+ * @property string $src           - номер, с которого звонили.
+ * @property string $dst           - набранный номер.
+ * @property string $dcontext      - контекст (служебная вещь asterisk). По сути, если incoming – то вызов входящий, если остальные – то исходящий.
+ *                                   Исключение – контексты вида «from-**», служащие для связи с другими станциями.
+ *                                   Там придется по длине номера dst смотреть, если 3-4 цифры, то вызов внутренний,
+ *                                   если больше – он в город, соответственно, при наличии записи разговора выводим.
+ * @property string $channel       - имя канала (не используется в отчете, служебная информация)
+ * @property string $dstchannel    - то же самое.
+ * @property string $lastapp       - на какой команде закончился вызов, нам не интересно.
+ * @property string $lastdata      - параметры, переданные последней команде.
+ * @property string $duration      - длительность вызова.
+ * @property string $billsec       - сколько времени вызов был отвечен
+ * @property string $disposition   - состояние (занято, нет ответа, принят). Нам нужны только ANSWERED (неприянтые или занятые естественно не записываются)
+ * @property string $amaflags      - не используется, стандартное поле.
+ * @property string $accountcode   - используется
+ * @property string $uniqueid      - идентификатор вызова (под этим имененем храним файл с записью)
+ * @property string $userfield     - пользовательское поле, в случае исходящего вызова там может быть записан код оператора.
+ *                                   Нам достаточно, если Вы выведете этот код.
+ *                                   В случае входящего код принявшего вызов оператора лежит в поле dstchannel.
+ * @property string $comment       - коментарий
+ */
+class Cdr extends ACDataObject {
+    /**
+     * @var string название таблицы
+     */
+
+    const TABLE = 'cdr';
+
+
+    /**
+     * @var integer вызов внутренний
+     */
+    const HOME = 0;
+
+    /**
+     * @var integer вызов входящий
+     */
+    const INCOMING = 1;
+
+    /**
+     * @var integer вызов исходящий
+     */
+    const OUTCOMING = 2;
+
+    /**
+     * Вызов входящий, исходящий, внутренний
+     *   0 - внутренний
+     *   1 - входящий
+     *   2 - исходящий
+     * @return integer
+     */
+    public function getComing() {
+        if ($this->dcontext == 'incoming')
+            return 1;
+        if (strpos($this->dcontext, 'from') === false)
+            return 2;
+
+        if (strlen((string) $this->dst) > 4)
+            return 2;
+        else
+            return 0;
+    }
+
+    /**
+     * Номер назначение
+     * @return string
+     */
+    public function getDst() {
+        // 989052823638
+        if (strlen($this->dst) == 12) {
+            return substr($this->dst, 2);
+        }
+        return $this->dst;
+    }
+
+
+
+    /**
+     * Код оператора
+     * @return string
+     */
+    public function getOperatorCode() {
+        if ($this->getComing() == self::OUTCOMING) {
+            return $this->userfield;
+        }
+        if ($this->getComing() == self::INCOMING) {
+            return $this->dstchannel;
+        }
+    }
+
+    /**
+     * длительность вызова
+     * @return string в формате hh:mm::ss
+     */
+    public function getTime() {
+        $seconds = (int) $this->duration;
+        $di = new DateInterval('PT'.$seconds.'S');
+        $di->h = floor($seconds/60/60);
+        $seconds -= $di->h * 3600;
+        $di->i = floor($seconds/60);
+        $seconds -= $di->i * 60;
+        $di->s = $seconds;
+
+        return $di->format('%H:%I:%S');
+
+        $time = array();
+        $sec  = $tick % 60;
+        $tick = $tick - $sec;
+        if ($tick >= 60) {
+            $sec  = sprintf("%'02d", (int) $sec);
+            $min  = $tick / 60;
+            $tick = $min;
+            if ($tick >= 60) {
+                $min  = $tick % 60;
+                $tick = $tick - $min;
+                $min  = sprintf("%'02d", (int) $min);
+                $hou  = $tick / 60;
+                array_unshift($time, $hou);
+            }
+            array_push($time, $min);
+        }
+        array_push($time, $sec);
+        return implode(":", $time);
+    }
+
+    /**
+     * Ссылка на файл
+     * @return string
+     */
+    public function getFile() {
+        return App::Config()->cdr->monitor_dir . "/" . $this->uniqueid . "." . App::Config()->cdr->file_format;
+    }
+}

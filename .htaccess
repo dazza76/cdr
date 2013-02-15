@@ -1,0 +1,15 @@
+# Отключает Magic quotes для входящих данных из массивов GET/POST/Cookie
+php_flag magic_quotes_gpc Off
+php_flag magic_quotes_runtime Off
+
+# Приоритетность глобальных переменных
+php_value variables_order GPCS
+
+# Отключаем супер глобальные переменные
+php_value register_globals Off
+
+# Запрет на отображение содержимого каталога
+Options -Indexes
+
+# Задание кодировки файлов
+AddDefaultCharset utf-8
