@@ -120,11 +120,6 @@ abstract class Controller {
     }
 
     public function mainView($file) {
-        if (ACLog::$enable) {
-            $this->dataPage['links'] .= ''
-                    . '<link href="css/aclog.css" rel="stylesheet" type="text/css" />'
-                    . '<script type="text/javascript" src="js/aclog.js"></script>';
-        }
         $this->content = $this->view($file);
         $this->content = $this->view('layout/main.php');
         return $this->content;

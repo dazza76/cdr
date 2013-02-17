@@ -108,6 +108,8 @@ input[type="text"].datetimepicker { width: 135px; height: 20px;}
 .pg_lnk_sel .pg_in { border-bottom: 2px solid #069; font-weight: bold;}
 /* ------------------------------------------------------------------------- */
 
+#highcharts-wrap > tspan:last-of-type { display: none; }
+
 /* table result */
 table.grid { border-collapse: collapse; margin-left: -1px; border-spacing: 0px; empty-cells: show; border: 1px solid #EEE; font-size: 12px; width: 100%; }
 table.grid tr { display: table-row; vertical-align: inherit; border-color: inherit; }
@@ -115,7 +117,6 @@ table.grid td,
 table.grid th { border: 1px solid #EEE; padding: 0 4px; height: 26px; -moz-box-sizing: border-box; -ms-box-sizing: border-box; box-sizing: border-box; }
 table.grid th, table.grid td.head { font-size: 90%; height: 26px; color: #FFF; background-color: #8A8A8A; font-weight: bold; }
 table.grid th.sortable { cursor: pointer; }
-
 
 table.grid tbody tr:hover { background-color: #C6C6C6;}
 

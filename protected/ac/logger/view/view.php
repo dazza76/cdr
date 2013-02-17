@@ -35,9 +35,9 @@ $(document).ready(function () {
                 <tr>
                     <td class="number"><?php printf("%'02d", ++$i); ?></td>
                     <td class="time"><?php printf(" %01.6f", $row['time'] - TIME_START); ?></td>
-                    <td class="category"><?php html(printf("%-9s", $row['ctg'])); ?></td>
-                    <td class="level"><?php html(printf("%-9s", '[' . $row['level'] . ']')); ?></td>
-                    <td class="message"><?php echo html($row['msg']); ?></td>
+                    <td class="category"><?php printf("%-9s", $row['ctg']); ?></td>
+                    <td class="level"><?php printf("%-9s", '[' . $row['level'] . ']'); ?></td>
+                    <td class="message"><?php echo $row['msg']; ?></td>
                 </tr>
             <?php } ?>
         </tbody>

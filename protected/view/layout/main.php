@@ -7,7 +7,9 @@
  */
 /* @var $this Controller */
 $v = 1;
-
+if (ACLog::$enable) {
+    $this->dataPage['links'] .= '<link href="css/aclog.css" rel="stylesheet" type="text/css" />';
+}
 ?>
 <html>
     <head>

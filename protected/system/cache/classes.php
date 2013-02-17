@@ -38,6 +38,7 @@ return array(
     'callstatus' => 'model/CallStatus.php', 
     'cdr' => 'model/Cdr.php', 
     'cdrcontroller' => 'controller/CdrController.php', 
+    'chartqueue' => 'controller/component/ChartQueue.php', 
     'controller' => 'controller/component/Controller.php', 
     'graphqueue' => 'controller/component/GraphQueue.php', 
     'queue' => 'model/Queue.php', 

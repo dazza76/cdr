@@ -1,6 +1,6 @@
 <?php
 $config = array(
-    'debug'=>0,
+//    'debug'=>0,
 );
 require_once 'protected/bootstrap.php';
 // ----------------------------------------------------------------------------

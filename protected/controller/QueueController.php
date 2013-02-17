@@ -50,6 +50,7 @@ class QueueController extends Controller {
     public $page        = "queue";
     public $chart       = "arbit";
     public $compareType = "day";
+//    public $highcharts  = array();
 
     /**
      * @var int
@@ -75,7 +76,6 @@ class QueueController extends Controller {
         $this->_filters['fromdate'][1] = $from;
     }
 
-
     /**
      * Формирет страницу
      */
@@ -98,21 +98,24 @@ class QueueController extends Controller {
      * Очередь - Суточный
      */
     public function chartDay() {
-        $this->content = $this->mainView("page/charts/chart_{$this->chart}.php");
+        $this->highcharts = $this->getDataStatisticDay();
+        $this->content    = $this->mainView("page/charts/chart_{$this->chart}.php");
     }
 
     /**
      * Очередь - Недельный
      */
     public function chartWeek() {
-        $this->content = $this->mainView("page/charts/chart_{$this->chart}.php");
+        $this->highcharts = $this->getDataStatisticWeek();
+        $this->content    = $this->mainView("page/charts/chart_{$this->chart}.php");
     }
 
     /**
      * Очередь - Месячный
      */
     public function chartMonth() {
-        $this->content = $this->mainView("page/charts/chart_{$this->chart}.php");
+        $this->highcharts = $this->getDataStatisticMonth();
+        $this->content    = $this->mainView("page/charts/chart_{$this->chart}.php");
     }
 
     /**
@@ -120,6 +123,21 @@ class QueueController extends Controller {
      */
     public function chartCompare() {
         $this->compareType = $this->_parseCompareType($this->compareType);
+        ac_trace($this->compareType);
+        ac_trace("from:" . $this->fromdate);
+        ac_trace("to:" . $this->todate);
+
+//        $from = $this->getDataStatisticDay($this->fromdate);
+//        $to   = $this->getDataStatisticDay($this->todate);
+        $act = "getDataStatistic" . $this->compareType;
+
+        $from = $this->$act($this->fromdate);
+        $to   = $this->$act($this->todate);
+
+        $this->highcharts = array(
+            'total'    => array($from[0], $from[1], $to[1]),
+            'complete' => array($from[0], $from[2], $to[2])
+        );
 
         $this->content = $this->mainView("page/charts/chart_{$this->chart}.php");
     }
@@ -213,15 +231,33 @@ class QueueController extends Controller {
             }
             $this->totalResult['total'] += $row['total'];
             $this->totalResult['average_time_all'] += $row['average_time'];
-            ;
         }
     }
 
-    public function getDataStatisticDay() {
-        $data = array();
-        for ($i = 0; $i < 23; $i ++ ) {
-            $data[$i] = array();
+    /**
+     * Данныйе статистики за день
+     * @return array
+     */
+    public function getDataStatisticDay(DateTime $date = null) {
+        if ($date == null) {
+            $date = $this->fromdate;
         }
+
+        $oxY = array();
+        for ($i = 0; $i <= 23; $i ++ ) {
+            $time = $i;
+
+            if ($time <= 9) {
+                $time = "0" . $time;
+            }
+
+            $time .= ":00";
+            $oxY[$i]      = $time;
+            $total[$i]    = 0;
+            $complete[$i] = 0;
+        }
+
+
 
         $query_total = "
             SELECT
@@ -229,13 +265,13 @@ class QueueController extends Controller {
                 COUNT(*) AS `total`
             FROM `call_status`
             WHERE
-              DATE(`timestamp`) = '{$this->fromdate->format('Y-m-d')}'
+              DATE(`timestamp`) = '{$date->format('Y-m-d')}'
               AND  LENGTH(`callerId`) > 6
               AND `status` IN ('ABANDON', 'COMPLETEAGENT', 'COMPLETECALLER', 'TRANSFER')
             GROUP BY `hour`";
         $result      = App::Db()->query($query_total);
         while ($row         = $result->fetchAssoc()) {
-            $data[$row['hour']][0] = $row['total'];
+            $total[$row['hour']] = (int) $row['total'];
         }
 
         $query_complete = "
@@ -244,40 +280,44 @@ class QueueController extends Controller {
               COUNT(*) AS `complete`
             FROM `call_status`
             WHERE
-              DATE(`timestamp`) = '{$this->fromdate->format('Y-m-d')}'
+              DATE(`timestamp`) = '{$date->format('Y-m-d')}'
               AND  LENGTH(`callerId`) > 6
               AND `status` IN ('COMPLETEAGENT', 'COMPLETECALLER')
             GROUP BY `hour`";
 
         $result = App::Db()->query($query_complete);
         while ($row    = $result->fetchAssoc()) {
-            $data[$row['hour']][1] = $row['complete'];
+            $complete[$row['hour']] = (int) $row['complete'];
         }
 
-        $arr = array();
-        foreach ($data as $key => $value) {
-            $time       = $key;
-            if ($time <= 9)
-                $time       = "0" . $time;
-            $time .= ":00";
-            $arr[$time] = $value;
-        }
 
-        return $arr;
+        return array(array_values($oxY), array_values($total), array_values($complete));
     }
 
-    public function getDataStatisticWeek() {
-        $data     = array();
-        $dateTime = new DateTime($this->fromdate->format('Y-m-d'));
-        $n        = $this->fromdate->format('N');
+    /**
+     * Данныйе статистики за неделю
+     * @return array
+     */
+    public function getDataStatisticWeek(DateTime $date = null) {
+        if ($date == null) {
+            $date = $this->fromdate;
+        }
+
+        $dateTime = new DateTime($date->format('Y-m-d'));
+        $n        = $date->format('N');
         $pnd      = "P{$n}D";
         $dateTime->sub(new DateInterval($pnd));
 
+//        ac_output($dateTime);
+//        ac_output($oxY);
+
         for ($i = 0; $i < 7; $i ++ ) {
             $dateTime->add(new DateInterval('P1D'));
-            $data[$dateTime->format('d')] = array();
+            $day            = $dateTime->format('d');
+            $oxY[$day]      = (int) $day;
+            $total[$day]    = 0;
+            $complete[$day] = 0;
         }
-
 
 
         $query_total = "
@@ -286,14 +326,15 @@ class QueueController extends Controller {
                 COUNT(*) AS `total`
             FROM `call_status`
             WHERE
-              WEEK(`timestamp`) = WEEK('{$this->fromdate->format('Y-m-d')}')
+              WEEK(`timestamp`) = WEEK('{$date->format('Y-m-d')}')
               AND  LENGTH(`callerId`) > 6
               AND `status` IN ('ABANDON', 'COMPLETEAGENT', 'COMPLETECALLER', 'TRANSFER')
             GROUP BY `date`";
         $result      = App::Db()->query($query_total);
         while ($row         = $result->fetchAssoc()) {
-            $data[$row['date']][0] = $row['total'];
+            $total[$row['date']] = (int) $row['total'];
         }
+        ac_output($total);
 
         $query_complete = "
             SELECT
@@ -301,25 +342,34 @@ class QueueController extends Controller {
               COUNT(*) AS `complete`
             FROM `call_status`
             WHERE
-              WEEK(`timestamp`) = WEEK('{$this->fromdate->format('Y-m-d')}')
+              WEEK(`timestamp`) = WEEK('{$date->format('Y-m-d')}')
               AND  LENGTH(`callerId`) > 6
               AND `status` IN ('COMPLETEAGENT', 'COMPLETECALLER')
             GROUP BY `date`";
 
         $result = App::Db()->query($query_complete);
         while ($row    = $result->fetchAssoc()) {
-            $data[$row['date']][1] = $row['complete'];
+            $complete[$row['date']] = (int) $row['complete'];
         }
+        ac_output($complete);
 
-
-        return $data;
+        return array(array_values($oxY), array_values($total), array_values($complete));
     }
 
-    public function getDataStatisticMonth() {
-        $data = array();
-        $t    = $this->fromdate->format('t');
+    /**
+     * Данныйе статистики за месяц
+     * @return array
+     */
+    public function getDataStatisticMonth(DateTime $date = null) {
+        if ($date == null) {
+            $date = $this->fromdate;
+        }
+
+        $t = $date->format('t');
         for ($i = 1; $i <= $t; $i ++ ) {
-            $data[$i] = array();
+            $oxY[$i]      = $i;
+            $total[$i]    = 0;
+            $complete[$i] = 0;
         }
 
         $query_total = "
@@ -328,14 +378,14 @@ class QueueController extends Controller {
                 COUNT(*) AS `total`
             FROM `call_status`
             WHERE
-              YEAR(`timestamp`) = '{$this->fromdate->format('Y')}'
-              AND  MONTH(`timestamp`) = '{$this->fromdate->format('m')}'
+              YEAR(`timestamp`) = '{$date->format('Y')}'
+              AND  MONTH(`timestamp`) = '{$date->format('m')}'
               AND  LENGTH(`callerId`) > 6
               AND `status` IN ('ABANDON', 'COMPLETEAGENT', 'COMPLETECALLER', 'TRANSFER')
             GROUP BY `day`";
         $result      = App::Db()->query($query_total);
         while ($row         = $result->fetchAssoc()) {
-            $data[$row['day']][0] = $row['total'];
+            $total[$row['day']] = (int) $row['total'];
         }
 
         $query_complete = "
@@ -344,18 +394,18 @@ class QueueController extends Controller {
               COUNT(*) AS `complete`
             FROM `call_status`
             WHERE
-              YEAR(`timestamp`) = '{$this->fromdate->format('Y')}'
-              AND  MONTH(`timestamp`) = '{$this->fromdate->format('m')}'
+              YEAR(`timestamp`) = '{$date->format('Y')}'
+              AND  MONTH(`timestamp`) = '{$date->format('m')}'
               AND  LENGTH(`callerId`) > 6
               AND `status` IN ('COMPLETEAGENT', 'COMPLETECALLER')
             GROUP BY `day`";
 
         $result = App::Db()->query($query_complete);
         while ($row    = $result->fetchAssoc()) {
-            $data[$row['day']][1] = $row['complete'];
+            $complete[$row['day']] = (int) $row['complete'];
         }
 
-        return $data;
+        return array(array_values($oxY), array_values($total), array_values($complete));
     }
 
     /**

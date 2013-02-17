@@ -68,10 +68,18 @@ function __log($message, $category, $level) {
     ACLog::add($message, $category, $level);
 }
 
-function ac_error($message, $category = 'Output') {
+function ac_error($message, $category = 'Log') {
     __log($message, $category, 'error');
 }
 
-function ac_trace($message, $category = 'Output') {
+function ac_trace($message, $category = 'Log') {
     __log($message, $category, 'trace');
+}
+
+function ac_output($message) {
+    ob_start();
+    ac_dump($message);
+    $message = ob_get_contents();
+    ob_end_clean();
+    __log($message, 'Output', 'output');
 }

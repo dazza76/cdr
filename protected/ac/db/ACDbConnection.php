@@ -10,7 +10,7 @@
 
 /**
  * Класс расширяет mysqli
- * 
+ *
  * @package    AC
  */
 class ACDbConnection extends mysqli {
@@ -123,7 +123,7 @@ class ACDbConnection extends mysqli {
         $this->_timeQuery = microtime(true) - $time_start;
         $this->success    = true;
         $this->_connect   = true;
-        ac_trace("SQL> connect database: '{$dbname}'");
+        ac_trace("connect database: '{$dbname}'", 'SQL');
     }
 
     public function __destruct() {
@@ -187,12 +187,12 @@ class ACDbConnection extends mysqli {
 
         $time = sprintf("%01.5f", microtime(true) - $time_start);
 
-        ac_trace("SQL Query> {$query}");
+        ac_trace("{$query}", 'SQL');
         if ($this->errno) {
             ac_error("SQL> [Error] " . $this->errno . "; " . $this->error . "; ");
         }
         else {
-            ac_trace("SQL Reslt> |-> [OK][time: {$time}][affect: {$this->affected_rows}]");
+            //ac_trace("SQL Reslt> |-> [OK][time: {$time}][affect: {$this->affected_rows}]");
         }
 
         $this->_queryArr[] = array(

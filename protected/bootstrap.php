@@ -35,7 +35,7 @@ ACLoader::init();
 $cfgsys = @include_once 'config/system.php';
 App::Config()->mergeRecursive($cfgsys);
 if (@$config['config']) {
-    $cfgsys = @include_once 'config/system.'.$config['config'].'.php';
+    $cfgsys = @include_once 'config/'.$config['config'].'.php';
     App::Config()->mergeRecursive($cfgsys);
 }
 unset($cfgsys);
@@ -46,6 +46,6 @@ if (is_array($config)) {
 
 
 ACLog::enable(DEBUG);
-if ( ! DEBUG) {
+if ( ! DEBUG ) {
     ini_set('display_errors', 'Off');
 }
