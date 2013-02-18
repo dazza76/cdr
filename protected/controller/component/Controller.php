@@ -119,18 +119,28 @@ abstract class Controller {
         return $content;
     }
 
+        /**
+     * Выполнить главный шаблон
+     * @param string $file имя файла
+     * @return string
+     */
     public function mainView($file) {
         $this->content = $this->view($file);
         $this->content = $this->view('layout/main.php');
         return $this->content;
     }
 
+    /**
+     * Вывести результаты парсированых шаблонов
+     * @param bool $print
+     * @return string
+     */
     public function render($print = true) {
-        ac_trace('Запросов MySQL: ' . App::Db()->getNumQuery());
-        ac_trace('Время обработки MySQL: ' . sprintf(" %01.6f",
-                                                     App::Db()->getTimeQuery()));
-        ac_trace('Время работы скрипта : ' . sprintf(" %01.6f",
-                                                     ACUtils::getExecutionTime()));
+        if (DEBUG) {
+            ac_trace('Запросов MySQL: ' . App::Db()->getNumQuery());
+            ac_trace('Время обработки MySQL: ' . sprintf(" %01.6f", App::Db()->getTimeQuery()));
+            ac_trace('Время работы скрипта : ' . sprintf(" %01.6f", ACUtils::getExecutionTime()));
+        }
 
         return $this->_print($this->content, $print);
     }

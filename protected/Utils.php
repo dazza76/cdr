@@ -29,9 +29,6 @@ class Utils {
         return $di->format('%H:%I:%S');
     }
 
-    public static function functionName($param) {
-
-    }
 
     public static function sortable($name, $sort, $desc) {
         $attr = "data-column=\"{$name}\"   class=\"sortable\" ";

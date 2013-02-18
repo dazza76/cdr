@@ -3,8 +3,6 @@ function gotoPage(page) {
 }
 
 
-
-
 /*********
  * UI
  *********/
@@ -47,7 +45,6 @@ $(document).ready(function() {
 
 
     $(".button").button();
-
 
 
     /**
@@ -95,9 +92,9 @@ $(document).ready(function() {
 });
 
 
-    /**
-     * form
-     */
+/**
+ * form
+ */
 $(document).ready(function() {
     var $form = $(".filters form").first();
 

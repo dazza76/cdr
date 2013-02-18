@@ -15,7 +15,7 @@ $c[$this->page] = 'current';
         <li class="<?php echo $c['cdr']; ?>">
             <a href="cdr.php" class="header_icon icon_calls_big"> Запись разговоров </a>
         </li>
-<?php
+<?php  // Очереди
 if ($c['queue']) {
     $sm[$this->chart]='current';
 ?>
@@ -33,13 +33,15 @@ if ($c['queue']) {
         <li class="">
             <a href="queue.php" class="header_icon icon_charts_big"> Очереди </a>
         </li>
-<?php } ?>
+<?php }
+// Очереди --END
+?>
         <li class="<?php echo $c['timeman']; ?>">
             <a href="timeman.php" class="header_icon icon_reports_big"> Профиль вызовов </a>
         </li>
-<!--        <li class="<?php echo $c['settings']; ?>">
-            <a href="settings.php" class="header_icon icon_reports_big"> Настройки </a>
-        </li>-->
+       <li class="<?php echo $c['settings']; ?>">
+            <a href="settings.php" class="header_icon icon_settings_big"> Настройки </a>
+        </li>
 
     </ul>
 </div>

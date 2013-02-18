@@ -61,7 +61,7 @@ class QueueAgents extends ACDataObject {
         if ( ! $oper) {
             $oper = 'Неизвестно';
         }
-        
+
         return html($oper);
     }
 }

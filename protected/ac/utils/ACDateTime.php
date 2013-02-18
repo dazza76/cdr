@@ -49,6 +49,7 @@ class ACDateTime extends DateTime {
         // F : Полное наименование месяца
         // f : Полное наименование месяца в родительгом падеже
         // M : Сокращенное наименование месяца, 3 символа
+
         // eng
         $M_eng  = array('Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep',
             'Oct', 'Nov', 'Dec');

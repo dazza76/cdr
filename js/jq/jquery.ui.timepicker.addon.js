@@ -74,9 +74,9 @@
 		minute: 0,
 		second: 0,
 		ampm: '',
-		formattedDate: 'yy-mm-dd',
-		formattedTime: 'hh:mm',
-		formattedDateTime: 'yy-mm-dd hh:mm',
+		formattedDate: '',
+		formattedTime: '',
+		formattedDateTime: '',
 
 		//########################################################################
 		// add our sliders to the calendar

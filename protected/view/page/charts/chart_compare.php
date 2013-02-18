@@ -5,6 +5,22 @@
  * @copyright  (c) 2013, AC
  */
 /* @var $this QueueController */
+switch ($this->compareType) {
+    case 'week':
+        $from_title  = "<b>" . $this->fromdate->format('W') . "</b> неделю <b>" . $this->fromdate->format('Y') . "</b>г.";
+        $to_title    = "<b>" . $this->todate->format('W') . "</b> неделю <b>" . $this->todate->format('Y') . "</b>г.";
+        break;
+    case 'month':
+        $from_title  = "<b>" . $this->fromdate->format('F Y') . "</b>г.";
+        $to_title    = "<b>" . $this->todate->format('F Y') . "</b>г.";
+        break;
+    case 'day' :
+    default :
+        $from_title  = "<b>" . $this->fromdate->format(ACDateTime::DATE) . "</b>";
+        $to_title    = "<b>" . $this->todate->format(ACDateTime::DATE) . "</b>";
+        break;
+}
+$chart_title = "сравнение {$from_title} и {$to_title}";
 ?>
 
 
@@ -31,6 +47,14 @@
                 <input name="todate" type="text" autocomplete="off" value="<?php echo $this->fromdate->format('Y-m-d'); ?>" class="datepicker" showweek="1" >
             </div>
         </div>
+        <div class="filter fl_l sep">
+            <div class="label">Очередь</div>
+            <div class="labeled">
+                <select name="queue[]" multiple="multiple" size="1"  default="<?php echo @implode(',', $this->queue); ?>">
+                    <?php echo Queue::showQueuelist(); ?>
+                </select>
+            </div>
+        </div>
         <div class="filter fl_l but_search">
             <input type="submit" name="search" id="button-search" class="button" class="button" value="Показать" />
         </div>
@@ -40,16 +64,17 @@
 
 <div id="highcharts-wrap" class="clear clear_fix bigblock" style="width: 100%">
     <div id="container" style="width: 1240px; height: 400px;"></div>
+    <br />
     <div id="container2" style="width: 1240px; height: 400px;"></div>
 </div>
 
-<script src="http://code.highcharts.com/highcharts.js"></script>
+
 <script type="text/javascript">
     var chart;
     $(document).ready(function() {
         chart = new Highcharts.Chart({
             chart: {renderTo: 'container', type: 'spline'},
-            title: {text: 'chart'},
+            title: {text: '<?php echo $chart_title; ?>'},
             legend: {
                 layout: 'vertical',
                 align: 'right',
@@ -71,6 +96,7 @@
                 min: 0,
                 lineWidth: 1,
                 gridLineDashStyle: 'longdash',
+                title: {text: 'количество'},
                 stackLabels: {
                     enabled: true,
                     style: {fontWeight: 'bold', color: (Highcharts.theme && Highcharts.theme.textColor) || 'gray'}
@@ -86,15 +112,16 @@
                         radius: 4,
                         lineColor: '#666666',
                         lineWidth: 1
-                    }
+                    },
+                    animation: {duration: 0}
                 }
             },
             series: [{
-                    name: 'Поступило звонков  за <b><?php echo $this->fromdate->format('Y-m-d'); ?></b>',
+                    name: 'Поступило звонков  за <?php echo $from_title; ?>',
                     data: <?php echo json_encode($this->highcharts['total'][1]); ?>,
                     color: '#B64245',
                 }, {
-                    name: 'Поступило звонков  за <b><?php echo $this->todate->format('Y-m-d'); ?></b>',
+                    name: 'Поступило звонков  за <?php echo $to_title; ?>',
                     data: <?php echo json_encode($this->highcharts['total'][2]); ?>,
                     color: "#D98962",
                 }],
@@ -105,7 +132,7 @@
         var chart2;
         chart2 = new Highcharts.Chart({
             chart: {renderTo: 'container2', type: 'spline'},
-            title: {text: 'chart'},
+            title: {text: '<?php echo $chart_title; ?>'},
             legend: {
                 layout: 'vertical',
                 align: 'right',
@@ -127,6 +154,7 @@
                 min: 0,
                 lineWidth: 1,
                 gridLineDashStyle: 'longdash',
+                title: {text: 'количество'},
                 stackLabels: {
                     enabled: true,
                     style: {fontWeight: 'bold', color: (Highcharts.theme && Highcharts.theme.textColor) || 'gray'}
@@ -142,21 +170,20 @@
                         radius: 4,
                         lineColor: '#666666',
                         lineWidth: 1
-                    }
+                    },
+                    animation: {duration: 0}
                 }
             },
             series: [{
-                    name: 'Принято звонков за <b><?php echo $this->fromdate->format('Y-m-d'); ?></b>',
+                    name: 'Принято звонков за <?php echo $from_title; ?>',
                     data: <?php echo json_encode($this->highcharts['complete'][1]); ?>,
                     color: '#B64245',
                 }, {
-                    name: 'Принято звонков за <b><?php echo $this->todate->format('Y-m-d'); ?></b>',
+                    name: 'Принято звонков за <?php echo $to_title; ?>',
                     data: <?php echo json_encode($this->highcharts['complete'][2]); ?>,
                     color: "#D98962",
                 }],
         });
-        // data-highcharts-chart  Highcharts.com
-        //$("#highcharts-wrap  tspan").last().hide();
         $('tspan:contains("Highcharts.com")').hide();
     });
 </script>

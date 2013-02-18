@@ -8,7 +8,7 @@
 /* @var $this Controller */
 $v = 1;
 if (ACLog::$enable) {
-    $this->dataPage['links'] .= '<link href="css/aclog.css" rel="stylesheet" type="text/css" />';
+    $this->dataPage['links'] .= '<link href="css/aclog.css" rel="stylesheet" />';
 }
 ?>
 <html>
@@ -16,17 +16,17 @@ if (ACLog::$enable) {
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
         <title><?php echo $this->dataPage['title']; ?></title>
 
-        <link href="css/jquery-ui.css?<?php echo $v; ?>" rel="stylesheet" type="text/css">
-        <link href="css/jquery-ui.dropdownchecklist.css?<?php echo $v; ?>" rel="stylesheet" type="text/css">
-        <link href="css/common.css?<?php echo $v; ?>" rel="stylesheet" type="text/css">
+        <link href="css/jquery-ui.css?<?php echo $v; ?>" rel="stylesheet" >
+        <link href="css/jquery-ui.dropdownchecklist.css?<?php echo $v; ?>" rel="stylesheet" >
+        <link href="css/common.css?<?php echo $v; ?>" rel="stylesheet" >
 
-        <script type="text/javascript" src="js/jq/jquery-1.8.2.js"></script>
-        <script type="text/javascript" src="js/jq/jquery-ui-1.9.0.custom.js"></script>
-        <script type="text/javascript" src="js/jq/jquery.ui.datepicker-ru.js"></script>
-        <script type="text/javascript" src="js/jq/jquery-ui-timepicker-addon-0.7.3.patched.js"></script>
-        <script type="text/javascript" src="js/jq/jquery.ui.dropdownchecklist-1.4.js"></script>
+        <script src="js/jq/jquery-1.8.2.js"></script>
+        <script src="js/jq/jquery-ui-1.9.2.js"></script>
+        <script src="js/jq/jquery.ui.datepicker-ru.js"></script>
+        <script src="js/jq/jquery.ui.timepicker.addon.js"></script>
+        <script src="js/jq/jquery.ui.dropdownchecklist.js"></script>
 
-        <script type="text/javascript" src="js/common.js?<?php echo $v; ?>"></script>
+        <script src="js/common.js?<?php echo $v; ?>"></script>
 
         <?php echo $this->dataPage['links']; ?>
 

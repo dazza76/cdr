@@ -12,7 +12,12 @@
  * @package		AC
  */
 class SettingsController extends Controller {
+    public $page        = "settings";
+    /**
+     * Формирет страницу
+     */
     public function index() {
-
+        $this->content = $this->mainView('page/page-settings.php');
     }
+
 }

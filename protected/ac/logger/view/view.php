@@ -21,8 +21,8 @@ $(document).ready(function () {
             <tr >
                 <th class="number"   style="width: 30px;">№</th>
                 <th class="time"     style="width: 70px;"><?php printf("%-8s", 'time'); ?></th>
-                <th class="category" style="width: 70px;"><?php printf("%-9s", 'category'); ?></th>
                 <th class="level"    style="width: 85px;"><?php printf("%-9s", 'level'); ?></th>
+                <th class="category" style="width: 70px;"><?php printf("%-9s", 'category'); ?></th>
                 <th class="message">message</th>
             </tr>
         </thead>
@@ -35,8 +35,8 @@ $(document).ready(function () {
                 <tr>
                     <td class="number"><?php printf("%'02d", ++$i); ?></td>
                     <td class="time"><?php printf(" %01.6f", $row['time'] - TIME_START); ?></td>
-                    <td class="category"><?php printf("%-9s", $row['ctg']); ?></td>
                     <td class="level"><?php printf("%-9s", '[' . $row['level'] . ']'); ?></td>
+                    <td class="category"><?php printf("%-9s", $row['ctg']); ?></td>
                     <td class="message"><?php echo $row['msg']; ?></td>
                 </tr>
             <?php } ?>

@@ -67,6 +67,7 @@ a.header_icon {padding: 12px 0 12px 38px; line-height: 36px; }
 a.icon_calls_big {background: url(../images/blackberry_white.png) 2px 70% no-repeat; }
 a.icon_reports_big {background: url(../images/database_table.png) 2px 70% no-repeat; }
 a.icon_charts_big {background: url(../images/chart_bar.png) 2px 70% no-repeat; }
+a.icon_settings_big{background: url(../images/interface_preferences.png) 2px 70% no-repeat; }
 /* ------------------------------------------------------------------------- */
 
 

@@ -1,3 +1,20 @@
+<?php
+// TODO Sent: Thursday, December 06, 2012 5:20 PM
+/*
+Высылаю Вам новую порцию =)
+Есть дамп базы (так одна табличка старая, новую пока не реализовали вживую), пример нашей версии и описание полей.
+Хотелось бы получить реализацию
+http://demo.line24.ru/cc-line24/admin.php/reports/cc
+http://demo.line24.ru/cc-line24/admin.php/reports/hours
+http://demo.line24.ru/cc-line24/admin.php/reports/queues
+
++ графики оттуда же
++ страничка с добавлением новых операторов (queue_agents)
++ авторизация на сессиях, два уровня – пользователь (только отчеты) и администратор.
+
+Спасибо.
+ */
+?>
 <html>
 <body>
 	<h1 align=center>IP-АТС ИКТ Asterisk</br>
