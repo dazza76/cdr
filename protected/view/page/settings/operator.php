@@ -4,7 +4,7 @@
         <div class="fl_l" style="padding-right: 15px;">
             Всего операторов: <?php echo @count($this->queueAgent); ?>
         </div>
-        <div class="fl_r"><a href="?action=delete&amp;id=501" class="icon icon-add">добавить</a></div>
+        <div class="fl_r"><a onclick="$('#dialog-operator-add').dialog('open');" class="icon icon-add">добавить</a></div>
         <div class="pg-pages fl_r">  </div>
     </div>
 </div>
@@ -28,10 +28,13 @@
                 <tr>
                     <td><?php echo html($queueAgent->name); ?></td>
                     <td><?php echo html($queueAgent->agentid); ?></td>
-                    <td class="image_link"><a href="?action=edit&amp;id=501" class="icon icon-edit"></a></td>
-                    <td class="image_link"><a href="?action=delete&amp;id=501" class="icon icon-delete"></a></td>
+                    <td class="image_link"><a href="#" class="icon icon-edit"></a></td>
+                    <td class="image_link"><a href="#" class="icon icon-delete"></a></td>
                 </tr>
             <?php } ?>
         </tbody>
     </table>
 </div>
+
+
+<?php            include 'dialog-operator-add.php'; ?>
