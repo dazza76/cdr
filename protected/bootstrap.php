@@ -10,6 +10,8 @@
  *
  * @package       AC
  */
+error_reporting(E_ALL & ~E_NOTICE);
+
 // ----------------------------------------------------------------------------
 defined('TIME_START') or define('TIME_START', microtime(true));
 defined('DS') or define('DS', DIRECTORY_SEPARATOR);
@@ -48,11 +50,11 @@ defined('DEBUG') or define('DEBUG', (App::Config()->debug) ? 1 : false);
 
 // Добавлять в отчет все PHP ошибки
 // ---------------------------------------------------------------------------
-if (DEBUG) {
-    error_reporting(E_ALL & ~E_NOTICE);
-} else {
-    error_reporting(0);
-}
+//if (DEBUG) {
+//    error_reporting(E_ALL & ~E_NOTICE);
+//} else {
+//    error_reporting(0);
+//}
 // ----------------------------------------------------------------------------
 
 require_once 'ac/AC.php';
