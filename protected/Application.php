@@ -48,9 +48,6 @@ class Application {
             throw new ACSingletonException(get_class($this));
         }
 
-        if (is_string($config) && file_exists($config) && is_readable($config)) {
-            $config = @include $config;
-        }
         if (is_array($config)) {
             App::Config()->mergeRecursive($config);
         }
@@ -65,7 +62,6 @@ class Application {
 
 /**
  * App class
- *
  * @package		AC
  */
 class App extends Application {
@@ -81,38 +77,6 @@ class App extends Application {
         }
 
         return self::$_config;
-    }
-
-    public static function initConfig($file = null) {
-        if ($file !== null) {
-            $obj = self::loadConfig($file);
-            self::Config()->mergeRecursive($obj);
-        }
-        return self::Config();
-    }
-
-    public static function loadConfig($file, $toObj = true) {
-        $result = @file_get_contents($file);
-
-        $utf8 = (substr($result, 3, 5) == 'utf-8') ? true : false;
-
-        if ($utf8) {
-            $result = substr($result, 8);
-        } else {
-            $result = ACUtils::iconv($result, 'windows-1251', 'UTF-8');
-        }
-
-        $result = ACJSON::decode($result, true);
-        $result = ACUtils::iconv($result, 'UTF-8', 'windows-1251');
-
-        if ($toObj) {
-            $object = new ACObject();
-            $object->mergeRecursive($result);
-
-            return $object;
-        } else {
-            return $result;
-        }
     }
 
     public static function url($page = null, $params = null) {

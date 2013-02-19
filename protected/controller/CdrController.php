@@ -83,7 +83,9 @@ class CdrController extends Controller {
 
         $this->search();
 
-        $this->content = $this->mainView('page/page-cdr.php');
+        $this->_addJsSrc('player/jquery.jplayer.min.js');
+        $this->_addCssLink('../js/player/jplayer.blue.monday.css');
+        $this->viewMain('page/page-cdr.php');
     }
 
     /**

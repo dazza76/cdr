@@ -90,8 +90,8 @@ class ACResponse {
         if (self::$_singleton) {
             throw new ACSingletonException(get_class($this));
         }
-        self::$_mimeTypes = include_once 'mimeTypes.php';
-        self::$_statusCodes = include_once 'statusCodes.php';
+        self::$_mimeTypes = include_once APPPATH . 'ac/base/mimeTypes.php';
+        self::$_statusCodes = include_once APPPATH .'ac/base/statusCodes.php';
         self::$_singleton = $this;
 
         if ($options instanceof ACConfig) {
@@ -338,6 +338,8 @@ class ACResponse {
         }
 
         $this->_sendContent($this->_body);
+
+        Log::trace('Response::send()');
     }
 
     /**
@@ -354,7 +356,7 @@ class ACResponse {
                 setcookie($name, $c['value'], $c['expire']);
                 $c = array($name, $c['value'], $c['expire']);
             }
-            ac_trace("Header> setcookie(" . implode(", ", $c) . ")");
+            Log::trace("Header> setcookie(" . implode(", ", $c) . ")");
         }
     }
 
@@ -373,7 +375,7 @@ class ACResponse {
                 $header = "{$name}: {$value}";
             }
             header($header);
-            ac_trace("Header> header:: " . $header);
+            // Log::trace("Header> header:: " . $header);
         }
     }
 
@@ -385,7 +387,7 @@ class ACResponse {
      */
     protected function _sendContent($content) {
         echo $content;
-        ac_trace("Header> Send Content");
+        // Log::trace("Header> Send Content");
     }
 
     /**
@@ -402,7 +404,7 @@ class ACResponse {
             $this->header('Content-Type',
                           "{$this->_contentType}; charset={$this->_charset}");
         } else {
-            $this->header('Content-Type', "{$this->_contentType}");
+            // $this->header('Content-Type', "{$this->_contentType}");
         }
     }
 }

@@ -106,11 +106,11 @@ abstract class Controller {
     abstract public function index();
 
     /**
-     * Выполнить шаблонный файл
+     * Выполняет шаблонный файл и возвращает результат
      * @param string $file имя файла
      * @return string
      */
-    public function view($file) {
+    public function getView($file) {
         ob_start();
         include APPPATH . 'view/' . $file; //main.php';
         $content = ob_get_contents();
@@ -119,15 +119,37 @@ abstract class Controller {
         return $content;
     }
 
-        /**
-     * Выполнить главный шаблон
+    /**
+     * Выполнить шаблонный файл
      * @param string $file имя файла
-     * @return string
+     * @return void
      */
-    public function mainView($file) {
-        $this->content = $this->view($file);
-        $this->content = $this->view('layout/main.php');
-        return $this->content;
+    public function view($file) {
+        ob_start();
+        include APPPATH . 'view/' . $file; //main.php';
+        $content = ob_get_contents();
+        ob_end_clean();
+
+        $this->content = $content;
+    }
+
+    public function viewMain($file = null) {
+        if ($file !== null) {
+            $this->view($file);
+        }
+        $this->view('layout/main.php');
+    }
+
+    protected function _addJsParam($key, $value) {
+        $this->dataPage['js'][$key] = $value;
+    }
+
+    protected function _addJsSrc($file) {
+        $this->dataPage['links'] .= '<script src="js/' . $file . '"></script>' . "\n";
+    }
+
+    protected function _addCssLink($file) {
+        $this->dataPage['links'] .= ' <link rel="stylesheet" href="css/' . $file . '">' . "\n";
     }
 
     /**
@@ -136,10 +158,16 @@ abstract class Controller {
      * @return string
      */
     public function render($print = true) {
-        if (DEBUG) {
-            ac_trace('Запросов MySQL: ' . App::Db()->getNumQuery());
-            ac_trace('Время обработки MySQL: ' . sprintf(" %01.6f", App::Db()->getTimeQuery()));
-            ac_trace('Время работы скрипта : ' . sprintf(" %01.6f", ACUtils::getExecutionTime()));
+        if ( DEBUG ) {
+            Log::trace('--------------');
+            Log::trace('Запросов MySQL: ' . App::Db()->getNumQuery());
+            Log::trace('Время обработки MySQL: ' . sprintf(" %01.6f",
+                                                           App::Db()->getTimeQuery()));
+            Log::trace('Время работы скрипта : ' . sprintf(" %01.6f",
+                                                           ACUtils::getExecutionTime()));
+            if (Log::$enable) {
+                $this->_addCssLink('aclog.css');
+            }
         }
 
         return $this->_print($this->content, $print);

@@ -22,7 +22,7 @@
             <div class="label">Оператор</div>
             <div class="labeled">
                 <select name="oper" size="1"  default="<?php echo $this->oper; ?>">
-                    <?php echo QueueAgents::showOperslist(); ?>
+                    <?php echo QueueAgent::showOperslist(); ?>
                 </select>
             </div>
         </div>
@@ -103,7 +103,7 @@
     <div class="fl_l" style="padding-right: 15px;">
         Найдено: <?php echo $this->count ?>
     </div>
-    <div class="pg_pages fl_r">
+    <div class="pg-pages fl_r">
         <?php
         echo ACPagenator::html($this->count, $this->offset, $this->limit);
         ?>

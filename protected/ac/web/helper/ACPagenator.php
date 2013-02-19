@@ -104,18 +104,18 @@ class ACPagenator {
         $pages = $this->_pager();
 
         foreach ($pages as $pg) {
-            $_class = "pg_lnk";
+            $_class = "pg-lnk";
             $_title = $pg["pg"];
 
             if ($pg["sel"]) {
-                $_class .= "_sel";
+                $_class .= "-sel";
             }
             $_class .= " " . $fl;
 
             $pages_html .= '<a class="' . $_class . '" href="?' . $pg['link']
-                    . '"><div class="pg_in">' . $_title . '</div></a>';
+                    . '"><div class="pg-in">' . $_title . '</div></a>';
         }
-        $pages_html = '<div class="pg_pages fl_r">' . $pages_html . '</div>';
+        $pages_html = '<div class="pg-pages fl_r">' . $pages_html . '</div>';
 
         return $pages_html;
     }

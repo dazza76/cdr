@@ -6,29 +6,22 @@
  * @copyright  (c) 2013, AC
  */
 /* @var $this CdrController */
-
-$this->dataPage['links'] .=''
-        . '<link href="js/player/jplayer.blue.monday.css" rel="stylesheet" type="text/css" />'
-        . '<script type="text/javascript" src="js/player/jquery.jplayer.min.js"></script>';
-
 $dir    = App::Config()->cdr->monitor_dir . '/';
 $format = App::Config()->cdr->file_format;
-
-$this->dataPage['js'] .= <<<HTML
-            var rec = {
-                directory: '{$dir}',
-                format: '{$format}'
-            };
-            $(document).ready(function() {
-                $("#jquery_jplayer").jPlayer({
-                    swfPath: "js/player",
-                    supplied: rec.format,
-                    wmode: "window"
-                });
-            });
-HTML;
-
 ?>
+<script type="text/javascript">
+    var rec = {
+        directory: '<?php echo $dir; ?>',
+        format: '<?php echo $format; ?>'
+    };
+    $(document).ready(function() {
+        $("#jquery_jplayer").jPlayer({
+            swfPath: "js/player",
+            supplied: rec.format,
+            wmode: "window"
+        });
+    });
+</script>
 <div class="filters clear_fix">
     <form method="get" action="" class="of_h">
         <div class="filter fl_l sep">
@@ -43,7 +36,7 @@ HTML;
             <div class="label">Оператор</div>
             <div class="labeled">
                 <select name="oper" size="1"  default="<?php echo $this->oper; ?>">
-                    <?php echo QueueAgents::showOperslist(); ?>
+                    <?php echo QueueAgent::showOperslist(); ?>
                 </select>
             </div>
         </div>
@@ -95,11 +88,11 @@ HTML;
     </form>
 </div>
 
-<div class="control_bar clear_fix bigblock of_h">
+<div class="control-bar clear_fix bigblock of_h">
     <div class="fl_l" style="padding-right: 15px;">
         Найдено: <?php echo $this->count ?>
     </div>
-    <div class="pg_pages fl_r">
+    <div class="pg-pages fl_r">
         <?php
         echo ACPagenator::html($this->count, $this->offset, $this->limit);
         ?>
@@ -107,19 +100,29 @@ HTML;
 </div>
 
 
-<div class="clear clear_fix bigblock">
+<div class="clear clear_fix">
     <table class="grid">
         <thead>
             <tr>
-               <!--  data-sort="" data-desc=""  -->
+                <!--  data-sort="" data-desc=""  -->
                 <th style="width: 60px;">Напр.</th>
-                <th <?php  echo Utils::sortable("calldate", $this->sort, $this->desc); ?>  style="width: 150px;">Дата</th>
-                <th <?php  echo Utils::sortable("src", $this->sort, $this->desc); ?> style="width: 150px;">Источник</th>
-                <th <?php  echo Utils::sortable("dst", $this->sort, $this->desc); ?> style="width: 150px;">Назначение</th>
+                <th <?php
+        echo Utils::sortable("calldate", $this->sort, $this->desc);
+        ?>  style="width: 150px;">Дата</th>
+                <th <?php
+                echo Utils::sortable("src", $this->sort, $this->desc);
+        ?> style="width: 150px;">Источник</th>
+                <th <?php
+                echo Utils::sortable("dst", $this->sort, $this->desc);
+        ?> style="width: 150px;">Назначение</th>
                 <th style="width: 150px;">Оператор</th>
                 <th style="width: 135px;">Запись</th>
-                <th <?php  echo Utils::sortable("duration", $this->sort, $this->desc); ?> style="width: 70px;">Время</th>
-                <th <?php  echo Utils::sortable("comment", $this->sort, $this->desc); ?> style="">Комментарий</th>
+                <th <?php
+                echo Utils::sortable("duration", $this->sort, $this->desc);
+        ?> style="width: 70px;">Время</th>
+                <th <?php
+                echo Utils::sortable("comment", $this->sort, $this->desc);
+        ?> style="">Комментарий</th>
             </tr>
         </thead>
         <tbody>
@@ -128,20 +131,20 @@ HTML;
                 /* @var $row Cdr */
                 ?>
                 <tr callid="<?php echo $row->id; ?>">
-                    <td class="coming_img"><div class="coming_<?php echo $row->getComing(); ?>"></div></td>
+                    <td class="coming-img"><div class="coming_<?php echo $row->getComing(); ?>"></div></td>
                     <td><?php echo $row->calldate ?></td>
                     <td><?php echo html($row->src); ?></td>
                     <td><?php echo html($row->getDst()); ?></td>
                     <td><?php echo html($row->getOperatorCode()); ?></td>
                     <td>
                         <div class="fl_l"><a href="<?php echo $row->getFile(); ?>" target="_blank" ><img src="images/b_save.png" /></a></div>
-                        <div class="player_button fl_l b_play" style="margin-left: 5px;">
+                        <div class="player-button fl_l icon-play" style="margin-left: 5px;">
                             <input type="hidden" value="<?php echo $row->uniqueid; ?>" />
                         </div>
-                        <div class="slider fl_l"></div>
+                        <div class="player-slider fl_l"></div>
                     </td>
                     <td><?php echo $row->getTime(); ?></td>
-                    <td class="comment grid_edit"><span><?php echo html($row->comment); ?></span></td>
+                    <td class="comment grid-edit"><span><?php echo html($row->comment); ?></span></td>
                 </tr>
                 <?php
             }
@@ -150,12 +153,12 @@ HTML;
     </table>
 </div>
 
-<div id="comment_edit" class="hidden">
-    <input type="text" name="comment" class="edit_box" value="" autocomplete="off" />
+<div id="comment-edit" class="hidden">
+    <input type="text" name="comment" class="edit-box" value="" autocomplete="off" />
 </div>
 
 <div id="jquery_jplayer" class="jp-jplayer"></div>
-<div id="jp_container_1" class="jp-audio">
+<div id="jplayer_container" class="jp-audio">
     <div class="jp-type-single">
         <div class="jp-gui jp-interface">
             <div class="jp-progress">

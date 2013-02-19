@@ -70,6 +70,7 @@ class ACRequest {
         $this->url     = $_SERVER["REQUEST_URI"];
 
         $url     = substr($this->url, strlen($webpath));
+        $url     = str_replace($webpath, '', $url);
         $pattern = array(
             '|/+|',
             '|^/|',
@@ -78,9 +79,10 @@ class ACRequest {
         );
         $replace = array('/', '');
         $page    = preg_replace($pattern, $replace, $url);
-        if ( ! $page) {
-            $page       = 'index';
+        if (!$page) {
+            $page                = 'index';
         }
         $this->page = $page;
     }
+
 }

@@ -11,5 +11,5 @@ $app->controller = new QueueController();
 $app->controller->init();
 $app->controller->render();
 
-ACLog::render();
+Log::render();
 

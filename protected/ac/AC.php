@@ -4,6 +4,8 @@
  * @author      Tyurin D. <fobia3d@gmail.com>
  * @copyright   (c) 2013, AC
  */
+
+
 if ( ! defined('APPPATH'))
     die('Not instanse constant APPPATH');
 
@@ -12,8 +14,13 @@ if (ini_get('magic_quotes_gpc') === '1')
 
 // ---------------------------------------------------------------------------
 
+
 function ac_dump($obj) {
-    ACVarDumper::dump($obj, 10, true);
+    if (ini_get('xdebug.coverage_enable')) {
+        var_dump($obj);
+    } else {
+        ACVarDumper::dump($obj, 10, true);
+    }
 }
 
 function html($string, $print = false) {

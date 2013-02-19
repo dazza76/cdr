@@ -21,7 +21,7 @@ class ACException extends Exception {
  * @package		AC
  */
 class ACSingletonException extends Exception {
-    public function __construct($message) {
+    public function __construct($message = 'none') {
         parent::__construct("Объект класса - Singleton(Одиночка) уже создан {$message}.");
     }
 }

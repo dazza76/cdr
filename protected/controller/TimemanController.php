@@ -41,7 +41,7 @@ class TimemanController extends Controller {
      * Формирет страницу
      */
     public function index() {
-        $this->content = $this->mainView('page/page-timeman.php');
+        $this->viewMain('page/page-timeman.php');
     }
 
     /**

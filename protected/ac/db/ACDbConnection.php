@@ -110,20 +110,23 @@ class ACDbConnection extends mysqli {
         @parent::__construct($host, $user, $pass, $dbname);
         if (mysqli_connect_errno()) {
             $this->_databaseName = null;
-            if ($this->params["exception"])
+            /// if ($this->params["exception"])
                 throw new ACDbConnectionException();
             $this->_connect      = false;
             return;
         }
 
+        $this->_timeQuery = microtime(true) - $time_start;
+        $this->_connect   = true;
+        $this->success    = true;
+        log::trace("connect database: '{$dbname}'");
+
         if ($params['charset']) {
             $this->set_charset($params['charset']);
         }
-
-        $this->_timeQuery = microtime(true) - $time_start;
-        $this->success    = true;
-        $this->_connect   = true;
-        ac_trace("connect database: '{$dbname}'", 'SQL');
+        if ($params['time_zone']) {
+            $this->quickQuery('SET time_zone = "'.$params['time_zone'].'"');
+        }
     }
 
     public function __destruct() {
@@ -187,12 +190,12 @@ class ACDbConnection extends mysqli {
 
         $time = sprintf("%01.5f", microtime(true) - $time_start);
 
-        ac_trace("{$query}", 'SQL');
+        log::trace("{$query}", 'SQL' );
         if ($this->errno) {
-            ac_error("SQL> [Error] " . $this->errno . "; " . $this->error . "; ");
+            log::error("[Error] |-> " . $this->errno . "; " . $this->error . "; ");
         }
         else {
-            //ac_trace("SQL Reslt> |-> [OK][time: {$time}][affect: {$this->affected_rows}]");
+            // log::trace("[OK] |-> [time: {$time}][affect: {$this->affected_rows}]");
         }
 
         $this->_queryArr[] = array(
@@ -236,8 +239,8 @@ class ACDbConnection extends mysqli {
      * @return float
      */
     public function getTimeQuery() {
-        return $this->_timeQuery;
-        //return round($this->_timeQuery, 5);
+//        return $this->_timeQuery;
+        return round($this->_timeQuery, 5);
     }
 
     /**

@@ -9,4 +9,4 @@ $app->controller = new TimemanController();
 $app->controller->init();
 $app->controller->render();
 
-ACLog::render();
+Log::render();

@@ -24,8 +24,7 @@ class ACUtils {
         $eng = "abvgdegziyklmnoprstufieABVGDEGZIYKLMNOPRSTUFIE";
         $str = strtr($str, $rus, $eng);
 
-        return strtr($str,
-                     array(
+        return strtr($str, array(
             'е' => "yo", 'х' => "h", 'ц' => "ts", 'ч' => "ch", 'ш' => "sh",
             'щ' => "shch", 'ъ' => '', 'ь' => '', 'ю' => "yu", 'я' => "ya",
             'Е' => "Yo", 'Х' => "H", 'Ц' => "Ts", 'Ч' => "Ch", 'Ш' => "Sh",
@@ -40,7 +39,7 @@ class ACUtils {
      * @return mixed
      */
     public static function htmlspecialchars(&$data, $quote_style = 2) {
-        if ( ! is_array($data)) {
+        if (!is_array($data)) {
             $data = htmlspecialchars($data, $quote_style);
             return $data;
         }
@@ -64,9 +63,8 @@ class ACUtils {
      * @param string $out_charset конечная кодировка
      * @return string
      */
-    public static function iconv(&$data, $in_charset = 'UTF-8',
-                                 $out_charset = 'windows-1251') {
-        if ( ! is_array($data) && ! is_object($data)) {
+    public static function iconv(&$data, $in_charset = 'UTF-8', $out_charset = 'windows-1251') {
+        if (!is_array($data) && !is_object($data)) {
             $data = iconv($in_charset, $out_charset, $data);
             return $data;
         }
@@ -91,7 +89,7 @@ class ACUtils {
     }
 
     public static function trim(&$data) {
-        if ( ! is_array($data) && ! is_object($data)) {
+        if (!is_array($data) && !is_object($data)) {
             $data = trim($data);
             return $data;
         }
@@ -114,7 +112,7 @@ class ACUtils {
     }
 
     public static function userDefined(&$data, $callback) {
-        if ( ! is_array($data) && ! is_object($data)) {
+        if (!is_array($data) && !is_object($data)) {
             $data = call_user_func_array($callback, array($data));
             return $data;
         }
@@ -158,8 +156,7 @@ class ACUtils {
         else {
             $output = array();
             if (strncmp(PHP_OS, 'WIN', 3) === 0) {
-                exec('tasklist /FI "PID eq ' . getmypid() . '" /FO LIST',
-                     $output);
+                exec('tasklist /FI "PID eq ' . getmypid() . '" /FO LIST', $output);
                 return isset($output[5]) ? preg_replace('/[\D]/', '', $output[5]) * 1024 : 0;
             } else {
                 $pid    = getmypid();
@@ -175,9 +172,9 @@ class ACUtils {
      * @return string
      */
     public static function GetIp() {
-        if ( ! empty($_SERVER['HTTP_CLIENT_IP'])) {
+        if (!empty($_SERVER['HTTP_CLIENT_IP'])) {
             $ip = $_SERVER['HTTP_CLIENT_IP'];
-        } elseif ( ! empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
+        } elseif (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
             $ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
         } else {
             $ip = $_SERVER['REMOTE_ADDR'];
@@ -195,7 +192,7 @@ class ACUtils {
      * @param array $data параметры get
      */
     public static function location($page = "", $data = false) {
-        if ( ! is_array($data)) {
+        if (!is_array($data)) {
             $data = array();
         }
 
@@ -207,7 +204,7 @@ class ACUtils {
             foreach ($key_value as $value) {
                 $kv = explode("=", $value);
                 if ($kv[0] && $kv[1]) {
-                    if ( ! $data[$kv[0]]) {
+                    if (!$data[$kv[0]]) {
                         $data[$kv[0]] = $kv[1];
                     }
                 }
@@ -243,8 +240,8 @@ class ACUtils {
         if (isset($options['last']))
             $last  = $options['last'];
 
-        $trim = (isset($options['trim'])) ? true : false;
-        $dr   = (isset($options['dr'])) ? $options['dr'] : DIRECTORY_SEPARATOR;
+        $trim  = (isset($options['trim'])) ? true : false;
+        $dr    = (isset($options['dr'])) ? $options['dr'] : DIRECTORY_SEPARATOR;
 
         $pattern     = array(
             "#[\\\/]+#",
@@ -262,33 +259,13 @@ class ACUtils {
     }
 
     /**
-     * Преобразует путь в формат dir1/dir2/dir3/
-     * @param string $path
-     * @param string $first - надо ли удалять первый слнш
-     * @return string
-     */
-    public static function parsePath($path, $first = true) {
-        $pattern = array(
-            '|/+|',
-            '|/$|'
-        );
-        if ($first) {
-            $pattern[] = '|^/';
-        }
-        $replace   = array('/', '');
-        $path      = preg_replace($pattern, $replace, $path) . '/';
-
-        return $path;
-    }
-
-    /**
      * декодирует URL-кодированную строку
      *
      * @param array|string $data
      * @return mixed
      */
     public static function URLDecode($data) {
-        if ( ! is_array($data)) {
+        if (!is_array($data)) {
             $data = urldecode($data);
             return $data;
         }
@@ -340,8 +317,7 @@ class ACUtils {
         if (is_array($vars)) {
             reset($vars);
             while (list($key, $value) = each($vars)) {
-                $string = str_replace("{" . strtoupper($key) . "}", $value,
-                                                       $string);
+                $string = str_replace("{" . strtoupper($key) . "}", $value, $string);
             }
         }
 
@@ -355,9 +331,9 @@ class ACUtils {
      * @return string
      */
     public static function randString($number = 10) {
-        $chr  = "abvgdegziyklmnoprstufieABVGDEGZIYKLMNOPRSTUFIE1234567890";
+        $chr = "abvgdegziyklmnoprstufieABVGDEGZIYKLMNOPRSTUFIE1234567890";
         $pass = "";
-        for ($i = 0; $i < $number; $i ++ ) {
+        for ($i = 0; $i < $number; $i++) {
             $index = rand(0, strlen($chr));
             $pass .= substr($chr, $index, 1);
         }
@@ -371,7 +347,8 @@ class ACUtils {
      */
     public static function getMemoryString($size) {
         $unit = array('b', 'kb', 'mb', 'gb', 'tb', 'pb');
-        $str  = @round($size / pow(1024, ($i    = floor(log($size, 1024)))), 2) . ' ' . $unit[$i];
+        $str  = @round($size / pow(1024, ($i    = floor(Log($size, 1024)))), 2) . ' ' . $unit[$i];
         return $str;
     }
+
 }

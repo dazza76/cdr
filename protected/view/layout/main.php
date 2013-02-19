@@ -7,9 +7,6 @@
  */
 /* @var $this Controller */
 $v = 1;
-if (ACLog::$enable) {
-    $this->dataPage['links'] .= '<link href="css/aclog.css" rel="stylesheet" />';
-}
 ?>
 <html>
     <head>
@@ -18,7 +15,6 @@ if (ACLog::$enable) {
 
         <link href="css/jquery-ui.css?<?php echo $v; ?>" rel="stylesheet" >
         <link href="css/jquery-ui.dropdownchecklist.css?<?php echo $v; ?>" rel="stylesheet" >
-        <link href="css/common.css?<?php echo $v; ?>" rel="stylesheet" >
 
         <script src="js/jq/jquery-1.8.2.js"></script>
         <script src="js/jq/jquery-ui-1.9.2.js"></script>
@@ -26,6 +22,7 @@ if (ACLog::$enable) {
         <script src="js/jq/jquery.ui.timepicker.addon.js"></script>
         <script src="js/jq/jquery.ui.dropdownchecklist.js"></script>
 
+        <link href="css/common.css?<?php echo $v; ?>" rel="stylesheet" >
         <script src="js/common.js?<?php echo $v; ?>"></script>
 
         <?php echo $this->dataPage['links']; ?>
@@ -37,13 +34,16 @@ if (ACLog::$enable) {
 
     <body class="fixed-header">
         <div id="wrapper">
-            <?php include 'header.php'; ?>
+
+            <div id="header" class="fixed clear_fix">
+                <?php include 'header.php'; ?>
+            </div>
 
             <div id="middle">
                 <?php echo $this->content; ?>
-
                 <div style="padding-top: 50px;"><hr /></div>
             </div>
+
         </div>
     </body>
 </html>

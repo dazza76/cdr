@@ -50,7 +50,7 @@ class CallStatus extends ACDataObject {
         if (substr($num, 0, 4) == 'SIP/') {
             $str = 'Телефон ' . substr($num, 4, 4);
         } else {
-            $str = QueueAgents::getOper(substr($num, 0, 7));
+            $str = QueueAgent::getOper(substr($num, 0, 7));
         }
 
         return html($str);

@@ -12,6 +12,7 @@
  * @package		AC
  */
 class ACLoader {
+    const FILE_CLASSES =  'system/cache/classes.php';
 
     private static $_singleton = false;
     private static $_classes   = array();
@@ -22,6 +23,7 @@ class ACLoader {
         }
 
         if ( ! defined('APPPATH')) {
+            require_once 'ACException.php';
             throw new ACException("Непроинициализирована константа APPPATH");
         }
 
@@ -36,7 +38,7 @@ class ACLoader {
     public static function init() {
         self::_init();
 
-        $file = APPPATH . 'system/cache/classes.php';
+        $file = APPPATH . self::FILE_CLASSES;
         if (file_exists($file) && is_readable($file)) {
             $classes = include $file;
             self::classes($classes);

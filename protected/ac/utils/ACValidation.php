@@ -276,8 +276,8 @@ class ACValidation {
 
         if (self::date($check)) {
             list($y, $m, $d) = explode("-", $check);
-            $h = 23; 
-            $i = 59; 
+            $h = 23;
+            $i = 59;
             $s = 59;
         } elseif (self::datetime($check)) {
             $parts = explode(' ', $check);
@@ -289,7 +289,7 @@ class ACValidation {
         $time_now = explode(" ", microtime());
 
         $dt   = (int) (($time_old - $time_now[1]) / 60);
-        
+
         if ($dt < -10)
             return false;
 
@@ -498,11 +498,11 @@ class ACValidation {
     public static function numeric($check){
         return is_numeric($check);
     }
-    
+
     public static function integer($check) {
         return is_integer($check);
     }
-    
+
     public static function float($check) {
        return is_float($check);
     }

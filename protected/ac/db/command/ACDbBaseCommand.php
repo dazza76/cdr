@@ -201,7 +201,7 @@ abstract class ACDbWhereCommand extends ACDbBaseCommand {
 
         if ($this->_query['where']) {
             if (( ! in_array($operator, array("AND", "OR", "XOR")))) {
-                ac_error("Invalid operator Where : " . $operator);
+                Log::error("Invalid operator Where : " . $operator);
                 $operator = "AND";
             }
             $this->_query['where'] .= " " . $operator . " ";

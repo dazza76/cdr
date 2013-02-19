@@ -1,4 +1,5 @@
 <?php
+
 /**
  * ACDbResult class  - ACDbResult.php file
  *
@@ -18,6 +19,7 @@ class ACDbResult extends MySQLi_Result implements Iterator, Countable {
      * @var integer
      */
     public $foundRows;
+
     /**
      * В случае подсчета при выборге, содержит вспомогательные значения
      * @var array
@@ -44,7 +46,7 @@ class ACDbResult extends MySQLi_Result implements Iterator, Countable {
      */
     public function getFetchAssocs() {
         $rows = array();
-        if ( ! $this->count())
+        if (!$this->count())
             return $rows;
 
         $this->data_seek(0);
@@ -63,7 +65,7 @@ class ACDbResult extends MySQLi_Result implements Iterator, Countable {
      */
     public function getFetchObjects($class_name = null, $params = null) {
         $rows = array();
-        if ( ! $this->count())
+        if (!$this->count())
             return $rows;
 
         $this->data_seek(0);
@@ -101,7 +103,7 @@ class ACDbResult extends MySQLi_Result implements Iterator, Countable {
 
     public function fetchObject($class_name = null, $params = null) {
         if ($this->count()) {
-            if ( func_num_args() >=2) {
+            if (func_num_args() >= 2) {
                 return $this->fetch_object($class_name, $params);
             }
             if ($class_name) {
@@ -130,7 +132,7 @@ class ACDbResult extends MySQLi_Result implements Iterator, Countable {
 
     public function next() {
         $this->_current = $this->fetch();
-        $this->_key ++;
+        $this->_key++;
     }
 
     public function rewind() {
@@ -144,4 +146,5 @@ class ACDbResult extends MySQLi_Result implements Iterator, Countable {
     public function valid() {
         return $this->_key < $this->count();
     }
+
 }

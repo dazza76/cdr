@@ -93,7 +93,7 @@ class QueueController extends Controller {
     public function chartArbit() {
         $this->search();
         $this->getTotalResult();
-        $this->content = $this->mainView('page/page-queue.php');
+        $this->viewMain('page/page-queue.php');
     }
 
     /**
@@ -101,7 +101,7 @@ class QueueController extends Controller {
      */
     public function chartDay() {
         $this->highcharts = $this->getDataStatisticDay();
-        $this->content    = $this->mainView("page/charts/chart_{$this->chart}.php");
+        $this->viewMain("page/charts/chart_{$this->chart}.php");
     }
 
     /**
@@ -109,7 +109,7 @@ class QueueController extends Controller {
      */
     public function chartWeek() {
         $this->highcharts = $this->getDataStatisticWeek();
-        $this->content    = $this->mainView("page/charts/chart_{$this->chart}.php");
+        $this->viewMain("page/charts/chart_{$this->chart}.php");
     }
 
     /**
@@ -117,7 +117,7 @@ class QueueController extends Controller {
      */
     public function chartMonth() {
         $this->highcharts = $this->getDataStatisticMonth();
-        $this->content    = $this->mainView("page/charts/chart_{$this->chart}.php");
+        $this->viewMain("page/charts/chart_{$this->chart}.php");
     }
 
     /**
@@ -125,9 +125,9 @@ class QueueController extends Controller {
      */
     public function chartCompare() {
         $this->compareType = $this->_parseCompareType($this->compareType);
-//        ac_trace($this->compareType);
-//        ac_trace("from:" . $this->fromdate);
-//        ac_trace("to:" . $this->todate);
+//        Log::trace($this->compareType);
+//        Log::trace("from:" . $this->fromdate);
+//        Log::trace("to:" . $this->todate);
 
         $act = "getDataStatistic" . $this->compareType;
 
@@ -138,8 +138,8 @@ class QueueController extends Controller {
             'total'    => array($from[0], $from[1], $to[1]),
             'complete' => array($from[0], $from[2], $to[2])
         );
-        ac_output($this);
-        $this->content = $this->mainView("page/charts/chart_{$this->chart}.php");
+//        Log::vardump($this);
+        $this->viewMain("page/charts/chart_{$this->chart}.php");
     }
 
     /**
@@ -333,8 +333,8 @@ class QueueController extends Controller {
         $pnd      = "P{$n}D";
         $dateTime->sub(new DateInterval($pnd));
 
-        // ac_output($dateTime);
-        // ac_output($oxY);
+        // Log::vardump($dateTime);
+        // Log::vardump($oxY);
 
         $dayNames = array('понедельник', 'вторник', 'среда', 'четверг', 'пятница',
             'суббота', 'воскресенье');
@@ -346,7 +346,7 @@ class QueueController extends Controller {
             $complete[$day] = 0;
         }
 
-        ac_output($oxY);
+        Log::vardump($oxY);
 
 
         $query_total = "
@@ -364,7 +364,7 @@ class QueueController extends Controller {
         while ($row         = $result->fetchAssoc()) {
             $total[$row['date']] = (int) $row['total'];
         }
-        ac_output($total);
+        Log::vardump($total);
 
         $query_complete = "
             SELECT
@@ -382,7 +382,7 @@ class QueueController extends Controller {
         while ($row    = $result->fetchAssoc()) {
             $complete[$row['date']] = (int) $row['complete'];
         }
-        // ac_output($complete);
+        // Log::vardump($complete);
 
         return array(array_values($oxY), array_values($total), array_values($complete));
     }
