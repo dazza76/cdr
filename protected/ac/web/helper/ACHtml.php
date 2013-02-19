@@ -79,12 +79,15 @@ class ACHtml {
         if ($name) {
             $name = 'name="' . self::encode($name) . '"';
         }
+        if (!is_array($def)) {
+            $def = array($def);
+        }
 
         $attr = $name . " " . self::attr($attr);
 
         $html = '<select ' . $attr . '>';
         foreach ($opt as $value => $text) {
-            $sel = ($def == $value) ? "selected" : "";
+            $sel = (in_array($value, $def)) ? 'selected="selected"' : "";
             $html .= '<option value="' . self::encode($value) . '" ' . $sel . '>'
                     . self::encode($text)
                     . "</option>";

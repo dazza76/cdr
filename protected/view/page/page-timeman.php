@@ -21,14 +21,14 @@
         <div class="filter fl_l sep">
             <div class="label">Очереди</div>
             <div class="labeled">
-                <select name="queue[]" multiple="multiple" size="1" default="<?php echo @implode(',', $this->queue); ?>">
-                    <?php echo Queue::showQueuelist(); ?>
-                </select>
+                <?php echo Queue::showMultiple("queue[]", $this->queue); ?>
             </div>
         </div>
 
-        <div class="filter fl_l but_search">
-            <input type="submit" name="search" id="button-search" class="button" value="Показать" />
+        <div class="filter fl_l">
+            <div class="labeled">
+                <input type="submit" name="search" id="button-search" class="button button-search" class="button" value="Показать" />
+            </div>
         </div>
     </form>
 </div>

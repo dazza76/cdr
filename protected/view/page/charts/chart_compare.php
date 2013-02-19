@@ -50,13 +50,13 @@ $chart_title = "сравнение {$from_title} и {$to_title}";
         <div class="filter fl_l sep">
             <div class="label">Очередь</div>
             <div class="labeled">
-                <select name="queue[]" multiple="multiple" size="1"  default="<?php echo @implode(',', $this->queue); ?>">
-                    <?php echo Queue::showQueuelist(); ?>
-                </select>
+                    <?php echo Queue::showMultiple("queue[]", $this->queue); ?>
             </div>
         </div>
-        <div class="filter fl_l but_search">
-            <input type="submit" name="search" id="button-search" class="button" class="button" value="Показать" />
+        <div class="filter fl_l">
+            <div class="labeled">
+                <input type="submit" name="search" id="button-search" class="button button-search" class="button" value="Показать" />
+            </div>
         </div>
         <input type="hidden" name="chart" value="<?php echo $this->chart; ?>" />
     </form>
@@ -103,8 +103,12 @@ $chart_title = "сравнение {$from_title} и {$to_title}";
                 }
             },
             tooltip: {
-                crosshairs: true,
-                shared: true
+                // crosshairs: true,
+                // shared: true
+                formatter: function() {
+                    return '<b>' + this.x + '</b><br/>' +
+                            this.series.name + ': ' + this.y + '<br/>';
+                }
             },
             plotOptions: {
                 spline: {

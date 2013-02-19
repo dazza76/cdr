@@ -23,6 +23,7 @@ abstract class Controller {
     protected $_action;
     protected $_sortColumn = array();
     protected $_filters    = array();
+    protected $_sessionParams = false;
 
     /**
      * @var mixed
@@ -80,6 +81,7 @@ abstract class Controller {
     public function init($params = null) {
         if ($params === null) {
             $params = $_GET;
+            $this->_sessionParams = true;
         }
         $keys   = array_keys($this->_filters);
         foreach ($keys as $key) {

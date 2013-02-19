@@ -43,12 +43,28 @@
         <div class="label fl_l ta_r" style="width: 250px;">Телефон, на котором работает:</div>
         <div class="labeled fl_l" style="width: 220px; margin-left: 5px;"><input type="text" name="" value="" /></div>
     </div>
-    <div class="clear clear_fix">
+    <div class="clear clear_fix mediumblock">
         <div class="label fl_l ta_r" style="width: 250px;">Список очередей пенальти 1:</div>
         <div class="labeled fl_l" style="width: 220px; margin-left: 5px;"><input type="text" name="" value="" /></div>
     </div>
     <div class="clear clear_fix">
         <div class="label fl_l ta_r" style="width: 250px;">Пенальти в очередях 1:</div>
+        <div class="labeled fl_l" style="width: 220px; margin-left: 5px;"><input type="text" name="" value="" /></div>
+    </div>
+   <div class="clear clear_fix mediumblock">
+        <div class="label fl_l ta_r" style="width: 250px;">Список очередей пенальти 2:</div>
+        <div class="labeled fl_l" style="width: 220px; margin-left: 5px;"><input type="text" name="" value="" /></div>
+    </div>
+    <div class="clear clear_fix">
+        <div class="label fl_l ta_r" style="width: 250px;">Пенальти в очередях 2:</div>
+        <div class="labeled fl_l" style="width: 220px; margin-left: 5px;"><input type="text" name="" value="" /></div>
+    </div>
+   <div class="clear clear_fix mediumblock">
+        <div class="label fl_l ta_r" style="width: 250px;">Список очередей пенальти 3:</div>
+        <div class="labeled fl_l" style="width: 220px; margin-left: 5px;"><input type="text" name="" value="" /></div>
+    </div>
+    <div class="clear clear_fix">
+        <div class="label fl_l ta_r" style="width: 250px;">Пенальти в очередях 3:</div>
         <div class="labeled fl_l" style="width: 220px; margin-left: 5px;"><input type="text" name="" value="" /></div>
     </div>
 </div>

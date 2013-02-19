@@ -25,14 +25,18 @@ class Queue {
      * Формирует теги для поля выбора
      * @return string
      */
-    public static function showQueuelist() {
+    public static function showMultiple($name, $selected) {
         self::_init();
 
-        $result = "<option value=\"\" >Все очереди</option>";
-        foreach (self::$_queue as $val => $str) {
-            $result .= "<option value=\"{$val}\">{$str}</option>";
-        }
-        return $result;
+        $options =  array(" " => "Все очереди") + self::$_queue;
+        return ACHtml::select($options, $name , array("size"=>"1", "multiple"=>"multiple"), $selected);
+
+
+//        $result = "<option value=\"\" >Все очереди</option>";
+//        foreach (self::$_queue as $val => $str) {
+//            $result .= "<option value=\"{$val}\">{$str}</option>";
+//        }
+//        return $result;
     }
 
     /**

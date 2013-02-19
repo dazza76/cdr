@@ -56,6 +56,8 @@ class Application {
         $this->request  = new ACRequest(App::Config()->webpath);
         $this->response = new ACResponse(array('charset' => App::Config()->charset));
 
+        session_start();
+        
         self::$_instanse = $this;
     }
 }

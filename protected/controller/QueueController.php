@@ -76,6 +76,34 @@ class QueueController extends Controller {
         $this->_filters['fromdate'][1] = $from;
     }
 
+    public function init($params = null) {
+        if ($params === null) {
+            $chart           = $this->_parseChart($_GET['chart']);
+            $params          = $_GET;
+            $params['chart'] = $chart;
+
+            if (count($params) < 2) {
+                $params               = $_SESSION['pg_queue_' . $chart];
+                if($params) {
+                    $params = @unserialize($params);
+                }
+                $this->_sessionParams = true;
+            } else {
+                $params = $_GET;
+            }
+        }
+
+        $chart           = $this->_parseChart($_GET['chart']);
+        $params['chart'] = $chart;
+
+        $_SESSION['pg_queue_' . $chart] = @serialize($params);
+
+        Log::trace('Session parametr: ' . ((int) $this->_sessionParams));
+        Log::vardump($params);
+
+        parent::init($params);
+    }
+
     /**
      * Формирет страницу
      */
@@ -382,7 +410,7 @@ class QueueController extends Controller {
         while ($row    = $result->fetchAssoc()) {
             $complete[$row['date']] = (int) $row['complete'];
         }
-        // Log::vardump($complete);
+        Log::vardump($complete);
 
         return array(array_values($oxY), array_values($total), array_values($complete));
     }

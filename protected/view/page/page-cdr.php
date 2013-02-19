@@ -44,9 +44,9 @@ $format = App::Config()->cdr->file_format;
         <div class="filter fl_l sep">
             <div class="label">Телефон</div>
             <div class="labeled">
-                <input name="src" placeholder="Источник" autocomplete="off" style="width: 8em;" value="<?php echo html($this->src); ?>">
+                <input name="src" type="text" placeholder="Источник" autocomplete="off" style="width: 8em;" value="<?php echo html($this->src); ?>">
                 —
-                <input name="dst" placeholder="Назначение" autocomplete="off" style="width: 8em;" value="<?php echo html($this->dst); ?>">
+                <input name="dst" type="text" placeholder="Назначение" autocomplete="off" style="width: 8em;" value="<?php echo html($this->dst); ?>">
             </div>
         </div>
 
@@ -64,7 +64,7 @@ $format = App::Config()->cdr->file_format;
         <div class="filter fl_l sep">
             <div class="label">Комментарий</div>
             <div class="labeled">
-                <input name="comment" placeholder="Комментарий" autocomplete="off" style="width: 10em;" value="<?php echo html($this->comment); ?>">
+                <input name="comment" type="text" placeholder="Комментарий" autocomplete="off" style="width: 10em;" value="<?php echo html($this->comment); ?>">
             </div>
         </div>
         <div class="filter fl_l sep">
@@ -78,8 +78,10 @@ $format = App::Config()->cdr->file_format;
             </div>
         </div>
 
-        <div class="filter fl_l but_search">
-            <input type="submit" name="search" id="button-search" class="button" class="button" value="Показать" />
+        <div class="filter fl_l">
+            <div class="labeled">
+                <input type="submit" name="search" id="button-search" class="button button-search" class="button" value="Показать" />
+            </div>
         </div>
 
         <input type="hidden" name="sort" value="<?php echo $this->sort; ?>" />

@@ -73,6 +73,36 @@ class CdrController extends Controller {
         $this->_filters['fromdate'][1] = $from;
     }
 
+    public function init($params = null) {
+        // if ($params === null) {
+        //     $params = array();
+        //     foreach ($this->_filters as $key => $value) {
+        //         if ( ! empty($_GET[$key])) {
+        //             $params[$key] = $_GET[$key];
+        //         }
+        //     }
+        //     if (count($params)) {
+        //         $_SESSION['pg_cdr'] =$params;
+        //     } else {
+        //         $this->_initGetParams = true;
+        //         $params = $_SESSION['pg_cdr'];
+        //     }
+        // }
+       if ($params === null) {
+           if (!count($_GET)) {
+               $params =  $_SESSION['pg_cdr'];
+               $this->_sessionParams = true;
+           } else {
+              $params = $_GET;
+           }
+       }
+       $_SESSION['pg_cdr'] = $params;
+
+        Log::trace('Session parametr: '.((int) $this->_sessionParams));
+        Log::vardump($params);
+        parent::init($params);
+    }
+
     /**
      * Формирет страницу
      */

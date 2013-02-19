@@ -35,6 +35,10 @@ class Log {
     }
 
     public static function vardump($object) {
+        if (!self::$enable) {
+            return;
+        }
+
         ob_start();
         ac_dump($object);
         $message = ob_get_contents();

@@ -16,8 +16,10 @@
                 <input name="fromdate" type="text" autocomplete="off" value="<?php echo $this->fromdate->format('Y-m-d'); ?>" class="datepicker" showweek="1" >
             </div>
         </div>
-        <div class="filter fl_l but_search">
-            <input type="submit" name="search" id="button-search" class="button" value="Показать" />
+        <div class="filter fl_l">
+            <div class="labeled">
+                <input type="submit" name="search" id="button-search" class="button button-search" class="button" value="Показать" />
+            </div>
         </div>
         <input type="hidden" name="chart" value="<?php echo $this->chart; ?>" />
     </form>
