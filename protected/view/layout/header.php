@@ -10,17 +10,17 @@
 $c[$this->page] = 'current';
 ?>
 
-
+<div id="header" class="fixed clear_fix">
     <ul class="menu clear_fix">
         <li class="<?php echo $c['cdr']; ?>">
-            <a href="cdr.php" class="header-icon icon-calls-big"> Запись разговоров </a>
+            <a href="cdr.php" class="header_icon icon_calls_big"> Запись разговоров </a>
         </li>
 <?php  // Очереди
 if ($c['queue']) {
     $sm[$this->chart]='current';
 ?>
         <li class="submenu">
-            <span class="submenu_title"> <a href="queue.php" class="header-icon icon-charts-big"> Очереди: </a> </span>
+            <span class="submenu_title"> <a href="queue.php" class="header_icon icon_charts_big"> Очереди: </a> </span>
             <ul>
                 <li class="<?php echo $sm['arbit']; ?>"> <a href="queue.php"> Произвольно </a> </li>
                 <li class="<?php echo $sm['day']; ?>"> <a href="queue.php?chart=day"> Суточный </a> </li>
@@ -31,16 +31,17 @@ if ($c['queue']) {
         </li>
 <?php } else { ?>
         <li class="">
-            <a href="queue.php" class="header-icon icon-charts-big"> Очереди </a>
+            <a href="queue.php" class="header_icon icon_charts_big"> Очереди </a>
         </li>
 <?php }
 // Очереди --END
 ?>
         <li class="<?php echo $c['timeman']; ?>">
-            <a href="timeman.php" class="header-icon icon-reports-big"> Профиль вызовов </a>
+            <a href="timeman.php" class="header_icon icon_reports_big"> Профиль вызовов </a>
         </li>
        <li class="<?php echo $c['settings']; ?>">
-            <a href="settings.php" class="header-icon icon-settings-big"> Настройки </a>
+            <a href="settings.php" class="header_icon icon_settings_big"> Настройки </a>
         </li>
 
     </ul>
+</div>

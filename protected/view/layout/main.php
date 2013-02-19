@@ -15,6 +15,7 @@ $v = 1;
 
         <link href="css/jquery-ui.css?<?php echo $v; ?>" rel="stylesheet" >
         <link href="css/jquery-ui.dropdownchecklist.css?<?php echo $v; ?>" rel="stylesheet" >
+        <link href="css/common.css?<?php echo $v; ?>" rel="stylesheet" >
 
         <script src="js/jq/jquery-1.8.2.js"></script>
         <script src="js/jq/jquery-ui-1.9.2.js"></script>
@@ -22,7 +23,6 @@ $v = 1;
         <script src="js/jq/jquery.ui.timepicker.addon.js"></script>
         <script src="js/jq/jquery.ui.dropdownchecklist.js"></script>
 
-        <link href="css/common.css?<?php echo $v; ?>" rel="stylesheet" >
         <script src="js/common.js?<?php echo $v; ?>"></script>
 
         <?php echo $this->dataPage['links']; ?>
@@ -34,16 +34,13 @@ $v = 1;
 
     <body class="fixed-header">
         <div id="wrapper">
-
-            <div id="header" class="fixed clear_fix">
-                <?php include 'header.php'; ?>
-            </div>
+            <?php include 'header.php'; ?>
 
             <div id="middle">
                 <?php echo $this->content; ?>
+
                 <div style="padding-top: 50px;"><hr /></div>
             </div>
-
         </div>
     </body>
 </html>

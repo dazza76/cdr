@@ -63,6 +63,8 @@ a:hover { text-decoration: none; cursor: pointer; color: #E80005;}
 #header ul.menu a {color:#666666; text-decoration: none; line-height: 28px;}
 #header ul.menu li.right {float:right; }
 
+/* Icons
+-------------------------------------*/
 a.header_icon {padding: 12px 0 12px 38px; line-height: 36px; }
 a.icon_calls_big {background: url(../images/blackberry_white.png) 2px 70% no-repeat; }
 a.icon_reports_big {background: url(../images/database_table.png) 2px 70% no-repeat; }
@@ -70,6 +72,11 @@ a.icon_charts_big {background: url(../images/chart_bar.png) 2px 70% no-repeat; }
 a.icon_settings_big{background: url(../images/interface_preferences.png) 2px 70% no-repeat; }
 /* ------------------------------------------------------------------------- */
 
+a.icon { padding: 1px 0 1px 22px; line-height: 18px; }
+/*a.header-icon { padding: 12px 0 12px 38px; line-height: 36px; }*/
+a.icon-add { background: url(../images/add.png) 2px 70% no-repeat; }
+a.icon-edit { background: url(../images/edit.png) 2px 70% no-repeat; }
+a.icon-delete { background: url(../images/delete.png) 2px 70% no-repeat; }
 
 
 /** search filters */
@@ -122,7 +129,7 @@ table.grid th.sortable { cursor: pointer; }
 table.grid tbody tr:hover { background-color: #C6C6C6;}
 
 td.edit_box { padding: 0;}
-
+td.image_link { text-align: center; }
 td.coming_img { padding: 0px;}
 td.coming_img div { margin-left: 8px; width: 25px; height: 25px; background: url("../images/coming.png") no-repeat 0 100%;}
 td.coming_img div.coming_0{ background-position: 0px 0px; }
