@@ -15,7 +15,6 @@ $v = 1;
 
         <link href="css/jquery-ui.css?<?php echo $v; ?>" rel="stylesheet" >
         <link href="css/jquery-ui.dropdownchecklist.css?<?php echo $v; ?>" rel="stylesheet" >
-        <link href="css/common.css?<?php echo $v; ?>" rel="stylesheet" >
 
         <script src="js/jq/jquery-1.8.2.js"></script>
         <script src="js/jq/jquery-ui-1.9.2.js"></script>
@@ -23,7 +22,12 @@ $v = 1;
         <script src="js/jq/jquery.ui.timepicker.addon.js"></script>
         <script src="js/jq/jquery.ui.dropdownchecklist.js"></script>
 
-        <script src="js/common.js?<?php echo $v; ?>"></script>
+        <link href="css/base.css?<?php echo $v; ?>" rel="stylesheet" >
+        <script src="js/base.js?<?php echo $v; ?>"></script>
+        <script src="js/filters-form.js?<?php echo $v; ?>"></script>
+        <script src="js/fixed-header.js?<?php echo $v; ?>"></script>
+        <script src="js/grit.js?<?php echo $v; ?>"></script>
+        <script src="js/jplayer.js?<?php echo $v; ?>"></script>
 
         <?php echo $this->dataPage['links']; ?>
 

@@ -88,7 +88,7 @@ $format = App::Config()->cdr->file_format;
     </form>
 </div>
 
-<div class="control_bar clear_fix bigblock of_h">
+<div class="filters clear_fix bigblock of_h">
     <div class="fl_l" style="padding-right: 15px;">
         Найдено: <?php echo $this->count ?>
     </div>
@@ -100,7 +100,7 @@ $format = App::Config()->cdr->file_format;
 </div>
 
 
-<div class="clear clear_fix bigblock">
+<div class="clear clear_fix">
     <table class="grid">
         <thead>
             <tr>
@@ -141,10 +141,10 @@ $format = App::Config()->cdr->file_format;
                         <div class="player-button fl_l icon-play" style="margin-left: 5px;">
                             <input type="hidden" value="<?php echo $row->uniqueid; ?>" />
                         </div>
-                        <div class="slider fl_l"></div>
+                        <div class="player-slider fl_l"></div>
                     </td>
                     <td><?php echo $row->getTime(); ?></td>
-                    <td class="comment grid_edit"><span><?php echo html($row->comment); ?></span></td>
+                    <td class="comment grid-edit"><span><?php echo html($row->comment); ?></span></td>
                 </tr>
                 <?php
             }
@@ -158,7 +158,7 @@ $format = App::Config()->cdr->file_format;
 </div>
 
 <div id="jquery_jplayer" class="jp-jplayer"></div>
-<div id="jp_container_1" class="jp-audio">
+<div id="jplayer_container" class="jp-audio">
     <div class="jp-type-single">
         <div class="jp-gui jp-interface">
             <div class="jp-progress">

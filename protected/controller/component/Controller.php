@@ -137,6 +137,10 @@ abstract class Controller {
         if ($file !== null) {
             $this->view($file);
         }
+        if (DEBUG) {
+            $this->_addCssLink('aclog.css');
+        }
+
         $this->view('layout/main.php');
     }
 
@@ -158,16 +162,13 @@ abstract class Controller {
      * @return string
      */
     public function render($print = true) {
-        if ( DEBUG ) {
+        if (DEBUG) {
             Log::trace('--------------');
             Log::trace('Запросов MySQL: ' . App::Db()->getNumQuery());
             Log::trace('Время обработки MySQL: ' . sprintf(" %01.6f",
                                                            App::Db()->getTimeQuery()));
             Log::trace('Время работы скрипта : ' . sprintf(" %01.6f",
                                                            ACUtils::getExecutionTime()));
-            if (Log::$enable) {
-                $this->_addCssLink('aclog.css');
-            }
         }
 
         return $this->_print($this->content, $print);

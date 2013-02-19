@@ -28,8 +28,8 @@
                 <tr>
                     <td><?php echo html($queueAgent->name); ?></td>
                     <td><?php echo html($queueAgent->agentid); ?></td>
-                    <td class="image_link"><a href="#" class="icon icon-edit"></a></td>
-                    <td class="image_link"><a href="#" class="icon icon-delete"></a></td>
+                    <td class="image-link"><a href="#" class="icon icon-edit"></a></td>
+                    <td class="image-link"><a href="#" class="icon icon-delete"></a></td>
                 </tr>
             <?php } ?>
         </tbody>

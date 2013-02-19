@@ -103,7 +103,7 @@
 
                 </div>
 
-                <div class="control_bar clear_fix bigblock of_h">
+                <div class="filters clear_fix bigblock of_h">
                     <div class="fl_l" style="padding-right: 15px;">
                         Найдено: 0    </div>
                     <div class="pg-pages fl_r">

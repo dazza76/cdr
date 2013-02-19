@@ -10,5 +10,4 @@ $app->controller = new CdrController();
 $app->controller->init();
 $app->controller->render();
 
-
 Log::render();

@@ -66,7 +66,7 @@
 </div>
 
 
-<div class="control_bar clear clear_fix bigblock">
+<div class="filters clear clear_fix bigblock">
     <table class="grid">
         <tr>
             <td class="head" style="width: 400px;">ВСЕГО:</td>
@@ -99,7 +99,7 @@
     </table>
 </div>
 
-<div class="control_bar clear clear_fix bigblock of_h">
+<div class="filters clear clear_fix bigblock of_h">
     <div class="fl_l" style="padding-right: 15px;">
         Найдено: <?php echo $this->count ?>
     </div>
