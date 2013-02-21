@@ -29,6 +29,13 @@
  * @property string $amaflags      - не используется, стандартное поле.
  * @property string $accountcode   - используется
  * @property string $uniqueid      - идентификатор вызова (под этим имененем храним файл с записью)
+ * @property string $file_exists   - информация о существовании файла.
+ *                                     NULL - информация неизвестна
+ *                                     0    - файла нет
+ *                                     1    - файл находиться в папке /monitor/
+ *                                     2    - файл находиться в папке /monitor/YYYY/
+ *                                     3    - файл находиться в папке /monitor/YYYY/MM/
+ *                                     4    - файл находиться в папке /monitor/YYYY/MM/DD/
  * @property string $userfield     - пользовательское поле, в случае исходящего вызова там может быть записан код оператора.
  *                                   Нам достаточно, если Вы выведете этот код.
  *                                   В случае входящего код принявшего вызов оператора лежит в поле dstchannel.
@@ -88,8 +95,6 @@ class Cdr extends ACDataObject {
         return $this->dst;
     }
 
-
-
     /**
      * Код оператора
      * @return string
@@ -109,33 +114,14 @@ class Cdr extends ACDataObject {
      */
     public function getTime() {
         $seconds = (int) $this->duration;
-        $di = new DateInterval('PT'.$seconds.'S');
-        $di->h = floor($seconds/60/60);
+        $di      = new DateInterval('PT' . $seconds . 'S');
+        $di->h   = floor($seconds / 60 / 60);
         $seconds -= $di->h * 3600;
-        $di->i = floor($seconds/60);
+        $di->i   = floor($seconds / 60);
         $seconds -= $di->i * 60;
-        $di->s = $seconds;
+        $di->s   = $seconds;
 
         return $di->format('%H:%I:%S');
-
-        $time = array();
-        $sec  = $tick % 60;
-        $tick = $tick - $sec;
-        if ($tick >= 60) {
-            $sec  = sprintf("%'02d", (int) $sec);
-            $min  = $tick / 60;
-            $tick = $min;
-            if ($tick >= 60) {
-                $min  = $tick % 60;
-                $tick = $tick - $min;
-                $min  = sprintf("%'02d", (int) $min);
-                $hou  = $tick / 60;
-                array_unshift($time, $hou);
-            }
-            array_push($time, $min);
-        }
-        array_push($time, $sec);
-        return implode(":", $time);
     }
 
     /**
@@ -143,6 +129,23 @@ class Cdr extends ACDataObject {
      * @return string
      */
     public function getFile() {
-        return App::Config()->cdr->monitor_dir . "/" . $this->uniqueid . "." . App::Config()->cdr->file_format;
+        if ($this->file_exists == 2) {
+            return self::monitorFile($this->uniqueid, $this->calldate);
+        } else {
+            return self::monitorFile($this->uniqueid);
+        }
+    }
+
+    public static function monitorDir($date = null) {
+        $dir = App::Config()->cdr->monitor_dir . "/";
+        if ($date == null) {
+            return $dir;
+        }
+        $date = ACPropertyValue::ensureDate($date, false);
+        return $dir . implode('/', $date) . '/';
+    }
+
+    public static function monitorFile($uniqueid, $date = null) {
+        return self::monitorDir($date) . $uniqueid . '.' . App::Config()->cdr->file_format;
     }
 }

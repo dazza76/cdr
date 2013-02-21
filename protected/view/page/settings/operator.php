@@ -10,7 +10,7 @@
 </div>
 
 
-<div class="clear clear_fix mediumblock">
+<div id="operator_list" class="clear clear_fix mediumblock">
     <table class="grid" style="width: 660px;">
         <thead>
             <tr>
@@ -29,7 +29,7 @@
                     <td><?php echo html($queueAgent->name); ?></td>
                     <td><?php echo html($queueAgent->agentid); ?></td>
                     <td class="image-link"><a href="#" class="icon icon-edit"></a></td>
-                    <td class="image-link"><a href="#" class="icon icon-delete"></a></td>
+                    <td class="image-link"><a onclick="" class="icon icon-delete"></a></td>
                 </tr>
             <?php } ?>
         </tbody>

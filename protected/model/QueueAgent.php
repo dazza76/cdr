@@ -9,7 +9,16 @@
 /**
  * QueueAgent class
  *
- * @package		AC
+ * @property string $name        -  имя оператора
+ * @property string $agentid     -  номер оператора
+ * @property string $agentphone  -  телефон, на котором он СЕЙЧАС работает («0», если не в системе)
+ * @property string $state       -
+ * @property string $queues1     -  список очередей, в которых действует пенальти penalty1
+ * @property string $penalty1    -  пенальти оператора в очередях queues1
+ * @property string $queues2     -  список очередей, в которых действует пенальти penalty2
+ * @property string $penalty2    -  пенальти оператора в очередях queues2
+ * @property string $queues3     -  список очередей, в которых действует пенальти penalty3
+ * @property string $penalty3    -  пенальти оператора в очередях queues3
  */
 class QueueAgent extends ACDataObject {
 
@@ -39,7 +48,7 @@ class QueueAgent extends ACDataObject {
      * @return string
      */
     public static function showOperslist() {
-        $result      = "<option value=\"\" selected=\"selected\">все</option>";
+        $result     = "<option value=\"\" selected=\"selected\">все</option>";
         $QueueAgent = self::_init();
         foreach ($QueueAgent as $key => $value) {
             $key   = html($key);

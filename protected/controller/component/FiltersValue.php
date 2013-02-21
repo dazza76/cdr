@@ -13,29 +13,30 @@
  */
 class FiltersValue {
 
+    const NAME = 'FiltersValue';
+
     /**
      * @param mixed $id
      * @return int
      */
-    protected function _parseId($id) {
-        $id = ACPropertyValue::ensurePositive($id);
-        return $id;
+    public static function parseId($id) {
+        return ACPropertyValue::ensurePositive($id);
     }
 
     /**
      * @param mixed $comment
      * @return string
      */
-    protected function _parseComment($comment) {
+    public static function parseComment($comment) {
         return trim(ACPropertyValue::ensureString($comment));
     }
 
     /**
      * @param mixed $date
      * @param ACDateTime $default
-     * @return \ACDateTime
+     * @return ACDateTime
      */
-    protected function _parseDatetime($date, ACDateTime $default = null) {
+    public static function parseDatetime($date, ACDateTime $default = null) {
         if ($date instanceof DateTime) {
             return new ACDateTime($date->format(ACDateTime::DATETIME));
         }
@@ -61,40 +62,35 @@ class FiltersValue {
      * @param mixed $phone
      * @return string|null
      */
-    protected function _parsePhone($phone) {
+    public static function parsePhone($phone) {
         $phone = ACPropertyValue::ensureString($phone);
-        if ($phone)
-            return $phone;
+        return ($phone) ? $phone : null;
     }
 
     /**
      * @param mixed $offset
      * @return int
      */
-    protected function _parseOffset($offset) {
+    public static function parseOffset($offset, $limit = 30) {
         $offset = ACPropertyValue::ensurePositive($offset);
-        $limit  = $this->_parseLimit($this->limit);
-        if ($offset % $limit != 0)
-            $offset = 0;
-        return $offset;
+        $limit  = self::parseLimit($limit);
+        return ($offset % $limit != 0) ? 0 : $offset;
     }
 
     /**
      * @param mixed $limit
      * @return int
      */
-    protected function _parseLimit($limit) {
+    public static function parseLimit($limit) {
         $limit = ACPropertyValue::ensurePositive($limit);
-        if ($limit < 30)
-            $limit = 30;
-        return $limit;
+        return ($limit < 30) ? 30 : $limit;
     }
 
     /**
      * @param mixed $value
      * @return bool
      */
-    protected function _parseFileExist($value) {
+    public static function parseFileExist($value) {
         return ($value == '1');
     }
 
@@ -102,35 +98,68 @@ class FiltersValue {
      * @param mixed $oper
      * @return int|null
      */
-    protected function _parseOper($oper) {
+    public static function parseOper($oper) {
         $oper = ACPropertyValue::ensurePositive($oper);
-        if ($oper > 0)
-            return $oper;
+        return ($oper > 0) ? $oper : null;
     }
 
     /**
      * @param mixed $coming
      * @return int|null
      */
-    protected function _parseComing($coming) {
+    public static function parseComing($coming) {
         if ($coming == Cdr::INCOMING || $coming == Cdr::OUTCOMING)
             return $coming;
     }
 
-    protected function _parseQueue($queue) {
-        if ($queue)
+    /**
+     * @param mixed $queue
+     * @return array|null
+     */
+    public static function parseQueue($queue) {
+        if ($queue) {
             return ACPropertyValue::ensureNumbers($queue, null);
-    }
-
-    protected function _parseSort($sort) {
-        if (in_array($sort, $this->_sortColumn)) {
-            return $sort;
-        } else {
-            return $this->_sortColumn[0];
         }
     }
 
-    protected function _parseDesc($desc) {
+    /**
+     *
+     * @param string $sort
+     * @param array $sortColumn
+     * @return string
+     */
+    public static function parseSort($sort, array $sortColumn) {
+        return (in_array($sort, $sortColumn)) ? $sort : $sortColumn[0];
+    }
+
+    /**
+     * @param string $desc
+     * @return bool
+     */
+    public static function parseDesc($desc) {
         return ($desc) ? 1 : 0;
+    }
+
+    /**
+     * @param mixed $status
+     * @return string
+     */
+    public static function parseStatus($status) {
+        switch ($status) {
+            case "ABANDON":
+            case "COMPLETEAGENT":
+            case "COMPLETECALLER":
+            case "TRANSFER":
+                return $status;
+                break;
+        }
+    }
+
+    /**
+     * @param mixed $vip
+     * @return bool
+     */
+    public static function parseVIP($vip) {
+        return ($vip) ? true : false;
     }
 }

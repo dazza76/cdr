@@ -141,7 +141,7 @@ $format = App::Config()->cdr->file_format;
                     <td>
                         <div class="fl_l"><a href="<?php echo $row->getFile(); ?>" target="_blank" ><img src="images/b_save.png" /></a></div>
                         <div class="player-button fl_l icon-play" style="margin-left: 5px;">
-                            <input type="hidden" value="<?php echo $row->uniqueid; ?>" />
+                            <input type="hidden" value="<?php echo $row->getFile(); ?>" />
                         </div>
                         <div class="player-slider fl_l"></div>
                     </td>
@@ -160,7 +160,7 @@ $format = App::Config()->cdr->file_format;
 </div>
 
 <div id="jquery_jplayer" class="jp-jplayer"></div>
-<div id="jplayer_container" class="jp-audio">
+<div id="jp_container_1" class="jp-audio">
     <div class="jp-type-single">
         <div class="jp-gui jp-interface">
             <div class="jp-progress">

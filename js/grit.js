@@ -1,5 +1,5 @@
 /*********
- * result table
+ * table
  *********/
 $(document).ready(function () {
     var $table = $(".grid");
@@ -65,8 +65,12 @@ $(document).ready(function () {
                 cache: false,
                 data: data
             }).done(function (result) {
-                console.log("comment save: " + edit_id);
-                $edit_span.text(str);
+                if (result == 1) {
+                    console.log("comment save: " + edit_id);
+                    $edit_span.text(str);
+                } else {
+                    window.alert('error save comment');
+                }
             }).fail(function () {
                 $edit_span.text("error");
                 console.log("CONNECT ERROR");

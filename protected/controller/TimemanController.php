@@ -16,8 +16,8 @@
 class TimemanController extends Controller {
 
     protected $_filters = array(
-        'fromdate' => array('_parseDatetime'),
-        'todate'   => array('_parseDatetime'),
+        'fromdate' => array('parseDatetime'),
+        'todate'   => array('parseDatetime'),
         'queue'    => 1,
     );
     public $page     = "timeman";

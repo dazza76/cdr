@@ -38,6 +38,7 @@ return array(
     'cdr' => 'model/Cdr.php', 
     'cdrcontroller' => 'controller/CdrController.php', 
     'controller' => 'controller/component/Controller.php', 
+    'filtersvalue' => 'controller/component/FiltersValue.php', 
     'log' => 'ac/logger/Log.php', 
     'queue' => 'model/Queue.php', 
     'queueagent' => 'model/QueueAgent.php', 

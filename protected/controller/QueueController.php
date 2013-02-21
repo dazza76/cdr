@@ -22,35 +22,33 @@
  */
 class QueueController extends Controller {
 
-    protected $_sortColumn = array(
-        'timestamp',
-        'callerId',
-        'memberId',
-        'callId',
-        'status',
-        'holdtime',
-        'ringtime',
-        'callduration',
-        'originalPosition',
-        'position',
-        'queue'
-    );
     protected $_filters    = array(
-        'fromdate' => array('_parseDatetime'),
-        'todate'   => array('_parseDatetime'),
+        'fromdate' => array('parseDatetime'),
+        'todate'   => array('parseDatetime'),
         'oper'     => 1,
         'status'   => 1,
         'queue'    => 1,
         'vip'      => 1,
         'limit'    => 1,
         'offset'   => 1,
-        'sort'     => 1,
+        'sort'     => array('parseSort', array(
+                'timestamp',
+                'callerId',
+                'memberId',
+                'callId',
+                'status',
+                'holdtime',
+                'ringtime',
+                'callduration',
+                'originalPosition',
+                'position',
+                'queue'
+        )),
         'desc'     => 1
     );
     public $page        = "queue";
     public $chart       = "arbit";
     public $compareType = "day";
-//    public $highcharts  = array();
 
     /**
      * @var int
@@ -83,9 +81,9 @@ class QueueController extends Controller {
             $params['chart'] = $chart;
 
             if (count($params) < 2) {
-                $params               = $_SESSION['pg_queue_' . $chart];
-                if($params) {
-                    $params = @unserialize($params);
+                $params = $_SESSION['pg_queue_' . $chart];
+                if ($params) {
+                    $params               = @unserialize($params);
                 }
                 $this->_sessionParams = true;
             } else {
@@ -152,10 +150,11 @@ class QueueController extends Controller {
      * Очередь - Сравнение
      */
     public function chartCompare() {
+        // TODO Добавить: Таблицы сравнения
         $this->compareType = $this->_parseCompareType($this->compareType);
-//        Log::trace($this->compareType);
-//        Log::trace("from:" . $this->fromdate);
-//        Log::trace("to:" . $this->todate);
+        Log::trace($this->compareType);
+        Log::trace("from:" . $this->fromdate);
+        Log::trace("to:" . $this->todate);
 
         $act = "getDataStatistic" . $this->compareType;
 
@@ -166,7 +165,7 @@ class QueueController extends Controller {
             'total'    => array($from[0], $from[1], $to[1]),
             'complete' => array($from[0], $from[2], $to[2])
         );
-//        Log::vardump($this);
+        Log::vardump($this);
         $this->viewMain("page/charts/chart_{$this->chart}.php");
     }
 
@@ -461,6 +460,7 @@ class QueueController extends Controller {
             $total[$row['day']] = (int) $row['total'];
         }
 
+
         $query_complete = "
             SELECT
               DAY(`timestamp`) AS `day`,
@@ -480,29 +480,6 @@ class QueueController extends Controller {
         }
 
         return array(array_values($oxY), array_values($total), array_values($complete));
-    }
-
-    /**
-     * @param mixed $status
-     * @return string
-     */
-    protected function _parseStatus($status) {
-        switch ($status) {
-            case "ABANDON":
-            case "COMPLETEAGENT":
-            case "COMPLETECALLER":
-            case "TRANSFER":
-                return $status;
-                break;
-        }
-    }
-
-    /**
-     * @param mixed $vip
-     * @return bool
-     */
-    protected function _parseVIP($vip) {
-        return ($vip) ? true : false;
     }
 
     /**

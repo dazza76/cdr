@@ -188,7 +188,6 @@ class ACPropertyValue {
      *
      * @param mixed   $value  - масив или строка.
      * @parem boolean $to_str - в случае true результат преобразуеться в строку
-     * @param string  $delimiter   - символ разделитель
      * @return string|array
      */
     public static function ensureDate($value, $to_str = true) {

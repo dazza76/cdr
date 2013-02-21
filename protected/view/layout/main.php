@@ -39,13 +39,13 @@ $v = 2;
     </head>
 
     <body class="fixed-header">
-        <div id="wrapper">
+        <div id="wrapper" >
             <?php include 'header.php'; ?>
 
-            <div id="middle">
+            <div id="middle" class="">
                 <?php echo $this->content; ?>
 
-                <div style="padding-top: 50px;"><hr /></div>
+                <div class="clear" style="padding-top: 50px;"><hr /></div>
             </div>
         </div>
     </body>

@@ -24,28 +24,27 @@
  */
 class CdrController extends Controller {
 
-    protected $_sortColumn = array(
-        "calldate",
-        "src",
-        "dst",
-        "duration",
-        "comment",
-    );
-    protected $_filters    = array(
-        'fromdate'  => array('_parseDatetime'),
-        'todate'    => array('_parseDatetime'),
+    protected $_filters = array(
+        'fromdate'  => array('parseDatetime'), // array('_parseDatetime'),
+        'todate'    => array('parseDatetime'),
         'oper'      => 1,
-        'src'       => array('_parsePhone'),
-        'dst'       => array('_parsePhone'),
+        'src'       => array('parsePhone'),
+        'dst'       => array('parsePhone'),
         'coming'    => 1,
         'fileExist' => 1,
         'comment'   => 1,
         'limit'     => 1,
         'offset'    => 1,
-        'sort'      => array('_parseSort'),
+        'sort'      => array('parseSort', array(
+                "calldate",
+                "src",
+                "dst",
+                "duration",
+                "comment",
+        )),
         'desc'      => 1
     );
-    public $page        = "cdr";
+    public $page     = "cdr";
 
     /**
      * @var int
@@ -74,31 +73,17 @@ class CdrController extends Controller {
     }
 
     public function init($params = null) {
-        // if ($params === null) {
-        //     $params = array();
-        //     foreach ($this->_filters as $key => $value) {
-        //         if ( ! empty($_GET[$key])) {
-        //             $params[$key] = $_GET[$key];
-        //         }
-        //     }
-        //     if (count($params)) {
-        //         $_SESSION['pg_cdr'] =$params;
-        //     } else {
-        //         $this->_initGetParams = true;
-        //         $params = $_SESSION['pg_cdr'];
-        //     }
-        // }
-       if ($params === null) {
-           if (!count($_GET)) {
-               $params =  $_SESSION['pg_cdr'];
-               $this->_sessionParams = true;
-           } else {
-              $params = $_GET;
-           }
-       }
-       $_SESSION['pg_cdr'] = $params;
+        if ($params === null) {
+            if ( ! count($_GET)) {
+                $params               = $_SESSION['pg_cdr'];
+                $this->_sessionParams = true;
+            } else {
+                $params             = $_GET;
+            }
+        }
+        $_SESSION['pg_cdr'] = $params;
 
-        Log::trace('Session parametr: '.((int) $this->_sessionParams));
+        Log::trace('Session parametr: ' . ((int) $this->_sessionParams));
         Log::vardump($params);
         parent::init($params);
     }
@@ -128,8 +113,8 @@ class CdrController extends Controller {
             $params = $_POST;
         }
 
-        $id      = $this->_parseId($params['id']);
-        $comment = $this->_parseComment($params['comment']);
+        $id      = FiltersValue::parseId($params['id']);
+        $comment = FiltersValue::parseComment($params['comment']);
 
         App::Db()->createCommand()->update(Cdr::TABLE)
                 ->addSet('comment', $comment, true)
@@ -147,7 +132,7 @@ class CdrController extends Controller {
     public function actionCheckFile() {
         $DB = App::Db();
 
-        $command = $DB->createCommand()->select('id, uniqueid')
+        $command = $DB->createCommand()->select('id, calldate, uniqueid')
                 ->from(Cdr::TABLE)
                 ->where(' `file_exists` IS NULL ')
                 ->limit(500);
@@ -161,22 +146,36 @@ class CdrController extends Controller {
 
         $rows = $command->query()->getFetchAssocs();
 
-        $dir      = $_SERVER['DOCUMENT_ROOT'] . App::Config()->cdr->monitor_dir . "/";
-        $file_yes = array();
-        $file_no  = array();
+        // $dir        = Cdr::monitorDir(); // $_SERVER['DOCUMENT_ROOT'] . App::Config()->cdr->monitor_dir . "/";
+        $file_yes_1 = array();
+        $file_yes_2 = array();
+        $file_no    = array();
         foreach ($rows as $row) {
-            $file = $dir . $row['uniqueid'] . '.' . App::Config()->cdr->file_format;
+            $file = $_SERVER['DOCUMENT_ROOT'] .Cdr::monitorFile($row['uniqueid']);
             if (file_exists($file)) {
-                $file_yes[] = $row['id'];
-            } else {
-                $file_no[] = $row['id'];
+                $file_yes_1[] = $row['id'];
+                continue;
             }
+
+            $file = $_SERVER['DOCUMENT_ROOT'] .Cdr::monitorFile($row['uniqueid'], $row['calldate']);
+            if (file_exists($file)) {
+                $file_yes_2[] = $row['id'];
+                continue;
+            }
+
+            $file_no[] = $row['id'];
         }
 
-        if (count($file_yes)) {
+        if (count($file_yes_1)) {
             App::Db()->createCommand()->update(Cdr::TABLE)
                     ->addSet('`file_exists`', "1")
-                    ->addWhere('id', $file_yes, 'IN')
+                    ->addWhere('id', $file_yes_1, 'IN')
+                    ->query();
+        }
+        if (count($file_yes_2)) {
+            App::Db()->createCommand()->update(Cdr::TABLE)
+                    ->addSet('`file_exists`', "2")
+                    ->addWhere('id', $file_yes_2, 'IN')
                     ->query();
         }
         if (count($file_no)) {
@@ -185,6 +184,8 @@ class CdrController extends Controller {
                     ->addWhere('id', $file_no, 'IN')
                     ->query();
         }
+
+        return array(count($file_yes_1), count($file_yes_2), count($file_no));
     }
 
     /**
@@ -243,7 +244,7 @@ class CdrController extends Controller {
             $command->addWhere('comment', "%{$this->comment}%", 'LIKE');
         }
 
-        $command->addWhere('file_exists', '1');
+        $command->addWhere('file_exists', '0', '>');
 
         $result       = $command->query();
         $this->offset = $result->calc['offset'];

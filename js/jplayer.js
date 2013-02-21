@@ -1,5 +1,5 @@
 $(document).ready(function () {
-    $("#jplayer_container").css({
+    $("#jp_container_1").css({
         top: "-1000px",
         left: "-1000px"
     });
@@ -17,8 +17,8 @@ $(document).ready(function () {
             $player.jPlayer("play");
         } else {
             $player.jPlayer("stop");
-            var uniqueid = $(this).find("input").val();
-            var file = "http://" + document.domain + rec.directory + uniqueid + "." + rec.format;
+            var audiofile = $(this).find("input").val();
+            var file = "http://" + document.domain + audiofile;
             var setMedia = {};
             setMedia[rec.format] = file;
 
@@ -31,7 +31,7 @@ $(document).ready(function () {
             $(this).toggleClass("icon-pause", true);
 
             var $slider = $(this).parent().find(".player-slider").first();
-            $("#jplayer_container").css({
+            $("#jp_container_1").css({
                 top: $slider.position().top + 8,
                 left: $slider.position().left + 7
             });
