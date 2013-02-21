@@ -36,7 +36,7 @@ abstract class Controller {
     public $dataPage = array();
 
     /**
-     * @var string
+     * @var string имя контроллера
      */
     public $page;
 
@@ -46,7 +46,7 @@ abstract class Controller {
     public $info;
 
     /**
-     * @var array
+     * @var array ошибки в ходе работы
      */
     public $error;
 
@@ -62,7 +62,7 @@ abstract class Controller {
     }
 
     public function __set($name, $value) {
-        if (array_key_exists($name, $this->_filters)) {
+        if ( array_key_exists($name, $this->_filters) ) {
             if ($this->_filters[$name][0]) {
                 $method = $this->_filters[$name][0];
             } else {
@@ -135,6 +135,10 @@ abstract class Controller {
         $this->content = $content;
     }
 
+    /**
+     * Выполнить главный шаблонный файл
+     * @param type $file
+     */
     public function viewMain($file = null) {
         if ($file !== null) {
             $this->view($file);

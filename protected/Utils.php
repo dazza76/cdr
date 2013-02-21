@@ -17,6 +17,11 @@ class Utils {
 
     }
 
+    /**
+     * Форматированное время H:I:S
+     * @param int $seconds
+     * @return string
+     */
     public static function time($seconds) {
         $seconds = (int) $seconds;
         $di      = new DateInterval('PT' . $seconds . 'S');
@@ -29,8 +34,14 @@ class Utils {
         return $di->format('%H:%I:%S');
     }
 
-
-    public static function sortable($name, $sort, $desc) {
+    /**
+     * Атрибуты для столбца с возможностью сортировки
+     * @param  string $name
+     * @param  string $sort
+     * @param  bool $desc
+     * @return string
+     */
+    public static function sortable($name, $sort, $desc = false) {
         $attr = "data-column=\"{$name}\"   class=\"sortable\" ";
         if ($sort == $name) {
             $attr .= ($desc) ? 'data-sort="desc"' : 'data-sort="asc"';
@@ -38,6 +49,4 @@ class Utils {
 
         return $attr;
     }
-
-
 }

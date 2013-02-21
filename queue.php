@@ -11,9 +11,5 @@ $app->controller = new QueueController();
 $app->controller->init();
 $app->controller->render();
 
-
-Log::vardump(App::Controller()->queue);
-
-
 Log::render();
 

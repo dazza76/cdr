@@ -35,10 +35,9 @@ if (@$config['config']) {
     $_config_file = $config['config'];
 }
 
-if ($_config_file) {
+if (@$_config_file) {
     $_config_system = @include_once 'config/' . $_config_file . '.php';
     App::Config()->mergeRecursive($_config_system);
-    unset($_config_system);
 }
 unset($_config_system);
 
@@ -47,14 +46,10 @@ if (is_array($config)) {
 }
 
 defined('DEBUG') or define('DEBUG', (App::Config()->debug) ? 1 : false);
-
 // Добавлять в отчет все PHP ошибки
-// ---------------------------------------------------------------------------
-//if (DEBUG) {
-//    error_reporting(E_ALL & ~E_NOTICE);
-//} else {
-//    error_reporting(0);
-//}
+if (!DEBUG) {
+    error_reporting(0);
+}
 // ----------------------------------------------------------------------------
 
 require_once 'ac/AC.php';

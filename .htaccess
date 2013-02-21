@@ -1,10 +1,10 @@
 ###############################################################################
 #  Apache mod rewrite                                                         #
 ###############################################################################
-#<IfModule mod_rewrite.c>
-#    RewriteEngine  on
-#    RewriteRule    ^[a-z]+$  rewrite.php  [L,QSA]
-#</IfModule>
+<IfModule mod_rewrite.c>
+    RewriteEngine  on
+    RewriteRule    ^[a-z\-_]+$  mod_rewrite.php  [L,QSA]
+</IfModule>
 
 # Отключает Magic quotes для входящих данных из массивов GET/POST/Cookie
 php_flag magic_quotes_gpc Off

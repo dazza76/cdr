@@ -57,7 +57,7 @@ class Application {
         $this->response = new ACResponse(array('charset' => App::Config()->charset));
 
         session_start();
-        
+
         self::$_instanse = $this;
     }
 }
@@ -77,10 +77,15 @@ class App extends Application {
         if (self::$_config === null) {
             self::$_config = new ACObject();
         }
-
         return self::$_config;
     }
 
+    /**
+     *
+     * @param string $page
+     * @param string|array $params
+     * @return string
+     */
     public static function url($page = null, $params = null) {
         if ($page === null) {
             $page = App::Request()->page;
