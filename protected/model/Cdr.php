@@ -1,12 +1,5 @@
 <?php
 /**
- * Свк class  - Свк.php file
- *
- * @author     Tyurin D. <fobia3d@gmail.com>
- * @copyright   (c) 2013, CMRI
- */
-
-/**
  * Cdr class
  *
  * @property string $id            - id

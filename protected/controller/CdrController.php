@@ -74,7 +74,7 @@ class CdrController extends Controller {
 
     public function init($params = null) {
         if ($params === null) {
-            if ( ! count($_GET)) {
+            if ( ! count($_GET) ) {
                 $params               = $_SESSION['pg_cdr'];
                 $this->_sessionParams = true;
             } else {

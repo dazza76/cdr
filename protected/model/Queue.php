@@ -1,12 +1,5 @@
 <?php
 /**
- * Queue class  - Queue.php file
- *
- * @author     Tyurin D. <fobia3d@gmail.com>
- * @copyright  (c) 2013, AC
- */
-
-/**
  * Queue class
  *
  * @package		AC

@@ -1,7 +1,6 @@
 /**
  * edit comment control
  */
-
 $(document).ready(function() {
     var $table = $(".grid");
     if (!$table.length) {

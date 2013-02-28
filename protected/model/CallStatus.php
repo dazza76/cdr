@@ -1,12 +1,5 @@
 <?php
 /**
- * CallStatus class  - CallStatus.php file
- *
- * @author     Tyurin D. <fobia3d@gmail.com>
- * @copyright  (c) 2013, AC
- */
-
-/**
  * CallStatus class
  *
  * @property string $callId            - [0] идентификатор вызова

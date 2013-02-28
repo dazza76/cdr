@@ -118,7 +118,7 @@ class FiltersValue {
      */
     public static function parseQueue($queue) {
         if ($queue) {
-            return ACPropertyValue::ensureNumbers($queue, null);
+            return ACPropertyValue::ensureFields($queue, null);
         }
     }
 
@@ -161,5 +161,13 @@ class FiltersValue {
      */
     public static function parseVIP($vip) {
         return ($vip) ? true : false;
+    }
+
+    /**
+     * @param mixed $param
+     * @return bool
+     */
+    public static function parseCheck($param) {
+        return ($param) ? true : false;
     }
 }

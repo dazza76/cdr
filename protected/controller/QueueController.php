@@ -126,7 +126,7 @@ class QueueController extends Controller {
      * Очередь - Суточный
      */
     public function chartDay() {
-        $this->highcharts = $this->getDataStatisticDay();
+        $this->highcharts = $this->getDataStatisticDay($this->fromdate, $this->queue);
         $this->viewMain("page/charts/chart_{$this->chart}.php");
     }
 
@@ -134,7 +134,7 @@ class QueueController extends Controller {
      * Очередь - Недельный
      */
     public function chartWeek() {
-        $this->highcharts = $this->getDataStatisticWeek();
+        $this->highcharts = $this->getDataStatisticWeek($this->fromdate, $this->queue);
         $this->viewMain("page/charts/chart_{$this->chart}.php");
     }
 
@@ -142,7 +142,7 @@ class QueueController extends Controller {
      * Очередь - Месячный
      */
     public function chartMonth() {
-        $this->highcharts = $this->getDataStatisticMonth();
+        $this->highcharts = $this->getDataStatisticMonth($this->fromdate, $this->queue);
         $this->viewMain("page/charts/chart_{$this->chart}.php");
     }
 
@@ -217,19 +217,46 @@ class QueueController extends Controller {
      * Статистика по звонкам
      */
     public function getTotalResult() {
-        $query = "
-            SELECT `status`,
-              COUNT(*) AS `total`,
-              SUM(`holdtime`) AS `average_time`,
-              SUM(`callduration`) AS `average_time_talk`
-            FROM `call_status`
-            WHERE
-              `timestamp` BETWEEN '{$this->fromdate}' AND '{$this->todate}'
-              AND  LENGTH(`callerId`) > 6
-              AND `status` IN ('ABANDON', 'COMPLETEAGENT', 'COMPLETECALLER', 'TRANSFER')
-            GROUP BY `status`";
+        $command = App::Db()->createCommand()->select('`status`')
+                ->select('COUNT(*) AS `total`')
+                ->select('SUM(`holdtime`) AS `average_time`')
+                ->select('SUM(`callduration`) AS `average_time_talk`')
+                ->from('`call_status`')
+                ->where("`timestamp` BETWEEN '{$this->fromdate}' AND '{$this->todate}' ")
+                ->where("AND  LENGTH(`callerId`) > 6 ")
+                ->where("AND `status` IN ('ABANDON', 'COMPLETEAGENT', 'COMPLETECALLER', 'TRANSFER')")
+                ->group('`status`');
+        if ($this->status) {
+            $command->addWhere('status', $this->status);
+        }
+        if ($this->oper) {
+            $command->addWhere('memberId', $this->oper);
+        }
+        if ($this->queue) {
+            $command->addWhere('queue', $this->queue, 'IN');
+        }
+//        if ($this->vip) {
+//            $command->select('queue_priority.callerid AS priorityId')
+//                    ->leftJoinOn('queue_priority', 'number',
+//                                 'SUBSTRING(' . CallStatus::TABLE . '.callerId, 3)')
+//                    ->having('priorityId IS NOT NULL');
+//        }
+        $result = $command->query();
 
-        $result = App::Db()->query($query);
+        /*
+          $query = "
+          SELECT `status`,
+          COUNT(*) AS `total`,
+          SUM(`holdtime`) AS `average_time`,
+          SUM(`callduration`) AS `average_time_talk`
+          FROM `call_status`
+          WHERE
+          `timestamp` BETWEEN '{$this->fromdate}' AND '{$this->todate}'
+          AND  LENGTH(`callerId`) > 6
+          AND `status` IN ('ABANDON', 'COMPLETEAGENT', 'COMPLETECALLER', 'TRANSFER')
+          GROUP BY `status`";
+          $result = App::Db()->query($query);
+         */
 
         $this->totalResult = array(
             'total'             => 0,
@@ -432,6 +459,7 @@ class QueueController extends Controller {
         if ($query == null) {
             $query = $this->query;
         }
+        Log::vardump($query);
         if (count($query)) {
             $query = " AND queue IN ( '" . @implode("','", $query) . "' ) ";
         }

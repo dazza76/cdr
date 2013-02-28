@@ -16,7 +16,12 @@
                 <input name="fromdate" type="text" autocomplete="off" value="<?php echo $this->fromdate->format('Y-m-d'); ?>" class="datepicker" >
             </div>
         </div>
-
+        <div class="filter fl_l sep">
+            <div class="label">Очередь</div>
+            <div class="labeled">
+                <?php echo Queue::showMultiple("queue[]", $this->queue); ?>
+            </div>
+        </div>
         <div class="filter fl_l">
             <div class="labeled">
                 <input type="submit" name="search" id="button-search" class="button button-search" class="button" value="Показать" />
