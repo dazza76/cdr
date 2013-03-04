@@ -12,9 +12,29 @@ $c[$this->page] = 'current';
 
 <div id="header" class="fixed clear_fix">
     <ul class="menu clear_fix">
-        <li class="<?php echo $c['cdr']; ?>">
+<!--        <li class="<?php echo $c['cdr']; ?>">
+            <a href="cdr.php" class="header-icon icon-calls-big"> Запись разговоров </a>
+        </li>-->
+<?php  // Записи
+if ($c['cdr']) {
+    $sm[$this->section]='current';
+?>
+        <li class="submenu">
+            <span class="submenu-title"> <a href="cdr.php" class="header-icon icon-calls-big"> Запись разговоров: </a> </span>
+            <ul>
+                <li class="<?php echo $sm['tab1']; ?>"> <a href="cdr.php?section=tab1"> Звонки </a> </li>
+                <li class="<?php echo $sm['tab2']; ?>"> <a href="cdr.php?section=tab2"> Автоинформатор </a> </li>
+            </ul>
+        </li>
+<?php } else { ?>
+        <li class="">
             <a href="cdr.php" class="header-icon icon-calls-big"> Запись разговоров </a>
         </li>
+<?php }
+// Записи --END
+?>
+
+
 <?php  // Очереди
 if ($c['queue']) {
     $sm[$this->chart]='current';
@@ -39,9 +59,29 @@ if ($c['queue']) {
         <li class="<?php echo $c['timeman']; ?>">
             <a href="timeman.php" class="header-icon icon-reports-big"> Профиль вызовов </a>
         </li>
-       <li class="<?php echo $c['settings']; ?>">
+
+
+
+<?php  // настройки
+if ($c['settings']) {
+    $sm[$this->section]='current';
+?>
+        <li class="submenu">
+            <span class="submenu-title"> <a href="settings.php" class="header-icon icon-settings-big"> Настройки: </a> </span>
+            <ul>
+                <li class="<?php echo $sm['operator']; ?>"> <a href="settings.php?section=operator"> Операторы </a> </li>
+                <li class="<?php echo $sm['queue']; ?>"> <a href="settings.php?section=queue"> Очереди </a> </li>
+                <li class="<?php echo $sm['schedule']; ?>"> <a href="settings.php?section=schedule"> Расписание </a> </li>
+            </ul>
+        </li>
+<?php } else { ?>
+        <li class="">
             <a href="settings.php" class="header-icon icon-settings-big"> Настройки </a>
         </li>
+<?php }
+// настройки --END
+?>
+
 
     </ul>
 </div>

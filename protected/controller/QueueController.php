@@ -1,9 +1,6 @@
 <?php
 /**
  * QueueController class  - QueueController.php file
- *
- * @author     Tyurin D. <fobia3d@gmail.com>
- * @copyright  (c) 2013, AC
  */
 
 /**
@@ -126,7 +123,8 @@ class QueueController extends Controller {
      * Очередь - Суточный
      */
     public function chartDay() {
-        $this->highcharts = $this->getDataStatisticDay($this->fromdate, $this->queue);
+        $this->highcharts = $this->getDataStatisticDay($this->fromdate,
+                                                       $this->queue);
         $this->viewMain("page/charts/chart_{$this->chart}.php");
     }
 
@@ -134,7 +132,8 @@ class QueueController extends Controller {
      * Очередь - Недельный
      */
     public function chartWeek() {
-        $this->highcharts = $this->getDataStatisticWeek($this->fromdate, $this->queue);
+        $this->highcharts = $this->getDataStatisticWeek($this->fromdate,
+                                                        $this->queue);
         $this->viewMain("page/charts/chart_{$this->chart}.php");
     }
 
@@ -142,7 +141,8 @@ class QueueController extends Controller {
      * Очередь - Месячный
      */
     public function chartMonth() {
-        $this->highcharts = $this->getDataStatisticMonth($this->fromdate, $this->queue);
+        $this->highcharts = $this->getDataStatisticMonth($this->fromdate,
+                                                         $this->queue);
         $this->viewMain("page/charts/chart_{$this->chart}.php");
     }
 

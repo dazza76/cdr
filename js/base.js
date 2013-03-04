@@ -39,10 +39,35 @@ $(document).ready(function() {
         $(this).datetimepicker("show");
     });
 
-
     $(".button").button();
 });
 
+
+$(function() {
+/*
+    $(".button-refresh").click(function() {
+        location.reload(true);
+    });
+    $("input:checkbox").each(function() {
+        if ($(this).attr("default") == "1") {
+            $(this).attr("checked", "checked");
+        }
+    });
+    $("input:text, input:hidden, select").each(function() {
+        var val = $(this).attr("default");
+        if ($(this).attr("default")) {
+            $(this).val(val);
+        }
+    });
+*/
+    $("input.field-number").keypress(function(e) {
+        if (e.which >= 48 && e.which <= 57) {
+            return true;
+        } else {
+            return false;
+        }
+    });
+});
 
 
 

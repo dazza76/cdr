@@ -67,6 +67,14 @@ $format = App::Config()->cdr->file_format;
                 <input name="comment" type="text" placeholder="Комментарий" autocomplete="off" style="width: 10em;" value="<?php echo html($this->comment); ?>">
             </div>
         </div>
+
+        <div class="filter fl_l sep">
+            <div class="label">мобильные</div>
+            <div class="labeled" style="padding: 3px 0px 4px 0px;">
+                <input name="mob" type="checkbox" value="1" <?php if ($this->mob) echo "default=\"1\""; ?> />
+            </div>
+        </div>
+
         <div class="filter fl_l sep">
             <div class="label">Показать</div>
             <div class="labeled">
@@ -137,7 +145,7 @@ $format = App::Config()->cdr->file_format;
                     <td><?php echo $row->calldate ?></td>
                     <td><?php echo html($row->src); ?></td>
                     <td><?php echo html($row->getDst()); ?></td>
-                    <td><?php echo html($row->getOperatorCode()); ?></td>
+                    <td><?php echo QueueAgent::getOper($row->getOperatorCode()); ?></td>
                     <td>
                         <div class="fl_l"><a href="<?php echo $row->getFile(); ?>" target="_blank" ><img src="images/b_save.png" /></a></div>
                         <div class="player-button fl_l icon-play" style="margin-left: 5px;">

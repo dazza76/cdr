@@ -29,7 +29,7 @@
                     <td><?php echo html($queueAgent->name); ?></td>
                     <td><?php echo html($queueAgent->agentid); ?></td>
                     <td class="image-link"><a href="#" class="icon icon-edit"></a></td>
-                    <td class="image-link"><a onclick="" class="icon icon-delete"></a></td>
+                    <td class="image-link"><a  onclick="showOperatorDelete(<?php echo html($queueAgent->agentid); ?>);" class="icon icon-delete"></a></td>
                 </tr>
             <?php } ?>
         </tbody>
@@ -37,4 +37,7 @@
 </div>
 
 
-<?php            include 'dialog-operator-add.php'; ?>
+<?php
+include 'dialog-operator-add.php';
+include 'dialog-operator-delete.php';
+?>

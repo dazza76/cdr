@@ -42,9 +42,11 @@ class CdrController extends Controller {
                 "duration",
                 "comment",
         )),
+        'mob'       => array('parseCheck'),
         'desc'      => 1
     );
     public $page     = "cdr";
+    public $section; // = "tab1";
 
     /**
      * @var int
@@ -73,8 +75,10 @@ class CdrController extends Controller {
     }
 
     public function init($params = null) {
+        $this->section = ($_GET == "tab2") ? "tab2" : "tab1";
+
         if ($params === null) {
-            if ( ! count($_GET) ) {
+            if ( ! count($_GET)) {
                 $params               = $_SESSION['pg_cdr'];
                 $this->_sessionParams = true;
             } else {
@@ -151,13 +155,14 @@ class CdrController extends Controller {
         $file_yes_2 = array();
         $file_no    = array();
         foreach ($rows as $row) {
-            $file = $_SERVER['DOCUMENT_ROOT'] .Cdr::monitorFile($row['uniqueid']);
+            $file = $_SERVER['DOCUMENT_ROOT'] . Cdr::monitorFile($row['uniqueid']);
             if (file_exists($file)) {
                 $file_yes_1[] = $row['id'];
                 continue;
             }
 
-            $file = $_SERVER['DOCUMENT_ROOT'] .Cdr::monitorFile($row['uniqueid'], $row['calldate']);
+            $file = $_SERVER['DOCUMENT_ROOT'] . Cdr::monitorFile($row['uniqueid'],
+                                                                 $row['calldate']);
             if (file_exists($file)) {
                 $file_yes_2[] = $row['id'];
                 continue;
@@ -243,6 +248,19 @@ class CdrController extends Controller {
         if ($this->comment) {
             $command->addWhere('comment', "%{$this->comment}%", 'LIKE');
         }
+
+        if ($this->mob) {
+            // "9ХХХХХХХХХ" и исходящие вида
+            // "[9]89XXXXXXXXX".
+            $command->where(" AND ("
+                    . "(LEFT(`src`, 1)='9' AND CHAR_LENGTH(`src`)=10)"
+                    . "OR (LEFT(`dst`, 3)='989' AND CHAR_LENGTH(`dst`)=12)"
+                    . ")");
+        }
+
+
+
+
 
         $command->addWhere('file_exists', '0', '>');
 

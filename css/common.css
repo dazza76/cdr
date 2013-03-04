@@ -169,3 +169,9 @@ td.coming-img div.coming_2 { background-position: -50px 0px; }
 /* ------------------------------------------------------------------------- */
 
 
+/* field
+------------------------------------------ */
+.field-required { color: #FF7058; font-weight: bold; padding-left: 3px;}
+.field-success { background: #C4FFC4; border-color: #090; }
+.field-sucfail { background: #FBC4C4; border-color: #D20000; }
+.field-sucload { background: #FFC; border-color: #F90; }
