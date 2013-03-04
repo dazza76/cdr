@@ -65,6 +65,7 @@ $(document).ready(function () {
                 cache: false,
                 data: data
             }).done(function (result) {
+                console.log(result);
                 if (result == 1) {
                     console.log("comment save: " + edit_id);
                     $edit_span.text(str);

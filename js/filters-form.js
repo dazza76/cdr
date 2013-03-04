@@ -1,8 +1,38 @@
-$(document).ready(function () {
+/**
+ * input element
+ */
+$(function() {
+    $(".button-refresh").click(function() {
+        location.reload(true);
+    });
+    $("input:checkbox").each(function() {
+        if ($(this).attr("default") == "1") {
+            $(this).attr("checked", "checked");
+        }
+    });
+    $("input:text, input:hidden, select[multiple!='multiple']").each(function() {
+        var val = $(this).attr("default");
+        if ($(this).attr("default")) {
+            $(this).val(val);
+        }
+    });
+    $("input.field-number").keypress(function(e) {
+        if (e.which >= 48 && e.which <= 57) {
+            return true;
+        } else {
+            return false;
+        }
+    });
+});
+
+/**
+ * filters form
+ */
+$(document).ready(function() {
     var $form = $(".filters form").first();
 
     // select
-    $form.find("select[multiple!='multiple']").each(function () {
+    $form.find("select[multiple!='multiple']").each(function() {
         var v = $(this).attr("default");
         if (v) {
             $(this).find("[value='" + v + "']").attr("selected", "selected");
@@ -12,7 +42,7 @@ $(document).ready(function () {
     });
 
     // checkbox
-    $form.find(':checkbox').each(function () {
+    $form.find(':checkbox').each(function() {
         if ($(this).attr("default")) {
             $(this).attr("checked", "checked");
         } else {
@@ -21,8 +51,8 @@ $(document).ready(function () {
     });
 
     // submit
-    $form.submit(function () {
-        $form.find('select, input').each(function () {
+    $form.submit(function() {
+        $form.find('select, input').each(function() {
             if (!$(this).val()) {
                 $(this).removeAttr('name');
             }

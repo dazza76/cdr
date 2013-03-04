@@ -12,9 +12,7 @@ $c[$this->page] = 'current';
 
 <div id="header" class="fixed clear_fix">
     <ul class="menu clear_fix">
-<!--        <li class="<?php echo $c['cdr']; ?>">
-            <a href="cdr.php" class="header-icon icon-calls-big"> Запись разговоров </a>
-        </li>-->
+
 <?php  // Записи
 if ($c['cdr']) {
     $sm[$this->section]='current';
@@ -22,8 +20,8 @@ if ($c['cdr']) {
         <li class="submenu">
             <span class="submenu-title"> <a href="cdr.php" class="header-icon icon-calls-big"> Запись разговоров: </a> </span>
             <ul>
-                <li class="<?php echo $sm['tab1']; ?>"> <a href="cdr.php?section=tab1"> Звонки </a> </li>
-                <li class="<?php echo $sm['tab2']; ?>"> <a href="cdr.php?section=tab2"> Автоинформатор </a> </li>
+                <li class="<?php echo $sm['calls']; ?>"> <a href="cdr.php"> Звонки </a> </li>
+                <li class="<?php echo $sm['answering']; ?>"> <a href="cdr.php?section=answering"> Автоинформатор </a> </li>
             </ul>
         </li>
 <?php } else { ?>

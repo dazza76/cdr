@@ -46,7 +46,7 @@ class CdrController extends Controller {
         'desc'      => 1
     );
     public $page     = "cdr";
-    public $section; // = "tab1";
+    public $section;
 
     /**
      * @var int
@@ -65,7 +65,7 @@ class CdrController extends Controller {
 
     // --------------------------------------------------------------
 
-    function __construct() {
+    public function __construct() {
         parent::__construct();
 
         $from = new ACDateTime();
@@ -74,18 +74,25 @@ class CdrController extends Controller {
         $this->_filters['fromdate'][1] = $from;
     }
 
+    /**
+     * Автоматическая инициализация
+     * @param array $params
+     */
     public function init($params = null) {
-        $this->section = ($_GET == "tab2") ? "tab2" : "tab1";
+        $section       = ($params === null) ? $_GET['section'] : $params['section'];
+        $section       = ($section == "answering") ? "answering" : "calls";
+        $this->section = $section;
 
+        $section = 'pg_cdr' . $section;
         if ($params === null) {
             if ( ! count($_GET)) {
-                $params               = $_SESSION['pg_cdr'];
+                $params               = $_SESSION[$section];
                 $this->_sessionParams = true;
             } else {
                 $params             = $_GET;
             }
         }
-        $_SESSION['pg_cdr'] = $params;
+        $_SESSION[$section] = $params;
 
         Log::trace('Session parametr: ' . ((int) $this->_sessionParams));
         Log::vardump($params);
@@ -100,11 +107,11 @@ class CdrController extends Controller {
             $this->actionCheckFile();
         }
 
-        $this->search();
+        if ($this->section == "calls") {
+            $this->search();
+        }
 
-        $this->_addJsSrc('player/jquery.jplayer.min.js');
-        $this->_addCssLink('../js/player/jplayer.blue.monday.css');
-        $this->viewMain('page/page-cdr.php');
+        $this->viewMain("page/cdr/{$this->section}.php");
     }
 
     /**
@@ -131,15 +138,21 @@ class CdrController extends Controller {
     }
 
     /**
-     *
+     * Проверяет наличия файлов аудиозаписей и редактирует записи в таблицы.
+     * Проверка проходитпорциями
+     * @param int $limit_scan количество сканируемых файлов за раз
+     * @return array результат работы [count_yes_1, count_file_yes_2, count__no]
      */
-    public function actionCheckFile() {
-        $DB = App::Db();
+    public function actionCheckFile($limit_scan = 500) {
+        if ($limit_scan <= 0) {
+            $limit_scan = 100;
+        }
+        $DB         = App::Db();
 
         $command = $DB->createCommand()->select('id, calldate, uniqueid')
                 ->from(Cdr::TABLE)
                 ->where(' `file_exists` IS NULL ')
-                ->limit(500);
+                ->limit($limit_scan);
 
         if ($this->fromdate) {
             $command->addWhere('calldate', $this->fromdate->format(), '>=');
@@ -194,7 +207,8 @@ class CdrController extends Controller {
     }
 
     /**
-     * Выполнить выборгу
+     * Выполнить выборгу.
+     * Поиск записей по заданому фильтру контролера
      * @return bool
      */
     public function search() {
@@ -257,9 +271,6 @@ class CdrController extends Controller {
                     . "OR (LEFT(`dst`, 3)='989' AND CHAR_LENGTH(`dst`)=12)"
                     . ")");
         }
-
-
-
 
 
         $command->addWhere('file_exists', '0', '>');
