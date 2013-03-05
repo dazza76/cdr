@@ -17,9 +17,9 @@ abstract class Controller {
     const TYPE_PAGE   = 'page';
 
     /**
-     * @var string тип действия контролера (page, method, ajax)
+     * @var string тип действия контролера (page, act, ajax)
      */
-    protected $_actType;
+    protected $_actType = 'page';
     protected $_action;
 
     /**
@@ -150,6 +150,10 @@ abstract class Controller {
         ob_end_clean();
 
         return $content;
+    }
+
+    public function getActType() {
+        return $this->_actType;
     }
 
     /**

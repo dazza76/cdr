@@ -71,10 +71,13 @@ md5 вклинивать, главное, чтобы был уникален. Pa
 ?>
 <html>
 <body>
-	<h1 align=center>IP-АТС ИКТ Asterisk<br>
-        <a href="/cdr/cdr.php">Запись разговоров</a><br/>
-        <a href="/cdr/queue.php">Очередь</a><br/>
-        <a href="/cdr/timeman.php">Длительности ожидания и разговора</a><br/>
-    </h1>
+	<h1 align="center">IP-АТС ИКТ Asterisk</h1>
+    <h3 align="center"><span style="color: #FF0000;" >требуеться модуль апача <i>mod_rewrite</i></span></h3>
+    <h2 align="center">
+        <a href="cdr">Запись разговоров</a><br />
+        <a href="queue">Очередь</a><br />
+        <a href="timeman">Длительности ожидания и разговора</a><br />
+        <a href="settings">Настройки</a><br />
+    </h2>
 </body>
 </html>

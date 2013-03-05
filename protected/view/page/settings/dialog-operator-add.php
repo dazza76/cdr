@@ -69,7 +69,7 @@
             <div class="label fl_l ta_r" style="width: 250px;"><span class="field-required">*</span>ФИО:</div>
             <div class="labeled fl_l" style="width: 220px; margin-left: 5px;"><input type="text" name="name" value="" /></div>
         </div>
-        <div class="clear clear_fix">
+        <div class="clear clear_fix miniblock">
             <div class="label fl_l ta_r" style="width: 250px;"><span class="field-required">*</span>Номер оператора:</div>
             <div class="labeled fl_l" style="width: 220px; margin-left: 5px;"><input type="text" name="agentid" value="" class="field-number" /></div>
         </div>
@@ -77,7 +77,7 @@
             <div class="label fl_l ta_r" style="width: 250px;">Список очередей пенальти 1:</div>
             <div class="labeled fl_l" style="width: 220px; margin-left: 5px;"><input type="text" name="queues1" value="" /></div>
         </div>
-        <div class="clear clear_fix">
+        <div class="clear clear_fix miniblock">
             <div class="label fl_l ta_r" style="width: 250px;">Пенальти в очередях 1:</div>
             <div class="labeled fl_l" style="width: 220px; margin-left: 5px;"><input type="text" name="penalty1" value="" class="field-number" maxlength="2" /></div>
         </div>
@@ -85,7 +85,7 @@
             <div class="label fl_l ta_r" style="width: 250px;">Список очередей пенальти 2:</div>
             <div class="labeled fl_l" style="width: 220px; margin-left: 5px;"><input type="text" name="queues2" value="" /></div>
         </div>
-        <div class="clear clear_fix">
+        <div class="clear clear_fix miniblock">
             <div class="label fl_l ta_r" style="width: 250px;">Пенальти в очередях 2:</div>
             <div class="labeled fl_l" style="width: 220px; margin-left: 5px;"><input type="text" name="penalty2" value="" class="field-number" maxlength="2" /></div>
         </div>
@@ -93,7 +93,7 @@
             <div class="label fl_l ta_r" style="width: 250px;">Список очередей пенальти 3:</div>
             <div class="labeled fl_l" style="width: 220px; margin-left: 5px;"><input type="text" name="queues3" value="" /></div>
         </div>
-        <div class="clear clear_fix">
+        <div class="clear clear_fix miniblock">
             <div class="label fl_l ta_r" style="width: 250px;">Пенальти в очередях 3:</div>
             <div class="labeled fl_l" style="width: 220px; margin-left: 5px;"><input type="text" name="penalty3" value="" class="field-number" maxlength="2" /></div>
         </div>

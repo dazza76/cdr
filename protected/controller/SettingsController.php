@@ -43,9 +43,11 @@ class SettingsController extends Controller {
 
         if($_POST['action'] == 'add') {
             $this->actionOperatorAdd();
+            App::refresh();
         }
         if($_POST['action'] == 'delete') {
             $this->actionOperatorDelete();
+            App::refresh();
         }
 
         $this->queueAgent = App::Db()->createCommand()

@@ -14,12 +14,12 @@ table, caption, tbody, tfoot, thead, tr, th, td
 img { border: 0; }
 html { height: 100% }
 body { font: 12px Tahoma, Geneva, sans-serif; min-width: 600px; height: 100%; }
-.ui-widget { font-size: 12px; }
 a { text-decoration: underline; cursor: pointer; color: #069; border-style: none;}
 a:hover { text-decoration: none; cursor: pointer; color: #E80005;}
-
 div { border: solid #000 0px; }
+input, select { border: 1px solid #abadb3; 	height: 22px; margin: 0px; }
 
+.ui-widget { font-size: 12px; }
 
 
 /* Layout helpers
@@ -51,14 +51,14 @@ div { border: solid #000 0px; }
 /* Layout
 ----------------------------------*/
 #wrapper { margin: 0 auto; min-height: 100%; height: auto !important; height: 100%; }
-#header { padding: 10px 10px; background: white; z-index: 10; }
+#header { padding: 10px 10px 0px 10px; background: white; z-index: 10; }
 #middle { padding: 0px 10px 40px 10px; /* height: 1%; */  }
 #footer { margin: -30px 0 0; padding: 0 10px; height: 30px; line-height: 26px; text-align: right; }
 
 #header.fixed { position: fixed; width: 100%; box-sizing: border-box; -moz-box-sizing: border-box; }
 #header.fixed .filters,
 #header.fixed .control-bar { top: 10px; position: relative; }
-#header.fixed-now { box-shadow: 0 0 4px 2px #999; border-bottom: 1px solid #999; }
+/*#header.fixed-now { box-shadow: 0 0 4px 2px #999; border-bottom: 1px solid #999; }*/
 
 /* Icons
 -------------------------------------*/
@@ -146,6 +146,7 @@ table.grid th { border: 1px solid #EEE; padding: 0 4px; height: 26px; -moz-box-s
 table.grid th,
 table.grid td.head { font-size: 90%; height: 26px; color: #FFF; background-color: #8A8A8A; font-weight: bold; }
 table.grid th.sortable { cursor: pointer; }
+table.grid thead > .b-head th { height: 1px; }
 table.grid tbody tr:hover { background-color: #C6C6C6; }
 
 td.edit-box { padding: 0; }
@@ -155,12 +156,13 @@ td.coming-img div { margin-left: 8px; width: 25px; height: 25px; background: url
 td.coming-img div.coming_0 { background-position: 0px 0px; }
 td.coming-img div.coming_1 { background-position: -25px 0px; }
 td.coming-img div.coming_2 { background-position: -50px 0px; }
-/* ------------------------------------------------------------------------- */
 
+/* comment edit */
 #comment_edit { margin: 0; padding: 0; position: absolute; }
 #comment_edit .edit-box { font-family: monospace; overflow: hidden; padding: 3px 4px 0px 4px; width: 100%; height: 100%; }
 #comment_edit input { font: 12px Tahoma, Geneva, sans-serif; font-family: monospace; overflow: hidden; width: 100%; }
 
+/* jplayer */
 #comment_player {margin: 0; padding: 0; position: absolute; top: 0px; left: 0px; }
 .player-button{ width: 16px; height: 16px; cursor: pointer; }
 .icon-play { background: url("../images/play.png") no-repeat 0 100%; }
@@ -174,4 +176,3 @@ td.coming-img div.coming_2 { background-position: -50px 0px; }
 .field-required { color: #FF7058; font-weight: bold; padding-left: 3px;}
 .field-success { background: #C4FFC4; border-color: #090; }
 .field-sucfail { background: #FBC4C4; border-color: #D20000; }
-.field-sucload { background: #FFC; border-color: #F90; }

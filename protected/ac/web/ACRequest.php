@@ -70,7 +70,7 @@ class ACRequest {
         $this->url     = $_SERVER["REQUEST_URI"];
 
         $url     = substr($this->url, strlen($webpath));
-        $url     = str_replace($webpath, '', $url);
+//        $url     = str_replace($webpath, '', $url);
         $pattern = array(
             '|/+|',
             '|^/|',

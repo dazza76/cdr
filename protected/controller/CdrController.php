@@ -220,16 +220,20 @@ class CdrController extends Controller {
         $command = $DB->createCommand()->select()
                 ->from(Cdr::TABLE)
                 ->calc()
+                ->addWhere('file_exists', '0', '>')
                 ->limit($this->limit)
                 ->offset($this->offset)
                 ->order($sort);
 
+        // начальная дата
         if ($this->fromdate) {
             $command->addWhere('calldate', $this->fromdate->format(), '>=');
         }
+        // конечная дата
         if ($this->todate) {
             $command->addWhere('calldate', $this->todate->format(), '<=');
         }
+        // оператор
         if ($this->oper) {
             $oper = $DB->escapeString($this->oper);
             $command->where(
@@ -238,12 +242,15 @@ class CdrController extends Controller {
                     . "OR  (`dcontext` <> 'incoming' AND `userfield`= '$oper' )"
                     . ") ");
         }
+        // поиск по входящим номерам
         if ($this->src) {
             $command->addWhere('src', "%{$this->src}%", 'LIKE');
         }
+        // поиск по исходящим номерам (или наоборот, не помню)
         if ($this->dst) {
             $command->addWhere('dst', "%{$this->dst}%", 'LIKE');
         }
+        // тип звонка входящий, исходящий или все
         if ($this->coming) {
             if ($this->coming == Cdr::INCOMING) {
                 $command->addWhere('dcontext', 'incoming');
@@ -258,11 +265,11 @@ class CdrController extends Controller {
         } else {
             $command->where(" AND NOT (  LEFT(`dcontext`, 4)='from' AND CHAR_LENGTH(`dst`)<=4  ) ");
         }
-
+        // коментарий
         if ($this->comment) {
             $command->addWhere('comment', "%{$this->comment}%", 'LIKE');
         }
-
+        // только мобильные
         if ($this->mob) {
             // "9ХХХХХХХХХ" и исходящие вида
             // "[9]89XXXXXXXXX".
@@ -271,9 +278,6 @@ class CdrController extends Controller {
                     . "OR (LEFT(`dst`, 3)='989' AND CHAR_LENGTH(`dst`)=12)"
                     . ")");
         }
-
-
-        $command->addWhere('file_exists', '0', '>');
 
         $result       = $command->query();
         $this->offset = $result->calc['offset'];

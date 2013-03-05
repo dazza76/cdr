@@ -1,4 +1,20 @@
 <?php
+/* cdr.php
+ * ------------------------------------------------------------------
+  $config = array(
+  //    'config'=>'localhost'
+  );
+  require_once 'protected/bootstrap.php';
+
+  $app = new Application();
+  $app->controller = new CdrController();
+  $app->controller->init();
+  $app->controller->render();
+
+  Log::render();
+  // ----------------------------------------------------------------------------
+ */
+
 $config = array(
     "database" => array(
     )
@@ -6,13 +22,14 @@ $config = array(
 require_once 'protected/bootstrap.php';
 // ----------------------------------------------------------------------------
 
+$app   = new Application();
 
-$app = new Application();
-var_dump($app);
+
 $class = $app->request->page . 'Controller';
 if ( ! class_exists($class)) {
     die('Страница не найдена');
 }
+Log::trace('Controller: ' . $app->request->page);
 
 $app->controller = new $class();
 $app->controller->init();
@@ -20,4 +37,6 @@ $app->controller->init();
 $app->response->send();
 $app->controller->render();
 
-// var_dump($app);
+if ($app->controller->getActType() == Controller::TYPE_PAGE) {
+    Log::render();
+}

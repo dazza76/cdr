@@ -106,6 +106,22 @@ class App extends Application {
         return $url;
     }
 
+    /**
+     * Тупо перезагружает страницу
+     */
+    public static function refresh() {
+        $host = parent::$_instanse->request->host;
+        $url  = parent::$_instanse->request->url;
+        if (parent::$_instanse->request->query) {
+            $url .= '&r=' . rand();
+        } else {
+            $url .= '?r=' . rand();
+        }
+        parent::$_instanse->response->header('location', 'http://' . $host . $url);
+
+        parent::$_instanse->response->send();
+    }
+
     public static function Db() {
         return parent::$_instanse->db;
     }

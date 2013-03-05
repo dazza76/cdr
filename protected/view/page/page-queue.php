@@ -110,8 +110,8 @@
     </div>
 </div>
 
-<div class="clear clear_fix bigblock">
-    <table id="result" class="grid">
+<div class="filters clear_fix bigblock of_h">
+    <table class="grid">
         <thead>
             <tr>
                 <th <?php echo Utils::sortable('timestamp', $this->sort, $this->desc); ?> style="width: 150px;">Дата - Время</th>
@@ -125,6 +125,28 @@
                 <th <?php echo Utils::sortable('originalPosition', $this->sort, $this->desc); ?> style="width: 70px;">Вошел</th>
                 <th <?php echo Utils::sortable('position', $this->sort, $this->desc); ?> style="width: 70px;">Вышел</th>
                 <th <?php echo Utils::sortable('queue', $this->sort, $this->desc); ?> style="">Очередь</th>
+            </tr>
+        </thead>
+    </table>
+</div>
+
+
+
+<div class="clear clear_fix">
+    <table class="grid">
+        <thead>
+            <tr class="b-head">
+                <th style="width: 150px;"> </th>
+                <th style="width: 250px;"> </th>
+                <th style="width: 150px;"> </th>
+                <th style="width: 170px;"> </th>
+                <th style="width: 170px;"> </th>
+                <th style="width: 150px;"> </th>
+                <th style="width: 150px;"> </th>
+                <th style="width: 150px;"> </th>
+                <th style="width: 70px;"> </th>
+                <th style="width: 70px;"> </th>
+                <th style=""> </th>
             </tr>
         </thead>
         <tbody>

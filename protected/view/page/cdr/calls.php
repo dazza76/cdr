@@ -96,8 +96,7 @@
     </div>
 </div>
 
-
-<div class="clear clear_fix">
+<div class="filters clear_fix bigblock of_h">
     <table class="grid">
         <thead>
             <tr>
@@ -110,6 +109,23 @@
                 <th style="width: 135px;">Запись</th>
                 <th style="width: 70px;" <?php echo Utils::sortable("duration", $this->sort, $this->desc); ?> >Время</th>
                 <th style="" <?php echo Utils::sortable("comment", $this->sort, $this->desc); ?> >Комментарий</th>
+            </tr>
+        </thead>
+    </table>
+</div>
+
+<div class="clear clear_fix">
+    <table class="grid">
+        <thead>
+            <tr class="b-head">
+                <th style="width: 60px;" > </th>
+                <th style="width: 150px;"> </th>
+                <th style="width: 150px;"> </th>
+                <th style="width: 150px;"> </th>
+                <th style="width: 150px;"> </th>
+                <th style="width: 135px;"> </th>
+                <th style="width: 70px;" > </th>
+                <th style=""             > </th>
             </tr>
         </thead>
         <tbody>
