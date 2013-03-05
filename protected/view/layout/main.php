@@ -6,7 +6,7 @@
  * @copyright  (c) 2013, AC
  */
 /* @var $this Controller */
-$v = 2;
+$v = 3;
 ?>
 <html>
     <head>
