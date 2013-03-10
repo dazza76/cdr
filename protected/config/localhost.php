@@ -4,7 +4,7 @@ return array(
         "user"   => "admin",
         "pass"   => "almazov123321",
         "params" => array(
-            "Log"       => 1
+            "log"       => 1
         )
     ),
     'debug'=>1,

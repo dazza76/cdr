@@ -20,7 +20,6 @@ class TimemanController extends Controller {
         'todate'   => array('parseDatetime'),
         'queue'    => 1,
     );
-    public $page     = "timeman";
     public $timeStep = array('0', '15', '30', '45', '60', '90', '120', '180', '32768');
 
     /**
@@ -28,7 +27,7 @@ class TimemanController extends Controller {
      */
     public $callStatus;
 
-    function __construct() {
+    public function __construct() {
         parent::__construct();
 
         $from = new ACDateTime();

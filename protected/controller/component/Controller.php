@@ -37,7 +37,26 @@ abstract class Controller {
      *
      * @var array фильтры
      */
-    protected $_filters       = array();
+    protected $_filters     = array();
+    protected $_filters_url = array();
+
+    /**
+     * Текущии используемые фильтры
+     * @return array
+     */
+    public function getFilters() {
+        $filters = array();
+        if ( ! is_array($this->_filters_url)) {
+            return $filters;
+        }
+        foreach ($this->_filters_url as $k => $v) {
+            if ($v) {
+                $filters[$k] = $v;
+            }
+        }
+        return $filters;
+    }
+
     protected $_sessionParams = false;
 
     /**
@@ -51,9 +70,29 @@ abstract class Controller {
     public $dataPage = array();
 
     /**
-     * @var string имя контроллера
+     * @var string подстраница
      */
-    public $page;
+    protected $_section;
+
+    /**
+     * @var array доступные подстраницы
+     */
+    protected $_sections;
+
+    protected function _ensureSection($section = null) {
+        if ($section == null) {
+            $section = $_GET['section'];
+        }
+        if ( ! $this->_sections) {
+            return null;
+        }
+
+        if ( ! in_array($section, $this->_sections)) {
+            $section = $this->_sections[0];
+        }
+
+        return $section;
+    }
 
     /**
      * @var array
@@ -70,6 +109,8 @@ abstract class Controller {
             $this->_atcion  = $_POST['act'];
             $this->_actType = self::TYPE_ACTION;
         }
+
+        $this->_init();
     }
 
     public function __get($name) {
@@ -92,7 +133,7 @@ abstract class Controller {
                     $method = array('FiltersValue', 'parse' . $name);
                     break;
                 case 'controller' :
-                    $method = array('$this', array_shift($param_arr));
+                    $method = array($this, array_shift($param_arr));
                     break;
                 default :
                     $method = array('FiltersValue', $method);
@@ -105,8 +146,22 @@ abstract class Controller {
         $this->$name = $value;
     }
 
+    protected function _init($params = null) {
+        if ($params === null) {
+            $params = $_GET;
+        }
+        if ( ! is_array($params)) {
+            $params         = array();
+        }
+        $this->_section = $this->_ensureSection($params['section']);
+        unset($params['section']);
+
+        $params = $this->_sessionParams($params);
+    }
+
     /**
      * Автоматическая инициализация
+     * @param array $params параметры инициализации
      * @return void
      */
     public function init($params = null) {
@@ -114,7 +169,10 @@ abstract class Controller {
             $params               = $_GET;
             $this->_sessionParams = true;
         }
-        $keys                 = array_keys($this->_filters);
+        if ( ! is_array($params)) {
+            $params = array();
+        }
+        $keys   = array_keys($this->_filters);
         foreach ($keys as $key) {
             $this->$key = $params[$key];
             unset($params[$key]);
@@ -136,7 +194,34 @@ abstract class Controller {
         $this->$action();
     }
 
-    abstract public function index();
+    /**
+     * Отображаемая страница по умолчанию
+     */
+    public function index() {
+        $this->viewMain();
+    }
+
+    /**
+     * Имя контролера
+     * @return string имя контроллера (страница)
+     */
+    public function getPage() {
+        $class = strtolower(get_class($this));
+        $p     = strpos($class, 'controller');
+        $page  = false;
+        if ($p !== false) {
+            $page = substr($class, 0, $p);
+        }
+        return $page;
+    }
+
+    /**
+     * Подстраница
+     * @return string
+     */
+    public function getSection() {
+        return $this->_section;
+    }
 
     /**
      * Выполняет шаблонный файл и возвращает результат
@@ -185,18 +270,6 @@ abstract class Controller {
         $this->view('layout/main.php');
     }
 
-    protected function _addJsParam($key, $value) {
-        $this->dataPage['js'][$key] = $value;
-    }
-
-    protected function _addJsSrc($file) {
-        $this->dataPage['links'] .= '<script src="js/' . $file . '"></script>' . "\n";
-    }
-
-    protected function _addCssLink($file) {
-        $this->dataPage['links'] .= ' <link rel="stylesheet" href="css/' . $file . '">' . "\n";
-    }
-
     /**
      * Вывести результаты парсированых шаблонов
      * @param bool $print
@@ -220,5 +293,39 @@ abstract class Controller {
             echo $string;
         else
             return $string;
+    }
+
+    protected function _addJsParam($key, $value) {
+        $this->dataPage['js'][$key] = $value;
+    }
+
+    protected function _addJsSrc($file) {
+        $this->dataPage['links'] .= '<script src="js/' . $file . '"></script>' . "\n";
+    }
+
+    protected function _addCssLink($file) {
+        $this->dataPage['links'] .= ' <link rel="stylesheet" href="css/' . $file . '">' . "\n";
+    }
+
+    protected function _sessionParams($params) {
+        $pg = "pg_" . $this->getPage();
+        if ($this->_sections) {
+            $pg .= $this->getSection();
+        }
+
+        if (count($params) == 0) {
+            $params = @unserialize($_SESSION[$pg]);
+            Log::trace('session parametr 1');
+        }
+
+        if ( ! is_array($params)) {
+            $params = array();
+        }
+
+        $_SESSION[$pg] = @serialize($params);
+
+        Log::vardump(array($pg => $params));
+
+        return $params;
     }
 }

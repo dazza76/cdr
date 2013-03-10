@@ -105,7 +105,7 @@
     </div>
     <div class="pg-pages fl_r">
         <?php
-        echo ACPagenator::html($this->count, $this->offset, $this->limit);
+        echo Utils::pagenator($this->count, $this->offset, $this->limit, $this->getFilters());
         ?>
     </div>
 </div>

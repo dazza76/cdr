@@ -12,40 +12,42 @@
  * @package		AC
  */
 class ACPagenator {
-    public static function html($count, $offset = 0, $limit = 15) {
-        $pagenator = new self($count, $offset, $limit);
-        return $pagenator->render();
-    }
+
+//    public static function html($count, $offset = 0, $limit = 15, $get = null) {
+//        $pagenator = new self($count, $offset, $limit, $get);
+//        return $pagenator->render();
+//    }
 
     public $get = null;
-
     public $count;
     public $offset;
     public $limit;
-
-    public $buttons = 3;
+    public $buttons     = 3;
     public $buttonFirst = true;
-    public $buttonLast = true;
-    public $buttonNext = false;
-    public $buttonPrev = false;
+    public $buttonLast  = true;
+    public $buttonNext  = false;
+    public $buttonPrev  = false;
 
-    public function __construct($count, $offset = 0, $limit = 15) {
+    public function __construct($count, $offset = 0, $limit = 15, $get = null) {
         $this->count  = (int) $count;
         $this->offset = (int) $offset;
         $this->limit  = (int) $limit;
+        if ($get == null || ! is_array($get)) {
+            $get       = $_GET;
+        }
+        $this->get = $get;
     }
 
     protected function _pager() {
         $count  = (int) $this->count;
         $offset = (int) $this->offset;
         $limit  = (int) $this->limit;
-        $get = $_GET;
-        $bc = (int) $this->buttons;
+        $bc     = (int) $this->buttons;
 
         $part_count   = ceil($count / $limit);
         $part_current = ceil($offset / $limit);
 
-        $p = array();
+        $p     = array();
         $pages = array();
 
         $p["pg"]     = $part_current + 1;
@@ -86,7 +88,7 @@ class ACPagenator {
         }
 
         foreach ($pages as $_key => $_value) {
-            $link                 = $_GET;
+            $link                 = $this->get;
             $link["offset"]       = $_value["offset"];
             $pages[$_key]["link"] = http_build_query($link);
         }
@@ -101,7 +103,7 @@ class ACPagenator {
     public function render() {
         $fl         = "fl_l";
         $pages_html = "";
-        $pages = $this->_pager();
+        $pages      = $this->_pager();
 
         foreach ($pages as $pg) {
             $_class = "pg-lnk";

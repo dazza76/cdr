@@ -45,8 +45,10 @@ class CdrController extends Controller {
         'mob'       => array('parseCheck'),
         'desc'      => 1
     );
-    public $page     = "cdr";
-    public $section;
+    protected $_sections = array(
+        'calls' => 'Звонки',
+        'answering' => 'Автоинформатор',
+    );
 
     /**
      * @var int
@@ -81,18 +83,19 @@ class CdrController extends Controller {
     public function init($params = null) {
         $section       = ($params === null) ? $_GET['section'] : $params['section'];
         $section       = ($section == "answering") ? "answering" : "calls";
-        $this->section = $section;
+        $this->_section = $section;
 
         $section = 'pg_cdr' . $section;
         if ($params === null) {
             if ( ! count($_GET)) {
-                $params               = $_SESSION[$section];
+                $params               = @unserialize($_SESSION[$section]);
                 $this->_sessionParams = true;
             } else {
                 $params             = $_GET;
             }
         }
-        $_SESSION[$section] = $params;
+        $this->_filters_url = $params;
+        $_SESSION[$section] = @serialize($params);
 
         Log::trace('Session parametr: ' . ((int) $this->_sessionParams));
         Log::vardump($params);
@@ -107,11 +110,11 @@ class CdrController extends Controller {
             $this->actionCheckFile();
         }
 
-        if ($this->section == "calls") {
-            $this->search();
+        if ($this->_section == "calls") {
+            $this->searchCalls();
         }
 
-        $this->viewMain("page/cdr/{$this->section}.php");
+        $this->viewMain("page/cdr/{$this->_section}.php");
     }
 
     /**
@@ -207,11 +210,11 @@ class CdrController extends Controller {
     }
 
     /**
-     * Выполнить выборгу.
+     * Выполнить выборгу по звонкам.
      * Поиск записей по заданому фильтру контролера
      * @return bool
      */
-    public function search() {
+    public function searchCalls() {
         $DB   = App::Db();
         $sort = $this->sort;
         if ($this->desc) {
@@ -264,6 +267,63 @@ class CdrController extends Controller {
             }
         } else {
             $command->where(" AND NOT (  LEFT(`dcontext`, 4)='from' AND CHAR_LENGTH(`dst`)<=4  ) ");
+        }
+        // коментарий
+        if ($this->comment) {
+            $command->addWhere('comment', "%{$this->comment}%", 'LIKE');
+        }
+        // только мобильные
+        if ($this->mob) {
+            // "9ХХХХХХХХХ" и исходящие вида
+            // "[9]89XXXXXXXXX".
+            $command->where(" AND ("
+                    . "(LEFT(`src`, 1)='9' AND CHAR_LENGTH(`src`)=10)"
+                    . "OR (LEFT(`dst`, 3)='989' AND CHAR_LENGTH(`dst`)=12)"
+                    . ")");
+        }
+
+        $result       = $command->query();
+        $this->offset = $result->calc['offset'];
+        $this->limit  = $result->calc['limit'];
+        $this->count  = $result->calc['count'];
+        $this->rows   = $result->getFetchObjects('Cdr');
+
+        return ($result->count()) ? true : false;
+    }
+
+    /**
+     * Выполнить выборгу по Автоинформаторам.
+     * Поиск записей по заданому фильтру контролера
+     * @return bool
+     */
+    public function searchAnswering() {
+        $DB   = App::Db();
+        $sort = $this->sort;
+        if ($this->desc) {
+            $sort .= " DESC ";
+        }
+        $command = $DB->createCommand()->select()
+                ->from(Cdr::TABLE)
+                ->calc()
+                ->addWhere('file_exists', '0', '>')
+                ->addWhere('disposition', ' ANSWERED')
+                ->limit($this->limit)
+                ->offset($this->offset)
+                ->order($sort);
+
+
+
+        // начальная дата
+        if ($this->fromdate) {
+            $command->addWhere('calldate', $this->fromdate->format(), '>=');
+        }
+        // конечная дата
+        if ($this->todate) {
+            $command->addWhere('calldate', $this->todate->format(), '<=');
+        }
+        // поиск по входящим номерам
+        if ($this->src) {
+            $command->addWhere('src', "%{$this->src}%", 'LIKE');
         }
         // коментарий
         if ($this->comment) {

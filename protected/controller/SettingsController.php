@@ -13,9 +13,6 @@
  */
 class SettingsController extends Controller {
 
-    public $page = "settings";
-    public $section;
-
     /**
      * Формирет страницу
      */
@@ -30,7 +27,7 @@ class SettingsController extends Controller {
                 $section       = 'operator';
                 break;
         }
-        $this->section = $section;
+        $this->_section = $section;
 
         $action = 'section' . $section;
         $this->$action();
@@ -39,15 +36,21 @@ class SettingsController extends Controller {
     }
 
     public function sectionOperator() {
-        Log::trace("Controller::sectionOperator()");
-
-        if($_POST['action'] == 'add') {
+        if ($_POST['action'] == 'add') {
             $this->actionOperatorAdd();
             App::refresh();
         }
-        if($_POST['action'] == 'delete') {
+        if ($_POST['action'] == 'delete') {
             $this->actionOperatorDelete();
             App::refresh();
+        }
+        if ($_POST['action'] == 'edit') {
+            $this->actionOperatorEdit();
+//            App::refresh();
+        }
+
+        if ($_GET['id']) {
+            return $this->sectionOperatorEdit();
         }
 
         $this->queueAgent = App::Db()->createCommand()
@@ -57,6 +60,62 @@ class SettingsController extends Controller {
                 ->getFetchObjects('QueueAgent');
 
         $this->view('page/settings/operator.php');
+    }
+
+    public function sectionOperatorEdit($id = null) {
+        if ($id == null) {
+            $id = $_GET['id'];
+        }
+        $id = (int) $id;
+
+        $this->queueAgent = App::Db()->createCommand()
+                ->select()
+                ->from(QueueAgent::TABLE)
+                ->addWhere('agentid', $id)
+                ->query()
+                ->getFetchObjects('QueueAgent');
+
+        $this->view('page/settings/operator_edit.php');
+    }
+
+    public function actionOperatorEdit($params = null) {
+        Log::trace('actionOperatorEdit');
+        if ($params == null) {
+            $params = $_POST;
+        }
+        unset($params['action']);
+
+
+
+        $agentid = (int) @$params['agentid'];
+        if ( ! $agentid) {
+            echo "no agentid";
+        }
+        $queueAgent = new QueueAgent($_POST);
+        Log::vardump($queueAgent);
+
+        $sets         = array();
+        $sets['name'] = trim(@$params['name']);
+        if ( ! $sets['name']) {
+            echo "no name";
+        }
+
+        $sets['queues1']  = implode(',',
+                                    ACPropertyValue::ensureFields($params['queues1']));
+        $sets['penalty1'] = (int) @$params['penalty1'];
+
+        $sets['queues2']  = implode(',',
+                                    ACPropertyValue::ensureFields($params['queues2']));
+        $sets['penalty2'] = (int) @$params['penalty2'];
+
+        $sets['queues3']  = implode(',',
+                                    ACPropertyValue::ensureFields($params['queues3']));
+        $sets['penalty3'] = (int) @$params['penalty3'];
+
+        App::Db()->createCommand()->update(QueueAgent::TABLE)
+                ->set($sets)
+                ->addWhere('agentid', $agentid)
+                ->query();
     }
 
     public function actionOperatorAdd($params = null) {
@@ -115,9 +174,8 @@ class SettingsController extends Controller {
 //        ac_dump($params);
     }
 
-
     public function actionOperatorDelete($params = null) {
-        if($params == null) {
+        if ($params == null) {
             $params = $_POST;
         }
 

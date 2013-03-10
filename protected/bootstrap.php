@@ -23,24 +23,25 @@ defined('WEBROOT') or define('WEBROOT', ROOT . 'webroot' . DS);
 defined('VIEWDIR') or define('VIEWDIR', APPPATH . 'view' . DS);
 // ----------------------------------------------------------------------------
 
-// Установка систкмной онфигурации
-// ---------------------------------------------------------------------------
 require_once 'ac/base/ACObject.php';
 require_once 'Application.php';
 
+// Установка систкмной конфигурации
+// ---------------------------------------------------------------------------
 $_config_system = @include_once 'config/system.php';
 App::Config()->mergeRecursive($_config_system);
+App::Config()->supervisor = @include_once 'config/supervisor.php';
 $_config_file = @$_config_system['config'];
 if (@$config['config']) {
     $_config_file = $config['config'];
 }
-
+// дополнительный файл конфигурации
 if (@$_config_file) {
     $_config_system = @include_once 'config/' . $_config_file . '.php';
     App::Config()->mergeRecursive($_config_system);
 }
 unset($_config_system);
-
+// локальные конфигурации
 if (is_array($config)) {
     App::Config()->mergeRecursive($config);
 }

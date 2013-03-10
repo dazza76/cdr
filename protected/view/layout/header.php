@@ -7,7 +7,7 @@
  * @author     Tyurin D. <fobia3d@gmail.com>
  * @copyright  (c) 2013, AC
  */
-$c[$this->page] = 'current';
+$c[$this->getPage()] = 'current';
 ?>
 
 <div id="header" class="fixed clear_fix">
@@ -15,7 +15,7 @@ $c[$this->page] = 'current';
 
 <?php  // Записи
 if ($c['cdr']) {
-    $sm[$this->section]='current';
+    $sm[$this->getSection()]='current';
 ?>
         <li class="submenu">
             <span class="submenu-title"> <a href="cdr" class="header-icon icon-calls-big"> Запись разговоров: </a> </span>
@@ -62,7 +62,7 @@ if ($c['queue']) {
 
 <?php  // настройки
 if ($c['settings']) {
-    $sm[$this->section]='current';
+    $sm[$this->getSection()]='current';
 ?>
         <li class="submenu">
             <span class="submenu-title"> <a href="settings" class="header-icon icon-settings-big"> Настройки: </a> </span>
@@ -79,6 +79,29 @@ if ($c['settings']) {
 <?php }
 // настройки --END
 ?>
+
+
+<?php  // Супервизоры
+if ($c['supervisor']) {
+    $sm[$this->getSection()]='current';
+?>
+        <li class="submenu">
+            <span class="submenu-title"> <a href="supervisor" class="header-icon icon-monitor-big"> Супервизоры: </a> </span>
+            <ul>
+                <li class="<?php echo $sm['operator']; ?>"> <a href="supervisor?section=operator"> Операторы </a> </li>
+                <li class="<?php echo $sm['queue']; ?>"> <a href="supervisor?section=queue"> Очереди </a> </li>
+                <li class="<?php echo $sm['chart']; ?>"> <a href="supervisor?section=chart"> Диаграмма </a> </li>
+            </ul>
+        </li>
+<?php } else { ?>
+        <li class="">
+            <a href="supervisor" class="header-icon icon-monitor-big"> Супервизоры </a>
+        </li>
+<?php }
+// Супервизоры --END
+?>
+
+
 
 
     </ul>

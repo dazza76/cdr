@@ -17,7 +17,7 @@ body { font: 12px Tahoma, Geneva, sans-serif; min-width: 600px; height: 100%; }
 a { text-decoration: underline; cursor: pointer; color: #069; border-style: none;}
 a:hover { text-decoration: none; cursor: pointer; color: #E80005;}
 div { border: solid #000 0px; }
-input, select { border: 1px solid #abadb3; 	height: 22px; margin: 0px; }
+/*input, select { border: 1px solid #abadb3; 	height: 22px; margin: 0px; }*/
 
 .ui-widget { font-size: 12px; }
 
@@ -63,14 +63,47 @@ input, select { border: 1px solid #abadb3; 	height: 22px; margin: 0px; }
 /* Icons
 -------------------------------------*/
 a.icon { padding: 1px 0 1px 22px; line-height: 18px; }
+
+a.icon-add { background: url(../images/add.png) 2px 70% no-repeat; }
+a.icon-edit { background: url(../images/edit.png) 2px 70% no-repeat; }
+a.icon-delete { background: url(../images/delete.png) 2px 70% no-repeat; }
+
+
+/* big icon */
 a.header-icon { padding: 12px 0 12px 38px; line-height: 36px; }
 a.icon-calls-big { background: url(../images/blackberry_white.png) 2px 70% no-repeat; }
 a.icon-reports-big { background: url(../images/database_table.png) 2px 70% no-repeat; }
 a.icon-charts-big { background: url(../images/chart_bar.png) 2px 70% no-repeat; }
 a.icon-settings-big{ background: url(../images/interface_preferences.png) 2px 70% no-repeat; }
-a.icon-add { background: url(../images/add.png) 2px 70% no-repeat; }
-a.icon-edit { background: url(../images/edit.png) 2px 70% no-repeat; }
-a.icon-delete { background: url(../images/delete.png) 2px 70% no-repeat; }
+a.icon-monitor-big { background: url(../images/monitor_lightning.png) 2px 70% no-repeat; }
+/*
+a.icon-phones-big {background: url(../img/icons_big/phones.png) 2px 70% no-repeat; }
+a.icon-calls-big { background: url(../img/icons_big/blackberry_white.png) 2px 70% no-repeat; }
+a.icon-queues-big { background: url(../img/icons_big/timeline.png) 2px 70% no-repeat; }
+a.icon-user-big { background: url(../img/icons_big/premium_support.png) 2px 70% no-repeat; }
+a.icon-reports-big { background: url(../img/icons_big/database_table.png) 2px 70% no-repeat; }
+a.icon-stats-big { background: url(../img/icons_big/chart_up_color.png) 2px 70% no-repeat; }
+a.icon-charts-big { background: url(../img/icons_big/chart_bar.png) 2px 70% no-repeat; }
+a.icon-logout-big { background: url(../img/icons_big/door_in.png) 2px 70% no-repeat; }
+a.icon-excel-big { background: url(../img/icons_big/page_white_excel.png) 2px 70% no-repeat; }
+a.icon-add-big { background: url(../img/icons_big/add.png) 2px 70% no-repeat; }
+a.icon-monitor-big { background: url(../img/icons_big/monitor_lightning.png) 2px 70% no-repeat; }
+a.icon-upload-big { background: url(../img/icons_big/database_add.png) 2px 70% no-repeat; }
+a.icon-edit-big { background: url(../img/icons_big/application_edit.png) 2px 70% no-repeat; }
+a.icon-delete-big { background: url(../img/icons_big/delete.png) 2px 70% no-repeat; }
+a.icon-check-big { background: url(../img/icons_big/tick.png) 2px 70% no-repeat; }
+a.icon-play-big { background: url(../img/icons_big/music.png) 2px 70% no-repeat; }
+a.icon-tasks-big { background: url(../img/icons_big/sheduled_task.png) 2px 70% no-repeat; }
+a.icon-settings-big { background: url(../img/icons_big/interface_preferences.png) 2px 70% no-repeat; }
+a.icon-pdf-big { background: url(../img/icons_big/page_white_acrobat.png) 2px 70% no-repeat; }
+a.icon-comment-big { background: url(../img/icons_big/comment.png) 2px 70% no-repeat; }
+a.icon-add_comment-big { background: url(../img/icons_big/comment_add.png) 2px 70% no-repeat; }
+a.icon-card-big { background: url(../img/icons_big/vcard.png) 2px 70% no-repeat; }
+a.icon-history-big { background: url(../img/icons_big/calendar.png) 2px 70% no-repeat; }
+a.icon-ext_link-big { background: url(../img/icons_big/application_link.png) 2px 70% no-repeat; }
+a.icon-clients-big { background: url(../img/icons_big/report_user.png) 2px 70% no-repeat; }
+*/
+
 
 /* Menu
 -------------------------------------*/

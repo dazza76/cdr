@@ -7,11 +7,11 @@
  */
 return array(
     'charset'  => 'utf-8',
-    'webpath'  => '/cdr',  // корневой путь скриптов
+    'webpath'  => '/cdr', // корневой путь скриптов
     // CDR audio file
     'cdr'      => array(
         'monitor_dir' => '/cdr/monitor', // файлы записей
-        'file_format' => 'wav',          // формат записей (без точки)
+        'file_format' => 'wav', // формат записей (без точки)
     ),
     // база данных
     'database' => array(
@@ -19,14 +19,15 @@ return array(
         'user'   => 'root',
         'pass'   => '',
         'dbname' => 'asterisk',
-        'params' => array(   // дополнительные параметры базы
-            'exception' => 0,     // выбрасывать исключения
-            'Log'       => 0,     // вести локальные логи запросов (большие затраты времени)
-            'charset' => 'utf8'   // кодировка
+        'params' => array(// дополнительные параметры базы
+            'exception' => 0, // выбрасывать исключения
+            'log'       => 1, // вести локальные логи запросов (большие затраты времени)
+            'charset'   => 'utf8'   // кодировка
         )
     ),
+    // LOG
     // вывод логов (дебагир)
-    'debug' => 1,
+    'debug'  => 1,
     // доп. файл настроек
-    'config' =>'', // 'localhost'
+    'config' => '', // 'localhost'
 );

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * QueueAgent class
  *
@@ -65,5 +66,47 @@ class QueueAgent extends ACDataObject {
         }
 
         return html($oper);
+    }
+
+    public function __set($name, $value) {
+        if (in_array($name, array('queues1', 'queues2', 'queues3'))) {
+            $value = implode(',', ACPropertyValue::ensureFields($value));
+        }
+        parent::__set($name, $value);
+    }
+
+    public function getQueues($number) {
+        $number = (int) $number;
+        $queues = "queues" . $number;
+        if ( ! $this->$queues) {
+            return array();
+        } else {
+            return explode(",", $this->$queues);
+        }
+    }
+
+    public function getPenalty($number) {
+        $number  = (int) $number;
+        $penalty = "penalty" . $number;
+        return;
+        if ( ! $this->$penalty) {
+            return array();
+        } else {
+            return explode(",", $this->$penalty);
+        }
+    }
+
+    public function save() {
+        if ( ! $this->agentid) {
+            return null;
+        }
+    }
+
+    public function edit() {
+
+    }
+
+    public function delete() {
+
     }
 }

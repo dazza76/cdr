@@ -49,4 +49,18 @@ class Utils {
 
         return $attr;
     }
+
+    /**
+     * Пагинатор
+     * @param int $count
+     * @param int $offset
+     * @param int $limit
+     * @param array $get
+     * @return string
+     */
+    public static function pagenator($count, $offset = 0, $limit = 15,
+                                     $get = null) {
+        $pagenator = new ACPagenator($count, $offset, $limit, $get);
+        return $pagenator->render();
+    }
 }

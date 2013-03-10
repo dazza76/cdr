@@ -43,7 +43,6 @@ class QueueController extends Controller {
         )),
         'desc'     => 1
     );
-    public $page        = "queue";
     public $chart       = "arbit";
     public $compareType = "day";
 
@@ -91,6 +90,7 @@ class QueueController extends Controller {
         $chart           = $this->_parseChart($_GET['chart']);
         $params['chart'] = $chart;
 
+        $this->_filters_url             = $params;
         $_SESSION['pg_queue_' . $chart] = @serialize($params);
 
         Log::trace('Session parametr: ' . ((int) $this->_sessionParams));
@@ -226,6 +226,7 @@ class QueueController extends Controller {
                 ->where("AND  LENGTH(`callerId`) > 6 ")
                 ->where("AND `status` IN ('ABANDON', 'COMPLETEAGENT', 'COMPLETECALLER', 'TRANSFER')")
                 ->group('`status`');
+
         if ($this->status) {
             $command->addWhere('status', $this->status);
         }

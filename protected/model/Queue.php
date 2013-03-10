@@ -10,8 +10,17 @@ class Queue {
 
     private static function _init() {
         if ( ! self::$_queue) {
-            self::$_queue = include_once APPPATH . 'config/queue.php';
+            self::$_queue = @include_once APPPATH . 'config/queue.php';
         }
+    }
+
+    /**
+     * Возвращает список очередей, как определено в конфигурации
+     * @return array
+     */
+    public static function getQueueArr() {
+        self::_init();
+        return self::$_queue;
     }
 
     /**

@@ -52,8 +52,9 @@ $(document).ready(function() {
 
     // submit
     $form.submit(function() {
+        $form.find("input[name=offset]").val('');
         $form.find('select, input').each(function() {
-            if (!$(this).val()) {
+            if (!$(this).val() || $(this).val() == 0 || $(this).val() == '') {
                 $(this).removeAttr('name');
             }
         });
