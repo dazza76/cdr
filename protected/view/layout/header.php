@@ -35,16 +35,16 @@ if ($c['cdr']) {
 
 <?php  // Очереди
 if ($c['queue']) {
-    $sm[$this->chart]='current';
+    $sm[$this->getSection()]='current';
 ?>
         <li class="submenu">
             <span class="submenu-title"> <a href="queue" class="header-icon icon-charts-big"> Очереди: </a> </span>
             <ul>
                 <li class="<?php echo $sm['arbit']; ?>"> <a href="queue"> Произвольно </a> </li>
-                <li class="<?php echo $sm['day']; ?>"> <a href="queue?chart=day"> Суточный </a> </li>
-                <li class="<?php echo $sm['week']; ?>"> <a href="queue?chart=week"> Недельный </a> </li>
-                <li class="<?php echo $sm['month']; ?>"> <a href="queue?chart=month"> Месячный </a> </li>
-                <li class="<?php echo $sm['compare']; ?>"> <a href="queue?chart=compare"> Сравнение </a> </li>
+                <li class="<?php echo $sm['day']; ?>"> <a href="queue?section=day"> Суточный </a> </li>
+                <li class="<?php echo $sm['week']; ?>"> <a href="queue?section=week"> Недельный </a> </li>
+                <li class="<?php echo $sm['month']; ?>"> <a href="queue?section=month"> Месячный </a> </li>
+                <li class="<?php echo $sm['compare']; ?>"> <a href="queue?section=compare"> Сравнение </a> </li>
             </ul>
         </li>
 <?php } else { ?>
@@ -88,9 +88,8 @@ if ($c['supervisor']) {
         <li class="submenu">
             <span class="submenu-title"> <a href="supervisor" class="header-icon icon-monitor-big"> Супервизоры: </a> </span>
             <ul>
-                <li class="<?php echo $sm['operator']; ?>"> <a href="supervisor?section=operator"> Операторы </a> </li>
                 <li class="<?php echo $sm['queue']; ?>"> <a href="supervisor?section=queue"> Очереди </a> </li>
-                <li class="<?php echo $sm['chart']; ?>"> <a href="supervisor?section=chart"> Диаграмма </a> </li>
+                <li class="<?php echo $sm['operator']; ?>"> <a href="supervisor?section=operator"> Операторы </a> </li>
             </ul>
         </li>
 <?php } else { ?>

@@ -27,7 +27,7 @@
                 ?>
                 <tr>
                     <td><?php echo html($queueAgent->name); ?></td>
-                    <td><?php echo html($queueAgent->agentid); ?></td>
+                    <td align="center"><?php echo html($queueAgent->agentid); ?></td>
                     <td class="image-link"><a href="?section=operator&id=<?php echo $queueAgent->agentid; ?>" class="icon icon-edit"></a></td>
                     <td class="image-link"><a  onclick="showOperatorDelete(<?php echo html($queueAgent->agentid); ?>);" class="icon icon-delete"></a></td>
                 </tr>

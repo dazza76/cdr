@@ -6,21 +6,22 @@
  * @copyright  (c) 2013, AC
  */
 /* @var $this Controller */
-$v = 4;
+$v = (int) App::Config()->v;
 ?>
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
         <title><?php echo $this->dataPage['title']; ?></title>
 
-        <link href="css/jquery-ui.css?<?php echo $v; ?>" rel="stylesheet" >
-        <link href="css/jquery-ui.dropdownchecklist.css?<?php echo $v; ?>" rel="stylesheet" >
-
         <script src="js/jq/jquery-1.8.2.js"></script>
         <script src="js/jq/jquery-ui-1.9.2.js"></script>
         <script src="js/jq/jquery.ui.datepicker-ru.js"></script>
         <script src="js/jq/jquery.ui.timepicker.addon.js"></script>
         <script src="js/jq/jquery.ui.dropdownchecklist.js"></script>
+        <script src="js/jq/jquery.cookie.js"></script>
+
+        <link href="css/jquery-ui.css?<?php echo $v; ?>" rel="stylesheet" >
+        <link href="css/jquery-ui.dropdownchecklist.css?<?php echo $v; ?>" rel="stylesheet" >
 
         <link href="css/common.css?<?php echo $v; ?>" rel="stylesheet" >
 

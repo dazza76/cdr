@@ -75,6 +75,11 @@ class QueueAgent extends ACDataObject {
         parent::__set($name, $value);
     }
 
+    /**
+     * Список очереддей
+     * @param int $number
+     * @return array
+     */
     public function getQueues($number) {
         $number = (int) $number;
         $queues = "queues" . $number;
@@ -88,25 +93,22 @@ class QueueAgent extends ACDataObject {
     public function getPenalty($number) {
         $number  = (int) $number;
         $penalty = "penalty" . $number;
-        return;
-        if ( ! $this->$penalty) {
-            return array();
-        } else {
-            return explode(",", $this->$penalty);
+        return $this->$penalty;
+    }
+
+    public function getStatePhone() {
+        switch ($this->phone) {
+            case "not_in_use" : return "Свободен";
+            case "used" : return "Занят";
+            case "ringing" : return "Звонит";
         }
     }
 
-    public function save() {
-        if ( ! $this->agentid) {
-            return null;
+    public function getStateOper() {
+        switch ($this->member) {
+            case "online" : return "В работе";
+            case "paused" : return "Перерыв";
+            case "aftercall" : return "Обработка";
         }
-    }
-
-    public function edit() {
-
-    }
-
-    public function delete() {
-
     }
 }

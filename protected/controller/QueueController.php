@@ -43,7 +43,13 @@ class QueueController extends Controller {
         )),
         'desc'     => 1
     );
-    public $chart       = "arbit";
+    protected $_sections = array(
+            'arbit'=> '',
+            'day'=> '',
+            'week'=> '',
+            'month'=> '',
+            'compare'=> '',
+    );
     public $compareType = "day";
 
     /**
@@ -71,40 +77,40 @@ class QueueController extends Controller {
     }
 
     public function init($params = null) {
-        if ($params === null) {
-            $chart           = $this->_parseChart($_GET['chart']);
-            $params          = $_GET;
-            $params['chart'] = $chart;
-
-            if (count($params) < 2) {
-                $params = $_SESSION['pg_queue_' . $chart];
-                if ($params) {
-                    $params               = @unserialize($params);
-                }
-                $this->_sessionParams = true;
-            } else {
-                $params = $_GET;
-            }
-        }
-
-        $chart           = $this->_parseChart($_GET['chart']);
-        $params['chart'] = $chart;
-
-        $this->_filters_url             = $params;
-        $_SESSION['pg_queue_' . $chart] = @serialize($params);
-
-        Log::trace('Session parametr: ' . ((int) $this->_sessionParams));
-        Log::vardump($params);
+//        if ($params === null) {
+//            $chart           = $this->_parseChart($_GET['chart']);
+//            $params          = $_GET;
+//            $params['chart'] = $chart;
+//
+//            if (count($params) < 2) {
+//                $params = $_SESSION['pg_queue_' . $chart];
+//                if ($params) {
+//                    $params               = @unserialize($params);
+//                }
+//                $this->_sessionParams = true;
+//            } else {
+//                $params = $_GET;
+//            }
+//        }
+//
+//        $chart           = $this->_parseChart($_GET['chart']);
+//        $params['chart'] = $chart;
+//
+//        $this->_filters_url             = $params;
+//        $_SESSION['pg_queue_' . $chart] = @serialize($params);
+//
+//        Log::trace('Session parametr: ' . ((int) $this->_sessionParams));
+//        Log::vardump($params);
 
         parent::init($params);
+        $this->index();
     }
 
     /**
      * Формирет страницу
      */
     public function index() {
-        $this->chart = $this->_parseChart($this->chart);
-        $chart       = 'chart' . $this->chart;
+        $chart       = 'chart' . $this->getSection();
         $this->dataPage['links'] .= '<script src="js/highcharts/highcharts.js"></script>';
 
         $this->$chart();
@@ -125,7 +131,7 @@ class QueueController extends Controller {
     public function chartDay() {
         $this->highcharts = $this->getDataStatisticDay($this->fromdate,
                                                        $this->queue);
-        $this->viewMain("page/charts/chart_{$this->chart}.php");
+        $this->viewMain("page/charts/chart_{$this->getSection()}.php");
     }
 
     /**
@@ -134,7 +140,7 @@ class QueueController extends Controller {
     public function chartWeek() {
         $this->highcharts = $this->getDataStatisticWeek($this->fromdate,
                                                         $this->queue);
-        $this->viewMain("page/charts/chart_{$this->chart}.php");
+        $this->viewMain("page/charts/chart_{$this->getSection()}.php");
     }
 
     /**
@@ -143,7 +149,7 @@ class QueueController extends Controller {
     public function chartMonth() {
         $this->highcharts = $this->getDataStatisticMonth($this->fromdate,
                                                          $this->queue);
-        $this->viewMain("page/charts/chart_{$this->chart}.php");
+        $this->viewMain("page/charts/chart_{$this->getSection()}.php");
     }
 
     /**
@@ -166,7 +172,7 @@ class QueueController extends Controller {
             'complete' => array($from[0], $from[2], $to[2])
         );
         Log::vardump($this);
-        $this->viewMain("page/charts/chart_{$this->chart}.php");
+        $this->viewMain("page/charts/chart_{$this->getSection()}.php");
     }
 
     /**
@@ -509,21 +515,6 @@ class QueueController extends Controller {
         }
 
         return array(array_values($oxY), array_values($total), array_values($complete));
-    }
-
-    /**
-     * @param mixed $chart
-     * @return string
-     */
-    protected function _parseChart($chart) {
-        switch ($chart) {
-            case 'compare':
-            case 'day':
-            case 'month':
-            case 'week': return $chart;
-            case 'arbit':
-            default: return 'arbit';
-        }
     }
 
     protected function _parseCompareType($type) {

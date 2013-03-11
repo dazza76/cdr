@@ -141,11 +141,14 @@ abstract class ACDbWhereCommand extends ACDbBaseCommand {
      * @return self
      */
     public function group($cols) {
+        $cols = implode(",", ACPropertyValue::ensureFields($cols));
+        if ( ! $cols) {
+            return $this;
+        }
         if ($this->_query['group']) {
             $this->_query['group'] .= ", ";
         }
-        $this->_query['group'] .= implode(",",
-                                          ACPropertyValue::ensureFields($cols));
+        $this->_query['group'] .= $cols;
         return $this;
     }
 

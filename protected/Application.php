@@ -106,19 +106,48 @@ class App extends Application {
         return $url;
     }
 
+    public static function location($page, $params) {
+        $host = parent::$_instanse->request->host;
+        $webpath = parent::$_instanse->request->webpath;
+
+        $url = $host.$webpath;
+        if (substr($url, -1) != "/") {
+            $url .= "/";
+        }
+
+        $url .= $page . "?" . http_build_query($params);
+
+        parent::$_instanse->response->header('location', 'http://' . $url);
+        parent::$_instanse->response->send();
+    }
+
     /**
      * Тупо перезагружает страницу
      */
     public static function refresh() {
         $host = parent::$_instanse->request->host;
-        $url  = parent::$_instanse->request->url;
-        if (parent::$_instanse->request->query) {
-            $url .= '&r=' . rand();
-        } else {
-            $url .= '?r=' . rand();
-        }
-        parent::$_instanse->response->header('location', 'http://' . $host . $url);
+        $page = parent::$_instanse->request->url;
 
+        $pos = strpos($page, '?');
+        if ($pos !== false) {
+            $page = substr($page, 0, $pos);
+        }
+
+        $get      = $_GET;
+        $get["r"] = rand();
+
+        $url = $host . $page . "?" . http_build_query($get);
+
+
+//        $url  = parent::$_instanse->request->url;
+//        if (parent::$_instanse->request->query) {
+//            $url .= '&r=' . rand();
+//        } else {
+//            $url .= '?r=' . rand();
+//        }
+//        Log::trace($url);
+
+        parent::$_instanse->response->header('location', 'http://' . $url);
         parent::$_instanse->response->send();
     }
 

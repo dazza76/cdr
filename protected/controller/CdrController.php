@@ -24,7 +24,7 @@
  */
 class CdrController extends Controller {
 
-    protected $_filters = array(
+    protected $_filters  = array(
         'fromdate'  => array('parseDatetime'), // array('_parseDatetime'),
         'todate'    => array('parseDatetime'),
         'oper'      => 1,
@@ -46,7 +46,7 @@ class CdrController extends Controller {
         'desc'      => 1
     );
     protected $_sections = array(
-        'calls' => 'Звонки',
+        'calls'     => 'Звонки',
         'answering' => 'Автоинформатор',
     );
 
@@ -81,25 +81,19 @@ class CdrController extends Controller {
      * @param array $params
      */
     public function init($params = null) {
-        $section       = ($params === null) ? $_GET['section'] : $params['section'];
-        $section       = ($section == "answering") ? "answering" : "calls";
-        $this->_section = $section;
-
-        $section = 'pg_cdr' . $section;
-        if ($params === null) {
-            if ( ! count($_GET)) {
-                $params               = @unserialize($_SESSION[$section]);
-                $this->_sessionParams = true;
-            } else {
-                $params             = $_GET;
-            }
-        }
-        $this->_filters_url = $params;
-        $_SESSION[$section] = @serialize($params);
-
-        Log::trace('Session parametr: ' . ((int) $this->_sessionParams));
-        Log::vardump($params);
         parent::init($params);
+
+        if ($this->_actType === self::TYPE_ACTION) {
+            $action = "action" . $this->_atcion;
+            if ( ! method_exists($this, $action)) {
+                $this->content = $action . "  error action";
+                return;
+            }
+        } else {
+            $action = 'index';
+        }
+
+        $this->$action();
     }
 
     /**
@@ -110,9 +104,8 @@ class CdrController extends Controller {
             $this->actionCheckFile();
         }
 
-        if ($this->_section == "calls") {
-            $this->searchCalls();
-        }
+        $search =  'search'. $this->getSection();
+        $this->$search();
 
         $this->viewMain("page/cdr/{$this->_section}.php");
     }
@@ -306,11 +299,11 @@ class CdrController extends Controller {
                 ->from(Cdr::TABLE)
                 ->calc()
                 ->addWhere('file_exists', '0', '>')
-                ->addWhere('disposition', ' ANSWERED')
+                ->addWhere('dcontext',
+                           array('autoinform', 'outgoing', 'dialout'), 'IN')
                 ->limit($this->limit)
                 ->offset($this->offset)
                 ->order($sort);
-
 
 
         // начальная дата

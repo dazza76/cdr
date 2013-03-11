@@ -16,11 +16,11 @@
  */
 
 $config = array(
-    "database" => array(
-    )
+    "config" => 'localhost'
 );
 require_once 'protected/bootstrap.php';
 // ----------------------------------------------------------------------------
+App::Config()->v = 5;
 
 $app   = new Application();
 

@@ -71,7 +71,7 @@
         </div>
         <div class="clear clear_fix miniblock">
             <div class="label fl_l ta_r" style="width: 250px;"><span class="field-required">*</span>Номер оператора:</div>
-            <div class="labeled fl_l" style="width: 220px; margin-left: 5px;"><input type="text" name="agentid" value="" class="field-number" /></div>
+            <div class="labeled fl_l" style="width: 220px; margin-left: 5px;"><input type="text" name="agentid" value="" class="field-number" maxlength="11" /></div>
         </div>
         <div class="clear clear_fix mediumblock">
             <div class="label fl_l ta_r" style="width: 250px;">Список очередей пенальти 1:</div>

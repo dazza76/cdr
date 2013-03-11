@@ -44,7 +44,9 @@ class ACDbSelectCommand extends ACDbWhereCommand {
     }
 
     public function select($select) {
-        $this->_query['select'][] = (string) $select;
+        if ($select) {
+            $this->_query['select'][] = (string) $select;
+        }
         return $this;
     }
 

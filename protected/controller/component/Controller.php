@@ -57,8 +57,6 @@ abstract class Controller {
         return $filters;
     }
 
-    protected $_sessionParams = false;
-
     /**
      * @var mixed
      */
@@ -79,21 +77,6 @@ abstract class Controller {
      */
     protected $_sections;
 
-    protected function _ensureSection($section = null) {
-        if ($section == null) {
-            $section = $_GET['section'];
-        }
-        if ( ! $this->_sections) {
-            return null;
-        }
-
-        if ( ! in_array($section, $this->_sections)) {
-            $section = $this->_sections[0];
-        }
-
-        return $section;
-    }
-
     /**
      * @var array
      */
@@ -109,8 +92,6 @@ abstract class Controller {
             $this->_atcion  = $_POST['act'];
             $this->_actType = self::TYPE_ACTION;
         }
-
-        $this->_init();
     }
 
     public function __get($name) {
@@ -146,7 +127,12 @@ abstract class Controller {
         $this->$name = $value;
     }
 
-    protected function _init($params = null) {
+    /**
+     * Автоматическая инициализация
+     * @param array $params параметры инициализации
+     * @return void
+     */
+    public function init($params = null) {
         if ($params === null) {
             $params = $_GET;
         }
@@ -157,22 +143,8 @@ abstract class Controller {
         unset($params['section']);
 
         $params = $this->_sessionParams($params);
-    }
 
-    /**
-     * Автоматическая инициализация
-     * @param array $params параметры инициализации
-     * @return void
-     */
-    public function init($params = null) {
-        if ($params === null) {
-            $params               = $_GET;
-            $this->_sessionParams = true;
-        }
-        if ( ! is_array($params)) {
-            $params = array();
-        }
-        $keys   = array_keys($this->_filters);
+        $keys = array_keys($this->_filters);
         foreach ($keys as $key) {
             $this->$key = $params[$key];
             unset($params[$key]);
@@ -180,18 +152,6 @@ abstract class Controller {
         foreach ($params as $key => $value) {
             $this->$key = $value;
         }
-
-        if ($this->_actType === self::TYPE_ACTION) {
-            $action = "action" . $this->_atcion;
-            if ( ! method_exists($this, $action)) {
-                $this->content = $action . "  error action";
-                return;
-            }
-        } else {
-            $action = 'index';
-        }
-
-        $this->$action();
     }
 
     /**
@@ -300,17 +260,17 @@ abstract class Controller {
     }
 
     protected function _addJsSrc($file) {
-        $this->dataPage['links'] .= '<script src="js/' . $file . '"></script>' . "\n";
+        $this->dataPage['links'] .= '<script src="js/' . $file . '?' . App::Config()->v . '"></script>' . "\n";
     }
 
     protected function _addCssLink($file) {
-        $this->dataPage['links'] .= ' <link rel="stylesheet" href="css/' . $file . '">' . "\n";
+        $this->dataPage['links'] .= ' <link rel="stylesheet" href="css/' . $file . '?' . App::Config()->v . '">' . "\n";
     }
 
     protected function _sessionParams($params) {
         $pg = "pg_" . $this->getPage();
         if ($this->_sections) {
-            $pg .= $this->getSection();
+            $pg .= "_" . $this->getSection();
         }
 
         if (count($params) == 0) {
@@ -327,5 +287,20 @@ abstract class Controller {
         Log::vardump(array($pg => $params));
 
         return $params;
+    }
+
+    protected function _ensureSection($section = null) {
+        if ($section == null) {
+            $section = $_GET['section'];
+        }
+        if ( ! $this->_sections) {
+            return null;
+        }
+        if ( ! array_key_exists($section, $this->_sections)) {
+            reset($this->_sections);
+            list($section) = each($this->_sections);
+        }
+
+        return $section;
     }
 }

@@ -13,6 +13,11 @@
  */
 class SettingsController extends Controller {
 
+    public function init($params = null) {
+        parent::init($params);
+        $this->index();
+    }
+
     /**
      * Формирет страницу
      */
@@ -24,7 +29,7 @@ class SettingsController extends Controller {
                 break;
             case 'operator':
             default :
-                $section       = 'operator';
+                $section        = 'operator';
                 break;
         }
         $this->_section = $section;
@@ -46,7 +51,7 @@ class SettingsController extends Controller {
         }
         if ($_POST['action'] == 'edit') {
             $this->actionOperatorEdit();
-//            App::refresh();
+            App::location($this->getPage(), array('section'=>  $this->getSection()));
         }
 
         if ($_GET['id']) {

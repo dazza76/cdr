@@ -37,19 +37,20 @@ class TimemanController extends Controller {
     }
 
     public function init($params = null) {
-        if ($params === null) {
-            if ( ! count($_GET)) {
-                $params               = $_SESSION['pg_timeman'];
-                $this->_sessionParams = true;
-            } else {
-                $params             = $_GET;
-            }
-        }
-        $_SESSION['pg_timeman'] = $params;
-
-        Log::trace('Session parametr: ' . ((int) $this->_sessionParams));
-        Log::vardump($params);
+//        if ($params === null) {
+//            if ( ! count($_GET)) {
+//                $params               = $_SESSION['pg_timeman'];
+//                $this->_sessionParams = true;
+//            } else {
+//                $params             = $_GET;
+//            }
+//        }
+//        $_SESSION['pg_timeman'] = $params;
+//
+//        Log::trace('Session parametr: ' . ((int) $this->_sessionParams));
+//        Log::vardump($params);
         parent::init($params);
+        $this->index();
     }
 
     /**
