@@ -50,7 +50,7 @@ class SupervisorController extends Controller {
      */
     public function sectionQueue() {
         $que_arr = Queue::getQueueArr();
-        $date    = new DateTime(); // '2011-03-11 00:00:00'
+        $date    = new DateTime(date('Y-m-d')); // '2011-03-11 00:00:00'
         $data    = $this->getStatisticQueue($date, array_keys($que_arr));
 
 
@@ -84,6 +84,7 @@ class SupervisorController extends Controller {
      * Операторы
      */
     public function sectionOperator() {
+        // статусы
         $states           = $this->getStates();
         $this->queueChart = array(
             'ringing'   => 0,
@@ -92,6 +93,7 @@ class SupervisorController extends Controller {
             'paused'    => 0,
             'aftercall' => 0
         );
+        // диограма
         foreach ($states as $value) {
             switch ($value['phone']) {
                 case 'ringing':
@@ -118,7 +120,8 @@ class SupervisorController extends Controller {
 
 
         $this->queueAgents = array();
-        $result            = App::Db()->createCommand()->select()
+
+        $result = App::Db()->createCommand()->select()
                 ->from(QueueAgent::TABLE)
                 ->query();
 
@@ -130,6 +133,10 @@ class SupervisorController extends Controller {
         }
         Log::vardump($this->queueAgents);
 
+        // минитабличка
+        $date             = date('Y-m-d H:i:s', time() - 1800);
+        $date             = new DateTime($date); // '2011-03-11 00:00:00'
+        $this->queuesData = $this->getStatisticQueueAll($date);
 
         $this->_addJsSrc('highcharts/highcharts.js');
         $this->viewMain('page/supervisor/supervisor_operator.php');
@@ -171,6 +178,10 @@ class SupervisorController extends Controller {
         }
     }
 
+    /**
+     * Статусы операторов
+     * @return array
+     */
     public function getStates() {
         $shell_res = $this->shell();
         Log::vardump($shell_res);
@@ -224,6 +235,12 @@ class SupervisorController extends Controller {
         return ($state) ? $state : array();
     }
 
+    /**
+     * Статистика по очередям
+     * @param DateTime $datetime
+     * @param array $queue
+     * @return array
+     */
     public function getStatisticQueue(DateTime $datetime, array $queue) {
         $servicelevel = 60;
 
@@ -315,43 +332,61 @@ class SupervisorController extends Controller {
     }
 
     /**
-     * @param string $select
-     * @return ACDbSelectCommand
+     * Статистика по всем очарядям
+     * @param DateTime $datetime
+     * @param array $queue
+     * @return array
      */
-    private function _select_queue($select, $group = null) {
-        $cmd = App::Db()->createCommand()->select($select);
-        $cmd->select($group);
-        return $cmd;
-    }
+    public function getStatisticQueueAll(DateTime $datetime) {
+        $datetime = $datetime->format('Y-m-d H:i:s');
+        $data     = array(
+            'waiting'     => 0,
+            'max_time'    => 0,
+            'served'      => 0,
+            'avg_call'    => 0,
+            'avg_hold'    => 0,
+            'lost'        => 0,
+            'avg_abandon' => 0,
+        );
 
-    public function getDiagram($states) {
-        foreach ($states as $value) {
-            switch ($value[2]) {
-                case 'ringing':
-                    $ringing ++;
-                    break;
-                case 'not_in_use':
-                    if ($value[1] == 'online')
-                        $free ++;
-                    break;
-                case 'used':
-                    $used ++;
-                    break;
-            }
-            switch ($value[1]) {
-                case 'paused':
-                    $paused ++;
-                    break;
-                case 'aftercall':
-                    $aftercall ++;
-                    break;
-            }
-        }
-//        drawbar($free,35,127,255,127,"Свободно");
-//        drawbar($ringing,75,255,192,127,"Звонит");
-//        drawbar($used,115,255,127,127,"Занято");
-//        drawbar($paused,155,255,255,127,"Перерыв");
-//        drawbar($aftercall,195,127,127,255,"Обработка");
+        $result = App::Db()->createCommand()->select('COUNT(callid) AS waiting') // Ожидающих
+                        ->select('MIN(timestamp) AS max_time') // Дольше всего ожидает
+                        ->from('ActiveCall')
+                        ->addWhere('status', 'inQue')
+                        ->query()->fetchAssoc();
+
+        $data['waiting']  = (int) $result['waiting'];
+        $data['max_time'] = ($result['max_time']) ? (time() - strtotime($result['max_time'])) : 0;
+
+        $result = App::Db()->createCommand()
+                        ->select('COUNT(callid) AS served') // Обслужено
+                        ->select('AVG(callduration) AS avg_call') // Ср. время разговора
+                        ->select('AVG(holdtime) AS avg_hold') // // Ср. время ожидание
+                        ->from('call_status')
+                        ->addWhere('status',
+                                   array('COMPLETECALLER', 'COMPLETEAGENT', 'TRANSFER'),
+                                   'IN')
+                        ->addWhere('timestamp', $datetime, '>=')
+                        ->query()->fetchAssoc();
+
+        $data['served']   = (int) $result['served'];
+        $data['avg_call'] = round($result['avg_call'], 2);
+        $data['avg_hold'] = round($result['avg_hold'], 2);
+
+
+        $result = App::Db()->createCommand()
+                        ->select('COUNT(callid) AS `lost`')      // Потеряно
+                        ->select('AVG(holdtime) AS avg_abandon') // Среднее время потеря
+                        ->from('call_status')
+                        ->addWhere('status', 'ABANDON')
+                        ->addWhere('timestamp', $datetime, '>=')
+                        ->query()->fetchAssoc();
+
+        $data['lost']        = (int) $result['lost'];
+        $data['avg_abandon'] = round($result['avg_abandon'], 2);
+
+
+        return $data;
     }
 
     /**

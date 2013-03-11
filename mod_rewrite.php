@@ -40,3 +40,5 @@ $app->controller->render();
 if ($app->controller->getActType() == Controller::TYPE_PAGE) {
     Log::render();
 }
+
+

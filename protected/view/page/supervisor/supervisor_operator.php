@@ -30,8 +30,9 @@ include 'filters.php';
                     categories: [' ']
                 },
                 yAxis: {
+                    allowDecimals: false,
                     title: {
-                        text: null,
+                        text: null
                     }
                 },
                 tooltip: {
@@ -40,14 +41,13 @@ include 'filters.php';
                     }
                 },
                 plotOptions: {
-            column: {borderColor: '#303030', shadow: true },
+                    column: {borderColor: '#303030', shadow: true},
                     series: {
                         animation: {
                             duration: 0
                         }
                     }
                 },
-
                 credits: {
                     enabled: false
                 },
@@ -112,31 +112,31 @@ include 'filters.php';
                 </tr>-->
                 <tr>
                     <td class="head">Ожидают:</td>
-                    <td> - 0 - </td>
+                    <td><?php echo html($this->queuesData['waiting']); ?></td>
                 </tr>
                 <tr>
                     <td class="head">Дольше всего ожидает:</td>
-                    <td> - 0 - </td>
+                    <td><?php echo html($this->queuesData['max_time']); ?></td>
+                </tr>
+                <tr>
+                    <td class="head">Обслуженно:</td>
+                    <td><?php echo html($this->queuesData['served']); ?></td>
                 </tr>
                 <tr>
                     <td class="head">В среднем клиенты ждут:</td>
-                    <td> - 0 - </td>
-                </tr>
-                <tr>
-                    <td class="head">обслуженно:</td>
-                    <td> - 0 - </td>
+                    <td><?php echo html($this->queuesData['avg_hold']); ?> сек.</td>
                 </tr>
                 <tr>
                     <td class="head">В среднем разговор длится:</td>
-                    <td> - 0 - </td>
+                    <td><?php echo html($this->queuesData['avg_call']); ?> сек.</td>
                 </tr>
                 <tr>
-                    <td class="head">потеряно:</td>
-                    <td> - 0 - </td>
+                    <td class="head">Потеряно:</td>
+                    <td><?php echo html($this->queuesData['lost']); ?></td>
                 </tr>
                 <tr>
-                    <td class="head">среднее время потеря:</td>
-                    <td> - 0 - </td>
+                    <td class="head">Среднее время потеря:</td>
+                    <td><?php echo html($this->queuesData['avg_abandon']); ?> сек.</td>
                 </tr>
             </tbody>
         </table>
