@@ -29,7 +29,7 @@ class QueueAgent extends ACDataObject {
             return self::$_QueueAgent;
         }
 
-        $res = App::Db()->query("SELECT name, agentid FROM " . self::TABLE);
+        $res = App::Db()->query("SELECT name, agentid FROM " . self::TABLE ." ORDER BY name");
         while ($row = $res->fetchAssoc()) {
             self::$_QueueAgent[$row['agentid']] = $row['name'];
         }

@@ -116,13 +116,14 @@ class SupervisorController extends Controller {
                     break;
             }
         }
-        Log::vardump($this->queueChart);
+        Log::dump($this->queueChart);
 
 
         $this->queueAgents = array();
 
         $result = App::Db()->createCommand()->select()
                 ->from(QueueAgent::TABLE)
+                ->order('name')
                 ->query();
 
         while ($queueAgent = $result->fetchObject('QueueAgent')) {
@@ -131,11 +132,13 @@ class SupervisorController extends Controller {
             $queueAgent->member  = $states[$queueAgent->agentid]['member'];
             $this->queueAgents[] = $queueAgent;
         }
-        Log::vardump($this->queueAgents);
+        Log::dump($this->queueAgents);
 
         // минитабличка
-        $date             = date('Y-m-d H:i:s', time() - 1800);
+        $date             = date('Y-m-d H:i:s', time() - 1800); //2012-07-28+03
+//        $date = '2012-07-28';
         $date             = new DateTime($date); // '2011-03-11 00:00:00'
+
         $this->queuesData = $this->getStatisticQueueAll($date);
 
         $this->_addJsSrc('highcharts/highcharts.js');
@@ -184,7 +187,8 @@ class SupervisorController extends Controller {
      */
     public function getStates() {
         $shell_res = $this->shell();
-        Log::vardump($shell_res);
+        Log::trace("<b>shell result::</b><pre>{$shell_res}</pre>");
+//        Log::dump($shell_res, 'shell result');
 
         $shell_arr = explode("\n", $shell_res);
         foreach ($shell_arr as $row) {

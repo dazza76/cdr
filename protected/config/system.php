@@ -29,5 +29,5 @@ return array(
     // вывод логов (дебагир)
     'debug'  => 0,
     // доп. файл настроек
-    'config' => '', // 'localhost'
+    'config' => 'localhost'
 );

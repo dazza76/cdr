@@ -111,7 +111,7 @@ class QueueController extends Controller {
      */
     public function index() {
         $chart       = 'chart' . $this->getSection();
-        $this->dataPage['links'] .= '<script src="js/highcharts/highcharts.js"></script>';
+        $this->dataPage['links'] .= '<script src="lib/highcharts/highcharts.js"></script>';
 
         $this->$chart();
     }
@@ -171,7 +171,7 @@ class QueueController extends Controller {
             'total'    => array($from[0], $from[1], $to[1]),
             'complete' => array($from[0], $from[2], $to[2])
         );
-        Log::vardump($this);
+        Log::dump($this, get_class($this));
         $this->viewMain("page/charts/chart_{$this->getSection()}.php");
     }
 
@@ -407,7 +407,7 @@ class QueueController extends Controller {
             $complete[$day] = 0;
         }
 
-        Log::vardump($oxY);
+        Log::dump($oxY, 'Масив по oxY');
 
 
         $query_total = "
@@ -425,7 +425,7 @@ class QueueController extends Controller {
         while ($row         = $result->fetchAssoc()) {
             $total[$row['date']] = (int) $row['total'];
         }
-        Log::vardump($total);
+        Log::dump($total, 'Масив по total');
 
         $query_complete = "
             SELECT
@@ -443,7 +443,7 @@ class QueueController extends Controller {
         while ($row    = $result->fetchAssoc()) {
             $complete[$row['date']] = (int) $row['complete'];
         }
-        Log::vardump($complete);
+        Log::dump($complete, 'Масив по complete');
 
         return array(array_values($oxY), array_values($total), array_values($complete));
     }
@@ -466,7 +466,7 @@ class QueueController extends Controller {
         if ($query == null) {
             $query = $this->query;
         }
-        Log::vardump($query);
+        Log::dump($query, 'query');
         if (count($query)) {
             $query = " AND queue IN ( '" . @implode("','", $query) . "' ) ";
         }

@@ -20,8 +20,8 @@ if ($c['cdr']) {
         <li class="submenu">
             <span class="submenu-title"> <a href="cdr" class="header-icon icon-calls-big"> Запись разговоров: </a> </span>
             <ul>
-                <li class="<?php echo $sm['calls']; ?>"> <a href="cdr"> Звонки </a> </li>
-                <li class="<?php echo $sm['answering']; ?>"> <a href="cdr?section=answering"> Автоинформатор </a> </li>
+                <li class="<?php echo $sm['calls']; ?>"> <a href="<?php echo Utils::pageUrl('cdr'); ?>"> Звонки </a> </li>
+                <li class="<?php echo $sm['answering']; ?>"> <a href="<?php echo Utils::pageUrl('cdr'); ?>?section=answering"> Автоинформатор </a> </li>
             </ul>
         </li>
 <?php } else { ?>
@@ -40,11 +40,11 @@ if ($c['queue']) {
         <li class="submenu">
             <span class="submenu-title"> <a href="queue" class="header-icon icon-charts-big"> Очереди: </a> </span>
             <ul>
-                <li class="<?php echo $sm['arbit']; ?>"> <a href="queue"> Произвольно </a> </li>
-                <li class="<?php echo $sm['day']; ?>"> <a href="queue?section=day"> Суточный </a> </li>
-                <li class="<?php echo $sm['week']; ?>"> <a href="queue?section=week"> Недельный </a> </li>
-                <li class="<?php echo $sm['month']; ?>"> <a href="queue?section=month"> Месячный </a> </li>
-                <li class="<?php echo $sm['compare']; ?>"> <a href="queue?section=compare"> Сравнение </a> </li>
+                <li class="<?php echo $sm['arbit']; ?>"> <a href="<?php echo Utils::pageUrl('queue'); ?>"> Произвольно </a> </li>
+                <li class="<?php echo $sm['day']; ?>"> <a href="<?php echo Utils::pageUrl('queue'); ?>?section=day"> Суточный </a> </li>
+                <li class="<?php echo $sm['week']; ?>"> <a href="<?php echo Utils::pageUrl('queue'); ?>?section=week"> Недельный </a> </li>
+                <li class="<?php echo $sm['month']; ?>"> <a href="<?php echo Utils::pageUrl('queue'); ?>?section=month"> Месячный </a> </li>
+                <li class="<?php echo $sm['compare']; ?>"> <a href="<?php echo Utils::pageUrl('queue'); ?>?section=compare"> Сравнение </a> </li>
             </ul>
         </li>
 <?php } else { ?>
@@ -67,9 +67,9 @@ if ($c['settings']) {
         <li class="submenu">
             <span class="submenu-title"> <a href="settings" class="header-icon icon-settings-big"> Настройки: </a> </span>
             <ul>
-                <li class="<?php echo $sm['operator']; ?>"> <a href="settings?section=operator"> Операторы </a> </li>
-                <li class="<?php echo $sm['queue']; ?>"> <a href="settings?section=queue"> Очереди </a> </li>
-                <li class="<?php echo $sm['schedule']; ?>"> <a href="settings?section=schedule"> Расписание </a> </li>
+                <li class="<?php echo $sm['operator']; ?>"> <a href="<?php echo Utils::pageUrl('settings'); ?>?section=operator"> Операторы </a> </li>
+                <li class="<?php echo $sm['queue']; ?>"> <a href="<?php echo Utils::pageUrl('settings'); ?>?section=queue"> Очереди </a> </li>
+                <li class="<?php echo $sm['schedule']; ?>"> <a href="<?php echo Utils::pageUrl('settings'); ?>?section=schedule"> Расписание </a> </li>
             </ul>
         </li>
 <?php } else { ?>
@@ -86,15 +86,15 @@ if ($c['supervisor']) {
     $sm[$this->getSection()]='current';
 ?>
         <li class="submenu">
-            <span class="submenu-title"> <a href="supervisor" class="header-icon icon-monitor-big"> Супервизоры: </a> </span>
+            <span class="submenu-title"> <a href="supervisor" class="header-icon icon-monitor-big"> Супервизор: </a> </span>
             <ul>
-                <li class="<?php echo $sm['queue']; ?>"> <a href="supervisor?section=queue"> Очереди </a> </li>
-                <li class="<?php echo $sm['operator']; ?>"> <a href="supervisor?section=operator"> Операторы </a> </li>
+                <li class="<?php echo $sm['queue']; ?>"> <a href="<?php echo Utils::pageUrl('supervisor'); ?>?section=queue"> Очереди </a> </li>
+                <li class="<?php echo $sm['operator']; ?>"> <a href="<?php echo Utils::pageUrl('supervisor'); ?>?section=operator"> Операторы </a> </li>
             </ul>
         </li>
 <?php } else { ?>
         <li class="">
-            <a href="supervisor" class="header-icon icon-monitor-big"> Супервизоры </a>
+            <a href="supervisor" class="header-icon icon-monitor-big"> Супервизор </a>
         </li>
 <?php }
 // Супервизоры --END

@@ -12,6 +12,10 @@
  */
 error_reporting(E_ALL & ~E_NOTICE);
 
+//header('Content-Type: text/html; charset=UTF-8');
+
+
+
 // ----------------------------------------------------------------------------
 defined('TIME_START') or define('TIME_START', microtime(true));
 defined('DS') or define('DS', DIRECTORY_SEPARATOR);
@@ -45,6 +49,9 @@ unset($_config_system);
 if (is_array($config)) {
     App::Config()->mergeRecursive($config);
 }
+
+
+App::Config()->page_prefix = '.php';
 
 defined('DEBUG') or define('DEBUG', (App::Config()->debug) ? 1 : false);
 // Добавлять в отчет все PHP ошибки

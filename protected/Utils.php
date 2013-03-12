@@ -63,4 +63,12 @@ class Utils {
         $pagenator = new ACPagenator($count, $offset, $limit, $get);
         return $pagenator->render();
     }
+
+    public static function linkUrl($file) {
+        return App::Config()->webpath . '/' . $file . '?' . App::Config()->v;
+    }
+
+    public static function pageUrl($page) {
+        return $page . App::Config()->page_prefix;
+    }
 }

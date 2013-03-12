@@ -42,9 +42,9 @@ $chart_title = "сравнение {$from_title} и {$to_title}";
         <div class="filter fl_l sep">
             <div class="label">Дата сравнения</div>
             <div class="labeled">
-                <input name="fromdate" type="text" autocomplete="off" value="<?php echo $this->fromdate->format('Y-m-d'); ?>" class="datepicker" showweek="1" >
+                <input name="fromdate" type="text" autocomplete="off" value="<?php echo $this->fromdate->format('d.m.Y'); ?>" class="datepicker" showweek="1" >
                 —
-                <input name="todate" type="text" autocomplete="off" value="<?php echo $this->fromdate->format('Y-m-d'); ?>" class="datepicker" showweek="1" >
+                <input name="todate" type="text" autocomplete="off" value="<?php echo $this->fromdate->format('d.m.Y'); ?>" class="datepicker" showweek="1" >
             </div>
         </div>
         <div class="filter fl_l sep">

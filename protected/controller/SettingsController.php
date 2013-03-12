@@ -61,6 +61,7 @@ class SettingsController extends Controller {
         $this->queueAgent = App::Db()->createCommand()
                 ->select()
                 ->from(QueueAgent::TABLE)
+                ->order('name')
                 ->query()
                 ->getFetchObjects('QueueAgent');
 
@@ -97,7 +98,7 @@ class SettingsController extends Controller {
             echo "no agentid";
         }
         $queueAgent = new QueueAgent($_POST);
-        Log::vardump($queueAgent);
+        Log::dump($queueAgent, 'queueAgent');
 
         $sets         = array();
         $sets['name'] = trim(@$params['name']);

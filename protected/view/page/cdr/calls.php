@@ -14,9 +14,9 @@
         <div class="filter fl_l sep">
             <div class="label">Дата</div>
             <div class="labeled">
-                <input name="fromdate" type="text" autocomplete="off" value="<?php echo $this->fromdate->format('Y-m-d H:i'); ?>" class="datetimepicker" >
+                <input name="fromdate" type="text" autocomplete="off" value="<?php echo $this->fromdate->format('d.m.Y H:i'); ?>" class="datetimepicker" >
                 —
-                <input name="todate" type="text" autocomplete="off" value="<?php echo $this->todate->format('Y-m-d H:i'); ?>" class="datetimepicker" >
+                <input name="todate" type="text" autocomplete="off" value="<?php echo $this->todate->format('d.m.Y H:i'); ?>" class="datetimepicker" >
             </div>
         </div>
         <div class="filter fl_l sep">

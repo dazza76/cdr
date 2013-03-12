@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Log class  - Log.php file
  *
@@ -18,7 +17,7 @@ class Log {
     public static $enable = false;
 
     public static function trace($message, $category = 'Log', $level = 'trace') {
-        if (!self::$enable) {
+        if ( ! self::$enable) {
             return;
         }
 
@@ -34,16 +33,17 @@ class Log {
         );
     }
 
-    public static function vardump($object) {
-        if (!self::$enable) {
+
+    public static function dump($object, $name = null) {
+        if ( ! self::$enable) {
             return;
         }
 
         ob_start();
         ac_dump($object);
-        $message = ob_get_contents();
+        $message = '<b>'.$name.'::</b>' . ob_get_contents();
         ob_end_clean();
-        self::trace($message, 'dump', 'trace');
+        self::trace($message, 'dump');
     }
 
     public static function error($message, $category = 'Log') {
@@ -62,7 +62,7 @@ class Log {
     }
 
     public static function render($print = true) {
-        if (!self::$enable) {
+        if ( ! self::$enable) {
             return;
         }
 
@@ -79,5 +79,4 @@ class Log {
             return $content;
         }
     }
-
 }

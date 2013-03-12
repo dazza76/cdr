@@ -339,7 +339,7 @@ class ACResponse {
 
         $this->_sendContent($this->_body);
 
-        Log::trace('Response::send()');
+        Log::trace('Response::send()', 'Header');
     }
 
     /**
@@ -375,6 +375,7 @@ class ACResponse {
                 $header = "{$name}: {$value}";
             }
             header($header);
+            Log::trace($header, 'Header');
             // Log::trace("Header> header:: " . $header);
         }
     }

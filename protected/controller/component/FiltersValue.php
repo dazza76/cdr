@@ -49,12 +49,15 @@ class FiltersValue {
             $default = new ACDateTime();
         }
 
+
+        $date = preg_replace('|([\d]{1,2})\.([\d]{1,2})\.([\d]{4})|', '$3-$2-$1', $date);
         $date = ACPropertyValue::ensureDatetime($date);
         if ($date == '0000-00-00 00:00:00') {
             $date = $default;
         } else {
             $date = new ACDateTime($date);
         }
+
         return $date;
     }
 

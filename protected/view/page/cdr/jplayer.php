@@ -7,9 +7,7 @@
  * @author     Tyurin D. <fobia3d@gmail.com>
  * @copyright  (c) 2013, AC
  */
-// Подключаем файлы JS и CSS
-$this->_addJsSrc('player/jquery.jplayer.min.js');
-$this->_addCssLink('../js/player/jplayer.blue.monday.css');
+
 //
 $dir    = App::Config()->cdr->monitor_dir . '/';
 $format = App::Config()->cdr->file_format;
@@ -21,7 +19,7 @@ $format = App::Config()->cdr->file_format;
     };
     $(document).ready(function() {
         $("#jquery_jplayer").jPlayer({
-            swfPath: "js/player",
+            swfPath: "lib/player",
             supplied: rec.format,
             wmode: "window"
         });

@@ -223,11 +223,9 @@ abstract class Controller {
         if ($file !== null) {
             $this->view($file);
         }
-        if (DEBUG) {
-            $this->_addCssLink('aclog.css');
-        }
 
         $this->view('layout/main.php');
+        Log::trace('parse view main complete');
     }
 
     /**
@@ -235,9 +233,10 @@ abstract class Controller {
      * @param bool $print
      * @return string
      */
-    public function render($print = true) {
+    public function render() {
         if (DEBUG) {
-            Log::trace('--------------');
+            $size = ACUtils::getMemoryUsage();
+            Log::trace('Объем занимаемой памяти: '. ACUtils::getMemoryString($size));
             Log::trace('Запросов MySQL: ' . App::Db()->getNumQuery());
             Log::trace('Время обработки MySQL: ' . sprintf(" %01.6f",
                                                            App::Db()->getTimeQuery()));
@@ -245,7 +244,7 @@ abstract class Controller {
                                                            ACUtils::getExecutionTime()));
         }
 
-        return $this->_print($this->content, $print);
+        echo $this->content;
     }
 
     protected function _print($string, $print = true) {
@@ -255,16 +254,15 @@ abstract class Controller {
             return $string;
     }
 
-    protected function _addJsParam($key, $value) {
-        $this->dataPage['js'][$key] = $value;
-    }
 
     protected function _addJsSrc($file) {
-        $this->dataPage['links'] .= '<script src="js/' . $file . '?' . App::Config()->v . '"></script>' . "\n";
+        // $this->dataPage['links'] .= '<script src="js/' . $file . '?' . App::Config()->v . '"></script>' . "\n";
+        $this->dataPage['links'] .= '<script src="' . Utils::linkUrl("js/{$file}") .  "\"></script>\n";
     }
 
     protected function _addCssLink($file) {
-        $this->dataPage['links'] .= ' <link rel="stylesheet" href="css/' . $file . '?' . App::Config()->v . '">' . "\n";
+        // $this->dataPage['links'] .= ' <link rel="stylesheet" href="css/' . $file . '?' . App::Config()->v . '">' . "\n";
+        $this->dataPage['links'] .= ' <link rel="stylesheet" href="' . Utils::linkUrl("css/{$file}") . "\">\n";
     }
 
     protected function _sessionParams($params) {
@@ -284,7 +282,7 @@ abstract class Controller {
 
         $_SESSION[$pg] = @serialize($params);
 
-        Log::vardump(array($pg => $params));
+        Log::dump($params, $pg);
 
         return $params;
     }

@@ -106,10 +106,10 @@ include 'filters.php';
         <h4>Данные за последние 30 мин</h4>
         <table class="grid">
             <tbody>
-<!--                <tr>
+                <tr>
                     <td class="head" style="width: 250px;">Уровень обслуживания:</td>
                     <td> - 0 - </td>
-                </tr>-->
+                </tr>
                 <tr>
                     <td class="head">Ожидают:</td>
                     <td><?php echo html($this->queuesData['waiting']); ?></td>

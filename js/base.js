@@ -49,7 +49,7 @@ $(document).ready(function() {
         showOn: "button",
         changeMonth: true,
         changeYear: true,
-        dateFormat: "yy-mm-dd"
+        dateFormat: "dd.mm.yy"
     }).keydown(function() {
         $(this).datepicker("show");
         return false;
@@ -63,7 +63,7 @@ $(document).ready(function() {
         changeMonth: true,
         changeYear: true,
         showOn: "button",
-        dateFormat: "yy-mm-dd",
+        dateFormat: "dd.mm.yy",
         buttonText: '',
         timeText: 'Время',
         hourText: 'Часы',

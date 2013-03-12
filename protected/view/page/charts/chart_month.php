@@ -13,7 +13,7 @@
         <div class="filter fl_l sep">
             <div class="label">Дата</div>
             <div class="labeled">
-                <input name="fromdate" type="text" autocomplete="off" value="<?php echo $this->fromdate->format('Y-m-d'); ?>" class="datepicker" >
+                <input name="fromdate" type="text" autocomplete="off" value="<?php echo $this->fromdate->format('d.m.Y'); ?>" class="datepicker" >
             </div>
         </div>
         <div class="filter fl_l sep">

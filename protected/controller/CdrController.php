@@ -41,7 +41,7 @@ class CdrController extends Controller {
                 "dst",
                 "duration",
                 "comment",
-        )),
+            )),
         'mob'       => array('parseCheck'),
         'desc'      => 1
     );
@@ -104,8 +104,12 @@ class CdrController extends Controller {
             $this->actionCheckFile();
         }
 
-        $search =  'search'. $this->getSection();
+        $search = 'search' . $this->getSection();
         $this->$search();
+
+        // Подключаем файлы JS и CSS
+        $this->dataPage['links'] .= '<script src="' . Utils::linkUrl('lib/player/jquery.jplayer.min.js') . "\"></script>\n"
+                . ' <link rel="stylesheet" href="' . Utils::linkUrl('lib/player/jplayer.blue.monday.css') . "\">\n";
 
         $this->viewMain("page/cdr/{$this->_section}.php");
     }
