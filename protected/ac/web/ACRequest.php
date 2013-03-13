@@ -1,4 +1,9 @@
 <?php
+/**
+ *
+ * @author      Tyurin D. <fobia3d@gmail.com>
+ * @copyright   (c) 2013, AC
+ */
 
 class ACRequest {
 
@@ -60,7 +65,7 @@ class ACRequest {
     /**
      * Constructor
      */
-    public function __construct($webpath = "/") {
+    public function __construct($webpath = "") {
         $this->webpath = $webpath;
         $this->method  = $_SERVER["REQUEST_METHOD"];
         $this->time    = $_SERVER["REQUEST_TIME"];
@@ -70,7 +75,6 @@ class ACRequest {
         $this->url     = $_SERVER["REQUEST_URI"];
 
         $url     = substr($this->url, strlen($webpath));
-//        $url     = str_replace($webpath, '', $url);
         $pattern = array(
             '|/+|',
             '|^/|',

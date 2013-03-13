@@ -41,6 +41,7 @@ class SupervisorController extends Controller {
 
     public function index() {
         $section = "section" . $this->getSection();
+
         $this->_addJsSrc('supervisor.js');
         $this->$section();
     }
@@ -136,12 +137,13 @@ class SupervisorController extends Controller {
 
         // минитабличка
         $date             = date('Y-m-d H:i:s', time() - 1800); //2012-07-28+03
-//        $date = '2012-07-28';
+        //        $date = '2012-07-28';
         $date             = new DateTime($date); // '2011-03-11 00:00:00'
 
         $this->queuesData = $this->getStatisticQueueAll($date);
 
-        $this->_addJsSrc('highcharts/highcharts.js');
+        $this->dataPage['links'] .= '<script src="' . Utils::linkUrl('lib/highcharts/highcharts.js') . "\"></script>\n";
+
         $this->viewMain('page/supervisor/supervisor_operator.php');
     }
 
@@ -311,6 +313,7 @@ class SupervisorController extends Controller {
         }
 
 
+        // Service Level
         $result = App::Db()->createCommand()
                 ->select('COUNT(callid) AS `service`') // SERVICE LEVEL
                 ->select('queue')
@@ -323,7 +326,12 @@ class SupervisorController extends Controller {
                 ->addWhere('holdtime + callduration', $servicelevel, '>=')
                 ->group('queue')
                 ->query();
+        Log::dump($result->getFetchAssocs(), 'service (SQL result)');
+
         while ($row    = $result->fetchAssoc()) {
+            // Service Level = Answered Less X seconds / Entered
+
+
             $full = $data[$row['queue']]['served'] + $data[$row['queue']]['lost'];
 
             $service = $row['service'];

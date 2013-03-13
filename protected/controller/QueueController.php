@@ -111,7 +111,8 @@ class QueueController extends Controller {
      */
     public function index() {
         $chart       = 'chart' . $this->getSection();
-        $this->dataPage['links'] .= '<script src="lib/highcharts/highcharts.js"></script>';
+
+        $this->dataPage['links'] .= '<script src="' . Utils::linkUrl('lib/highcharts/highcharts.js') . "\"></script>\n";
 
         $this->$chart();
     }

@@ -3,7 +3,7 @@
  * Pagenator class  - Pagenator.php file
  *
  * @author     Tyurin D. <fobia3d@gmail.com>
- * @copyright   (c) 2013, CMRI
+ * @copyright   (c) 2013, AC
  */
 
 /**
@@ -12,12 +12,6 @@
  * @package		AC
  */
 class ACPagenator {
-
-//    public static function html($count, $offset = 0, $limit = 15, $get = null) {
-//        $pagenator = new self($count, $offset, $limit, $get);
-//        return $pagenator->render();
-//    }
-
     public $get = null;
     public $count;
     public $offset;

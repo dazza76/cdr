@@ -52,6 +52,7 @@ if (is_array($config)) {
 
 
 App::Config()->page_prefix = '.php';
+App::Config()->mod_rewrite = false;
 
 defined('DEBUG') or define('DEBUG', (App::Config()->debug) ? 1 : false);
 // Добавлять в отчет все PHP ошибки

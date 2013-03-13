@@ -3,7 +3,7 @@
 ###############################################################################
 <IfModule mod_rewrite.c>
     RewriteEngine  on
-    RewriteRule    ^[a-z\-_]+$  mod_rewrite.php  [L,QSA]
+    RewriteRule    ^[a-z\-_]+$  auto_page.php  [L,QSA]
 </IfModule>
 
 # Отключает Magic quotes для входящих данных из массивов GET/POST/Cookie

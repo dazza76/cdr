@@ -1,10 +1,9 @@
 <?php
 /*
- * Супервизоры
+ * Супервизор
  *
  * charset="UTF-8"
  */
-
 return array(
     // Использовать команду shell
     'shell_exec' => 0,

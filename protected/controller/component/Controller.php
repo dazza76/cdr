@@ -236,14 +236,16 @@ abstract class Controller {
     public function render() {
         if (DEBUG) {
             $size = ACUtils::getMemoryUsage();
-            Log::trace('Объем занимаемой памяти: '. ACUtils::getMemoryString($size));
+            Log::trace('Объем занимаемой памяти: ' . ACUtils::getMemoryString($size));
             Log::trace('Запросов MySQL: ' . App::Db()->getNumQuery());
             Log::trace('Время обработки MySQL: ' . sprintf(" %01.6f",
                                                            App::Db()->getTimeQuery()));
             Log::trace('Время работы скрипта : ' . sprintf(" %01.6f",
                                                            ACUtils::getExecutionTime()));
         }
-
+        if ($this->getActType() != Controller::TYPE_PAGE) {
+            Log::enable(false);
+        }
         echo $this->content;
     }
 
@@ -254,10 +256,9 @@ abstract class Controller {
             return $string;
     }
 
-
     protected function _addJsSrc($file) {
         // $this->dataPage['links'] .= '<script src="js/' . $file . '?' . App::Config()->v . '"></script>' . "\n";
-        $this->dataPage['links'] .= '<script src="' . Utils::linkUrl("js/{$file}") .  "\"></script>\n";
+        $this->dataPage['links'] .= '<script src="' . Utils::linkUrl("js/{$file}") . "\"></script>\n";
     }
 
     protected function _addCssLink($file) {

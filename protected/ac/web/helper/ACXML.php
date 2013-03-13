@@ -2,10 +2,8 @@ w<?php
 /**
  * ACXML class  - ACXML.php file
  *
- * @package    AC
- * @author     Tyurin D.V. <tyurin_dv@almazovcentre.ru>
- * @copyright   (c) 2013, CMRI http://www.almazovcentre.ru
- * @link       http://www.almazovcentre.ru
+ * @author     Tyurin D. <fobia3d@gmail.com>
+ * @copyright   (c) 2013, AC
  */
 
 /**

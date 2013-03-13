@@ -1,6 +1,7 @@
 <?php
 /**
  * Очереди
+ *
  * charset="UTF-8"
  */
 return array(
