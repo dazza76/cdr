@@ -14,7 +14,7 @@ function $ajax(data, callback) {
     }).fail(function() {
         errorBox.Connect();
     }).done(function(result) {
-        console.log("page: " + app.page.page + "; act: " + data.act + "; result: " + result);
+        console.log("[API] " + app.page + "::" + data.act + " > " + result);
         if (Object.prototype.toString.call(callback) !== '[object Function]') {
             return;
         }

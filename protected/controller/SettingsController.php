@@ -22,17 +22,9 @@ class SettingsController extends Controller {
      * Формирет страницу
      */
     public function index() {
-        $section = $_GET['section'];
-        switch ($section) {
-            case 'queue':
-            case 'schedule':
-                break;
-            case 'operator':
-            default :
-                $section        = 'operator';
-                break;
-        }
+        $section = $this->_ensureSection($_GET['section']);
         $this->_section = $section;
+
 
         $action = 'section' . $section;
         $this->$action();
@@ -82,6 +74,26 @@ class SettingsController extends Controller {
                 ->getFetchObjects('QueueAgent');
 
         $this->view('page/settings/operator_edit.php');
+    }
+
+    public function sectionMode() {
+
+    }
+
+    public function sectionAnswering() {
+
+    }
+
+    public function sectionQueue() {
+
+    }
+
+    public function sectionSchedule() {
+
+    }
+
+    public function sectionPause() {
+
     }
 
     public function actionOperatorEdit($params = null) {
@@ -193,11 +205,5 @@ class SettingsController extends Controller {
                 ->query();
     }
 
-    public function sectionQueue() {
 
-    }
-
-    public function sectionSchedule() {
-
-    }
 }

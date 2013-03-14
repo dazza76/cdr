@@ -71,11 +71,12 @@ a.icon-delete { background: url(../images/delete.png) 2px 70% no-repeat; }
 
 /* big icon */
 a.header-icon { padding: 12px 0 12px 38px; line-height: 36px; }
-a.icon-calls-big { background: url(../images/blackberry_white.png) 2px 70% no-repeat; }
-a.icon-reports-big { background: url(../images/database_table.png) 2px 70% no-repeat; }
-a.icon-charts-big { background: url(../images/chart_bar.png) 2px 70% no-repeat; }
+a.icon-cdr-big { background: url(../images/blackberry_white.png) 2px 70% no-repeat; }
+a.icon-timeman-big { background: url(../images/database_table.png) 2px 70% no-repeat; }
+a.icon-queue-big { background: url(../images/chart_bar.png) 2px 70% no-repeat; }
 a.icon-settings-big{ background: url(../images/interface_preferences.png) 2px 70% no-repeat; }
-a.icon-monitor-big { background: url(../images/monitor_lightning.png) 2px 70% no-repeat; }
+a.icon-supervisor-big { background: url(../images/monitor_lightning.png) 2px 70% no-repeat; }
+a.icon-autoinform-big { background: url(../images/atm.png) 2px 70% no-repeat; }
 /*
 a.icon-phones-big {background: url(../img/icons_big/phones.png) 2px 70% no-repeat; }
 a.icon-calls-big { background: url(../img/icons_big/blackberry_white.png) 2px 70% no-repeat; }
@@ -136,6 +137,7 @@ ul.menu li.right {float:right; }
 	height: 22px;
 	margin: 0px;
 }
+.filters input[type="text"].ui-spinner-input {height: 19px;}
 .filters input[type="text"].datetimepicker { width: 150px; }
 .filters input.button-search { margin-left: 10px; margin-top: 17px; }
 

@@ -72,10 +72,6 @@ abstract class Controller {
      */
     protected $_section;
 
-    /**
-     * @var array доступные подстраницы
-     */
-    protected $_sections;
 
     /**
      * @var array
@@ -182,6 +178,7 @@ abstract class Controller {
     public function getSection() {
         return $this->_section;
     }
+
 
     /**
      * Выполняет шаблонный файл и возвращает результат
@@ -292,12 +289,13 @@ abstract class Controller {
         if ($section == null) {
             $section = $_GET['section'];
         }
-        if ( ! $this->_sections) {
+        $sections = App::Config()->pages[$this->getPage()]['section'];
+        if ( ! $sections ) {
             return null;
         }
-        if ( ! array_key_exists($section, $this->_sections)) {
-            reset($this->_sections);
-            list($section) = each($this->_sections);
+        if ( ! array_key_exists($section, $sections)) {
+            reset($sections);
+            list($section) = each($sections);
         }
 
         return $section;

@@ -4,8 +4,9 @@ $max  = 1;
 foreach ($this->queueChart as $value) {
     $max += $value;
 }
-if ($max < 10)
-$max = 10;
+if ($max < 10) {
+    $max = 10;
+}
 ?>
 <script type="text/javascript">
     $(function() {
@@ -24,12 +25,6 @@ $max = 10;
                     layout: 'vertical',
                     align: 'right',
                     verticalAlign: 'top',
-                    // backgroundColor: (Highcharts.theme && Highcharts.theme.legendBackgroundColorSolid) || 'white',
-                    // borderColor: '#CCC',
-                    // borderWidth: 1,
-                    // floating: true,
-                    // shadow: true
-                    // x: 0,
                     y: 40
                 },
                 xAxis: {
@@ -82,6 +77,7 @@ $max = 10;
     });
 </script>
 
+
 <div class="clear clear_fix bigblock fl_l" style="width: 600px">
     <table id="queueAgent" class="grid">
         <thead height="50px">
@@ -109,6 +105,7 @@ $max = 10;
     <div id="highcharts-wrap">
         <div id="queueChart" style="height: 250px;"></div>
     </div>
+
     <div class="bigblock" >
         <h4>Данные за последние 30 мин</h4>
         <table id="queuesData" class="grid">

@@ -65,10 +65,13 @@ class Utils {
     }
 
     public static function linkUrl($file) {
-        return App::Config()->webpath . '/' . $file . '?' . App::Config()->v;
+        // return App::Config()->webpath . '/' . $file . '?' . App::Config()->v;
+
+        $file = App::Config()->webpath . '/' . $file;
+        if (App::Config()->v) {
+            $file .= '?' . App::Config()->v;
+        }
+        return $file;
     }
 
-    public static function pageUrl($page) {
-        return $page . App::Config()->page_prefix;
-    }
 }

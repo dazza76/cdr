@@ -10,7 +10,7 @@
 </div>
 
 
-<div id="operator_list" class="clear clear_fix mediumblock">
+<div class="filters clear_fix mediumblock of_h">
     <table class="grid" style="width: 660px;">
         <thead>
             <tr>
@@ -18,6 +18,20 @@
                 <th style="width: 100px;">Телефон</th>
                 <th style="width: 70px;">Изменить</th>
                 <th style="width: 70px;">Удалить</th>
+            </tr>
+        </thead>
+    </table>
+</div>
+
+
+<div id="operator_list" class="clear clear_fix">
+    <table class="grid" style="width: 660px;">
+        <thead>
+            <tr class="b-head">
+                <th> </th>
+                <th style="width: 100px;"> </th>
+                <th style="width: 70px;" > </th>
+                <th style="width: 70px;" > </th>
             </tr>
         </thead>
         <tbody>

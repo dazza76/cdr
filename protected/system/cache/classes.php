@@ -35,6 +35,7 @@ return array(
     'acxml' => 'ac/web/helper/ACXML.php', 
     'app' => 'Application.php', 
     'application' => 'Application.php', 
+    'autoinformcontroller' => 'controller/AutoinformController.php', 
     'callstatus' => 'model/CallStatus.php', 
     'cdr' => 'model/Cdr.php', 
     'cdrcontroller' => 'controller/CdrController.php', 

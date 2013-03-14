@@ -43,13 +43,6 @@ class QueueController extends Controller {
         )),
         'desc'     => 1
     );
-    protected $_sections = array(
-            'arbit'=> '',
-            'day'=> '',
-            'week'=> '',
-            'month'=> '',
-            'compare'=> '',
-    );
     public $compareType = "day";
 
     /**

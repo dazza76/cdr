@@ -1,5 +1,25 @@
 $(document).ready(function() {
-    // starttick();
+    supervisor.section = $('#input-section').val();
+
+    $('#input-dynamic_update').change(function() {
+        supervisor.init();
+    });
+
+    $("#input-update_interval").change(function() {
+        supervisor.init();
+    }).spinner({
+        spin: function(event, ui) {
+            if (ui.value < 0) {
+                $(this).spinner("value", 0);
+                return false;
+            }
+            $(this).spinner("value", ui.value);
+            supervisor.init();
+            return false;
+        }
+    });
+
+    supervisor.init();
 });
 
 function starttick() {
@@ -38,30 +58,38 @@ function tick() {
 
 var supervisor = {
     _timeoutId: false,
-    update: 0,
-    interval: 1000,
+    onUpdate: 0,
+    interval: 1,
+    section: null,
     init: function() {
         var self = supervisor;
-        if (supervisor.update) {
-            $('#input-dynamic_update').attr('checked', 'checked');
-        }
-        $('#input-dynamic_update').change(function() {
-            self.update = ($(this).attr('checked')) ? 1 : 0;
-            $.cookie('supervisor_update', self.update);
-        });
 
-        $('#input-update_interval').val(supervisor.interval);
-        $('#input-update_interval').change(function() {
-            self.interval = $(this).val();
-            $.cookie('supervisor_interval', self.interval);
-        });
+        self.onUpdate = ($('#input-dynamic_update').attr('checked')) ? 1 : 0;
+        self.interval = $("#input-update_interval").val();
+
+        console.log('init section: ' + self.section + '; on:' + self.onUpdate + '; interval: ' + self.interval);
+
+        $.cookie('supervisor_update', self.onUpdate);
+        $.cookie('supervisor_interval', self.interval);
+
+        self.startUpdate();
     },
 
     startUpdate: function() {
         var self = supervisor;
-        self._timeoutId = setTimeout(function() {
-            self.update();
-        }, self.interval);
+        self.stopUpdate();
+
+        if (!self.onUpdate) {
+            return;
+        }
+
+        var interval = parseInt(self.interval) * 1000;
+        if (interval > 0) {
+            // console.log('start interval ' + interval);
+            self._timeoutId = setTimeout(function() {
+                self.actUpdate();
+            }, interval);
+        }
     },
     stopUpdate: function() {
         var self = supervisor;
@@ -70,11 +98,28 @@ var supervisor = {
         }
         self._timeoutId = false;
     },
-    update: function() {
+    actUpdate: function() {
         var self = supervisor;
-        self.stopUpdate();
 
-        console.log("update");
+//        $.ajax({
+//            type: "POST",
+//            cache: false,
+//            data: {
+//                act: 'update'
+//            }
+//        }).done(function(result) {
+//            console.log("[API] supervisor::update> " + result);
+//            try {
+//                var response = JSON.parse(result).response;
+//                console.log(response);
+//            } catch (e) {
+//                console.log(e);
+//            }
+//        }).fail(function() {
+//            console.log("CONNECT ERROR");
+//            // window.alert('error save comment');
+//        });
+
         self.startUpdate();
     }
 };

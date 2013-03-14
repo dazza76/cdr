@@ -82,6 +82,14 @@ class ACDataObject extends ACObject implements IteratorAggregate, Countable {
         return new ArrayIterator($this->_data);
     }
 
+    public function toArray() {
+        $arr = array();
+        foreach($this as $key=>$value) {
+            $arr[$key] = $value;
+        }
+        return $arr;
+    }
+
 }
 
 /**

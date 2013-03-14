@@ -20,10 +20,6 @@ class SupervisorController extends Controller {
     const STATE_PHONE_RINGING    = "ringing";
     const STATE_PHONE_USED       = "used";
 
-    protected $_sections = array(
-        'queue'    => ' ',
-        'operator' => ' ',
-    );
     public $queues;
 
     public function init($params = null) {
@@ -41,10 +37,31 @@ class SupervisorController extends Controller {
 
     public function index() {
         $section = "section" . $this->getSection();
+        $this->$section();
+
+        if ($this->_actType === self::TYPE_ACTION) {
+            $response = array(
+                'queuesData' => $this->queuesData,
+                'queueChart' => $this->queueChart
+            );
+            if($this->queueAgents) {
+                $queueAgents = array();
+                foreach ($this->queueAgents as $obj) {
+                    $queueAgents[] = $obj->toArray();
+                }
+                $response['queueAgents']= $queueAgents;
+            }
+            $this->content = ACJavaScript::encode(array('response'=>$response));
+            return;
+        }
+
+
 
         $this->_addJsSrc('supervisor.js');
-        $this->$section();
+        $this->viewMain('page/supervisor/supervisor_'.$this->getSection().'.php');
     }
+
+
 
     /**
      * Очереди
@@ -78,7 +95,7 @@ class SupervisorController extends Controller {
         // Log::vardump($data);
 
         $this->queuesData = $data;
-        $this->viewMain('page/supervisor/supervisor_queue.php');
+        Log::dump($data, 'queuesData');
     }
 
     /**
@@ -117,7 +134,7 @@ class SupervisorController extends Controller {
                     break;
             }
         }
-        Log::dump($this->queueChart);
+        Log::dump($this->queueChart, 'queueChart');
 
 
         $this->queueAgents = array();
@@ -133,18 +150,19 @@ class SupervisorController extends Controller {
             $queueAgent->member  = $states[$queueAgent->agentid]['member'];
             $this->queueAgents[] = $queueAgent;
         }
-        Log::dump($this->queueAgents);
+        Log::dump($this->queueAgents, 'queueAgents');
 
         // минитабличка
         $date             = date('Y-m-d H:i:s', time() - 1800); //2012-07-28+03
         //        $date = '2012-07-28';
         $date             = new DateTime($date); // '2011-03-11 00:00:00'
 
-        $this->queuesData = $this->getStatisticQueueAll($date);
+        $this->queuesData = $this->getStatisticOperator($date);
 
         $this->dataPage['links'] .= '<script src="' . Utils::linkUrl('lib/highcharts/highcharts.js') . "\"></script>\n";
+    }
 
-        $this->viewMain('page/supervisor/supervisor_operator.php');
+    public function sectionAnalogue() {
     }
 
     /**
@@ -293,8 +311,8 @@ class SupervisorController extends Controller {
                 ->query();
         while ($row    = $result->fetchAssoc()) {
             $data[$row['queue']]['served']   = (int) $row['served'];
-            $data[$row['queue']]['avg_call'] = round($row['avg_call'], 2);
-            $data[$row['queue']]['avg_hold'] = round($row['avg_hold'], 2);
+            $data[$row['queue']]['avg_call'] = (string) round($row['avg_call'], 2);
+            $data[$row['queue']]['avg_hold'] = (string) round($row['avg_hold'], 2);
         }
 
         $result = App::Db()->createCommand()
@@ -309,7 +327,7 @@ class SupervisorController extends Controller {
                 ->query();
         while ($row    = $result->fetchAssoc()) {
             $data[$row['queue']]['lost']        = (int) $row['lost'];
-            $data[$row['queue']]['avg_abandon'] = round($row['avg_abandon'], 2);
+            $data[$row['queue']]['avg_abandon'] = (string) round($row['avg_abandon'], 2);
         }
 
 
@@ -337,7 +355,7 @@ class SupervisorController extends Controller {
             $service = $row['service'];
             $service = ($full) ? (round(($service / $full), 2) * 100) : 0;
 
-            $data[$row['queue']]['service'] = $service;
+            $data[$row['queue']]['service'] = (string) $service;
         }
 
         return $data;
@@ -349,7 +367,7 @@ class SupervisorController extends Controller {
      * @param array $queue
      * @return array
      */
-    public function getStatisticQueueAll(DateTime $datetime) {
+    public function getStatisticOperator(DateTime $datetime) {
         $datetime = $datetime->format('Y-m-d H:i:s');
         $data     = array(
             'waiting'     => 0,
@@ -368,7 +386,7 @@ class SupervisorController extends Controller {
                         ->query()->fetchAssoc();
 
         $data['waiting']  = (int) $result['waiting'];
-        $data['max_time'] = ($result['max_time']) ? (time() - strtotime($result['max_time'])) : 0;
+        $data['max_time'] = (string) ($result['max_time']) ? (time() - strtotime($result['max_time'])) : 0;
 
         $result = App::Db()->createCommand()
                         ->select('COUNT(callid) AS served') // Обслужено
@@ -382,8 +400,8 @@ class SupervisorController extends Controller {
                         ->query()->fetchAssoc();
 
         $data['served']   = (int) $result['served'];
-        $data['avg_call'] = round($result['avg_call'], 2);
-        $data['avg_hold'] = round($result['avg_hold'], 2);
+        $data['avg_call'] = (string) round($result['avg_call'], 2);
+        $data['avg_hold'] = (string) round($result['avg_hold'], 2);
 
 
         $result = App::Db()->createCommand()
@@ -395,7 +413,7 @@ class SupervisorController extends Controller {
                         ->query()->fetchAssoc();
 
         $data['lost']        = (int) $result['lost'];
-        $data['avg_abandon'] = round($result['avg_abandon'], 2);
+        $data['avg_abandon'] = (string) round($result['avg_abandon'], 2);
 
 
         return $data;
