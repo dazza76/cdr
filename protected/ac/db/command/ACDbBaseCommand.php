@@ -172,7 +172,7 @@ abstract class ACDbWhereCommand extends ACDbBaseCommand {
             $where = "$column $partialMatch $value";
         }
 
-        if (in_array($partialMatch, array("IN", "ALL", "ANY"))) {
+        if (in_array($partialMatch, array("IN", "NOT IN", "ALL", "ANY"))) {
             $value = ACPropertyValue::ensureFields($value);
             if ($escape) {
                 array_walk($value, array($this, "_quoteValeu"));

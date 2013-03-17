@@ -48,18 +48,18 @@ include 'filters.php';
             </tr>
         </thead>
         <tbody>
-            <?php foreach ($this->queuesData as $row) { ?>
-                <tr queueid="<?php $row['agentid']; ?>">
+            <?php foreach ($this->queuesData as $k=>$row) { ?>
+                <tr queueid="<?php echo $k; ?>">
                     <td align="center" ><?php echo html($row['name']); ?></td>
-                    <td align="right" queue="<?php $row['count_oper']; ?>"><?php echo html($row['count_oper']); ?></td>
-                    <td align="right" queue="<?php $row['waiting']; ?>"><?php echo html($row['waiting']); ?></td>
-                    <td align="right" queue="<?php $row['max_time']; ?>"><?php echo html($row['max_time']); ?></td>
-                    <td align="right" queue="<?php $row['served']; ?>"><?php echo html($row['served']); ?></td>
-                    <td align="right" queue="<?php $row['avg_call']; ?>"><?php echo html($row['avg_call']); ?> сек.</td>
-                    <td align="right" queue="<?php $row['avg_hold']; ?>"><?php echo html($row['avg_hold']); ?> сек.</td>
-                    <td align="right" queue="<?php $row['lost']; ?>"><?php echo html($row['lost']); ?></td>
-                    <td align="right" queue="<?php $row['avg_abandon']; ?>"><?php echo html($row['avg_abandon']); ?> сек.</td>
-                    <td align="right" queue="<?php $row['service']; ?>"><?php echo html($row['service']); ?> %</td>
+                    <td align="right" queue="count_oper"><span><?php echo html($row['count_oper']); ?></span></td>
+                    <td align="right" queue="waiting"><span><?php echo html($row['waiting']); ?></span></td>
+                    <td align="right" queue="max_time"><span><?php echo html($row['max_time']); ?></span></td>
+                    <td align="right" queue="served"><span><?php echo html($row['served']); ?></span></td>
+                    <td align="right" queue="avg_call"><span><?php echo html($row['avg_call']); ?></span> сек.</td>
+                    <td align="right" queue="avg_hold"><span><?php echo html($row['avg_hold']); ?></span> сек.</td>
+                    <td align="right" queue="lost"><span><?php echo html($row['lost']); ?></span></td>
+                    <td align="right" queue="avg_abandon"><span><?php echo html($row['avg_abandon']); ?></span> сек.</td>
+                    <td align="right" queue="service"><span><?php echo html($row['service']); ?></span> %</td>
                 </tr>
             <?php } ?>
         </tbody>

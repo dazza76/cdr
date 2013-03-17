@@ -20,7 +20,7 @@ $v = (int) App::Config()->v;
         <script src="lib/jq/jquery.ui.dropdownchecklist.js"></script>
         <script src="lib/jq/jquery.cookie.js"></script>
 
-        <link href="lib/smoothness/jquery-ui.css" rel="stylesheet" >
+        <link href="lib/smoothness/jquery-ui.css?<?php echo App::Config()->v; ?>" rel="stylesheet" >
         <link href="lib/smoothness/jquery-ui.dropdownchecklist.css" rel="stylesheet" >
 
         <link href="<?php  echo Utils::linkUrl('css/common.css'); ?>" rel="stylesheet" >

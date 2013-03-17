@@ -221,6 +221,8 @@ class CdrController extends Controller {
                 ->from(Cdr::TABLE)
                 ->calc()
                 ->addWhere('file_exists', '0', '>')
+                ->addWhere('dcontext',
+                           array('autoinform', 'outgoing', 'dialout'), 'NOT IN')
                 ->limit($this->limit)
                 ->offset($this->offset)
                 ->order($sort);

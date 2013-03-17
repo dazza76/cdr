@@ -20,6 +20,10 @@ class SupervisorController extends Controller {
     const STATE_PHONE_RINGING    = "ringing";
     const STATE_PHONE_USED       = "used";
 
+    protected $_filters = array(
+        'fromdate' => array('parseDatetime'),
+        'todate'   => array('parseDatetime')
+    );
     public $queues;
 
     public function init($params = null) {
@@ -44,24 +48,26 @@ class SupervisorController extends Controller {
                 'queuesData' => $this->queuesData,
                 'queueChart' => $this->queueChart
             );
-            if($this->queueAgents) {
+            if ($this->queueAgents) {
                 $queueAgents = array();
                 foreach ($this->queueAgents as $obj) {
-                    $queueAgents[] = $obj->toArray();
+                    $queueAgents[]           = array(
+                        'agentid'     => $obj->agentid,
+                        //'state' => $obj->state,//sgetStatePhone(),
+                        'state_phone' => $obj->getStatePhone(),
+                        'phone'       => $obj->phone,
+                        'member'      => $obj->member,
+                    );
                 }
-                $response['queueAgents']= $queueAgents;
+                $response['queueAgents'] = $queueAgents;
             }
-            $this->content = ACJavaScript::encode(array('response'=>$response));
+            $this->content           = ACJavaScript::encode(array('response' => $response));
             return;
         }
 
-
-
         $this->_addJsSrc('supervisor.js');
-        $this->viewMain('page/supervisor/supervisor_'.$this->getSection().'.php');
+        $this->viewMain('page/supervisor/supervisor_' . $this->getSection() . '.php');
     }
-
-
 
     /**
      * Очереди
@@ -153,9 +159,8 @@ class SupervisorController extends Controller {
         Log::dump($this->queueAgents, 'queueAgents');
 
         // минитабличка
-        $date             = date('Y-m-d H:i:s', time() - 1800); //2012-07-28+03
-        //        $date = '2012-07-28';
-        $date             = new DateTime($date); // '2011-03-11 00:00:00'
+        $date = date('Y-m-d H:i:s', time() - 1800); //2012-07-28+03
+        $date = new DateTime($date); // '2011-03-11 00:00:00'
 
         $this->queuesData = $this->getStatisticOperator($date);
 
@@ -163,6 +168,31 @@ class SupervisorController extends Controller {
     }
 
     public function sectionAnalogue() {
+        // $date           = new ACDateTime();
+        // $this->fromdate = FiltersValue::parseDatetime($_GET['fromdate'], $date);
+        // $this->todate   = FiltersValue::parseDatetime($_GET['todate'], $date);
+
+        $command = App::Db()->createCommand()->select("`dst`, COUNT(*) AS `count`")
+                ->from(Cdr::TABLE)
+                ->addWhere("dcontext", "incoming")
+                ->addWhere('`calldate`',
+                           "'{$this->fromdate}' AND '{$this->todate}'",
+                           "BETWEEN")
+                ->group("`dst`");
+
+        $channel = array();
+        foreach (App::Config()->supervisor['analogue_channel'] as $value) {
+            $channel[] = "`channel` LIKE '{$value}'";
+        }
+        $channel   = implode(' OR ', $channel);
+        if ($channel) {
+            $command->where(" AND ({$channel})");
+        }
+
+
+        $result = $command->query()->getFetchAssocs();
+        $this->dataAnalogue = $result;
+        Log::dump($result, "dataAnalogue");
     }
 
     /**
@@ -311,8 +341,10 @@ class SupervisorController extends Controller {
                 ->query();
         while ($row    = $result->fetchAssoc()) {
             $data[$row['queue']]['served']   = (int) $row['served'];
-            $data[$row['queue']]['avg_call'] = (string) round($row['avg_call'], 2);
-            $data[$row['queue']]['avg_hold'] = (string) round($row['avg_hold'], 2);
+            $data[$row['queue']]['avg_call'] = (string) round($row['avg_call'],
+                                                              2);
+            $data[$row['queue']]['avg_hold'] = (string) round($row['avg_hold'],
+                                                              2);
         }
 
         $result = App::Db()->createCommand()
@@ -327,7 +359,8 @@ class SupervisorController extends Controller {
                 ->query();
         while ($row    = $result->fetchAssoc()) {
             $data[$row['queue']]['lost']        = (int) $row['lost'];
-            $data[$row['queue']]['avg_abandon'] = (string) round($row['avg_abandon'], 2);
+            $data[$row['queue']]['avg_abandon'] = (string) round($row['avg_abandon'],
+                                                                 2);
         }
 
 
@@ -346,7 +379,7 @@ class SupervisorController extends Controller {
                 ->query();
         Log::dump($result->getFetchAssocs(), 'service (SQL result)');
 
-        while ($row    = $result->fetchAssoc()) {
+        while ($row = $result->fetchAssoc()) {
             // Service Level = Answered Less X seconds / Entered
 
 
@@ -368,6 +401,8 @@ class SupervisorController extends Controller {
      * @return array
      */
     public function getStatisticOperator(DateTime $datetime) {
+        $servicelevel = 60;
+
         $datetime = $datetime->format('Y-m-d H:i:s');
         $data     = array(
             'waiting'     => 0,
@@ -377,6 +412,7 @@ class SupervisorController extends Controller {
             'avg_hold'    => 0,
             'lost'        => 0,
             'avg_abandon' => 0,
+            'service'     => 0
         );
 
         $result = App::Db()->createCommand()->select('COUNT(callid) AS waiting') // Ожидающих
@@ -415,6 +451,26 @@ class SupervisorController extends Controller {
         $data['lost']        = (int) $result['lost'];
         $data['avg_abandon'] = (string) round($result['avg_abandon'], 2);
 
+
+
+        // Service Level
+        $result = App::Db()->createCommand()
+                        ->select('COUNT(callid) AS `service`') // SERVICE LEVEL
+                        ->from('call_status')
+                        ->addWhere('status',
+                                   array('COMPLETECALLER', 'COMPLETEAGENT', 'TRANSFER'),
+                                   'IN')
+                        ->addWhere('timestamp', $datetime, '>=')
+                        ->addWhere('holdtime + callduration', $servicelevel,
+                                   '>=')
+                        ->query()->fetchAssoc();
+
+        $full = $data['served'] + $data['lost'];
+
+        $service = $row['service'];
+        $service = ($full) ? (round(($service / $full), 2) * 100) : 0;
+
+        $data['service'] = (string) $service;
 
         return $data;
     }

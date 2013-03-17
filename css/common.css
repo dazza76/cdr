@@ -17,7 +17,13 @@ body { font: 12px Tahoma, Geneva, sans-serif; min-width: 600px; height: 100%; }
 a { text-decoration: underline; cursor: pointer; color: #069; border-style: none;}
 a:hover { text-decoration: none; cursor: pointer; color: #E80005;}
 div { border: solid #000 0px; }
+
 /*input, select { border: 1px solid #abadb3; 	height: 22px; margin: 0px; }*/
+.edit-content input[type="text"],
+.edit-content select {
+    border: 1px solid #abadb3;
+    height: 22px; margin: 0px;
+}
 
 .ui-widget { font-size: 12px; }
 
@@ -206,8 +212,16 @@ td.coming-img div.coming_2 { background-position: -50px 0px; }
 /* ------------------------------------------------------------------------- */
 
 
-/* field
+/* edit-content
 ------------------------------------------ */
+
+/* field */
 .field-required { color: #FF7058; font-weight: bold; padding-left: 3px;}
 .field-success { background: #C4FFC4; border-color: #090; }
 .field-sucfail { background: #FBC4C4; border-color: #D20000; }
+
+.edit-content .label { padding-top: 5px; width: 250px; }
+.edit-content .labeled { margin-left: 5px; width: 220px; }
+
+#dialog-queue-add .label { width: 170px; }
+#dialog-queue-add .labeled { width: 250px; }

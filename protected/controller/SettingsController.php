@@ -85,6 +85,18 @@ class SettingsController extends Controller {
     }
 
     public function sectionQueue() {
+        if (in_array($_POST['action'], array('add', 'delete', 'edit') )) {
+             $this->actionQueue($_POST);
+        }
+
+        if ($_GET['id']) {
+            return $this->sectionOperatorEdit();
+        }
+
+        $this->view('page/settings/queue.php');
+    }
+
+    public function actionQueue($params) {
 
     }
 

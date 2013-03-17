@@ -106,7 +106,12 @@ class App extends Application {
         return $url;
     }
 
-    public static function location($page, $params) {
+    /**
+     *
+     * @param string $page
+     * @param array $params
+     */
+    public static function location($page, $params = null) {
         $host = parent::$_instanse->request->host;
         $webpath = parent::$_instanse->request->webpath;
 
@@ -115,7 +120,10 @@ class App extends Application {
             $url .= "/";
         }
 
-        $url .= $page . "?" . http_build_query($params);
+        if ($params == null) {
+            $params = array();
+        }
+        $url .= $page . ".php?" . http_build_query($params);
 
         parent::$_instanse->response->header('location', 'http://' . $url);
         parent::$_instanse->response->send();
@@ -136,16 +144,7 @@ class App extends Application {
         $get      = $_GET;
         $get["r"] = rand();
 
-        $url = $host . $page . "?" . http_build_query($get);
-
-
-//        $url  = parent::$_instanse->request->url;
-//        if (parent::$_instanse->request->query) {
-//            $url .= '&r=' . rand();
-//        } else {
-//            $url .= '?r=' . rand();
-//        }
-//        Log::trace($url);
+        $url = $host . $page . ".php?" . http_build_query($get);
 
         parent::$_instanse->response->header('location', 'http://' . $url);
         parent::$_instanse->response->send();

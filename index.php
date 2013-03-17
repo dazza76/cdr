@@ -85,20 +85,15 @@
  *   7)В настройках делаем еще одну заглушку – «Паузы».
  */
 
-?>
-<html>
-<body>
-	<h1 align="center">IP-АТС ИКТ Asterisk</h1>
-    <h3 align="center"><span style="color: #FF0000;" >требуеться модуль апача <i>mod_rewrite</i></span></h3>
-    <h2 align="center">
-        <a href="cdr.php">Запись разговоров</a><br />
-        <a href="queue.php">Очередь</a><br />
-        <a href="timeman.php">Длительности ожидания и разговора</a><br />
-        <a href="settings.php">Настройки</a><br />
-    </h2>
-</body>
-</html>
 
+require_once 'protected/bootstrap.php';
+$app = new Application();
+
+App::location('cdr');
+
+//echo $_SERVER["HTTP_HOST"];
+
+//header("Location: http://" . $_SERVER["HTTP_HOST"] . "/{$page}?{$get}");
 
 
 

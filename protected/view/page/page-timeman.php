@@ -33,10 +33,8 @@
     </form>
 </div>
 
-
-
 <div class="clear clear_fix bigblock">
-    <table id="result" class="grid" align="center">
+    <table id="result" class="grid" >
         <thead height="50px">
             <tr>
                 <th align=center width="150px">Время ожидания</th>

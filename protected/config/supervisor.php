@@ -9,18 +9,31 @@ return array(
     'shell_exec' => 0,
     // Команда shell.  {QUEUE} заменяеться на очередь из списка.
     // Команды объеденяються &&, если список очередей больше одного
-    'shell'      => "sudo asterisk -rx 'queue show {QUEUE}' | grep SIP",
+    'shell' => "sudo asterisk -rx 'queue show {QUEUE}' | grep SIP",
     // Список очередей. Если параметр не масив, то используются все очереди
     // определенные в конфигурации (файл queue.php)
-    'queues'      => array(
+    'queues'  => array(
         '3004',
         '3005',
         '3006',
         '0391',
     ),
+    // Критерии поиска для  `channel`.
+    // Каждое значение {NAME} формирует условие вида:
+    //    `channel` LIKE '{NAME}'
+    // Список всех значений объединяеть OR , в итоге получаем
+    //    `channel` LIKE '{NAME_1}' OR `channel` LIKE '{NAME_2}' OR ...
+    //
+    // ВНИМАНИЕ. Спецсимволы не экранируються, прямая вставка в SQL запрос.
+    //
+    // Результат: `channel` LIKE '%port%' OR `channel` LIKE '%10.28.48.2%'
+    'analogue_channel' => array(
+        '%port%',
+        '%10.28.48.2%'
+    ),
     // Динамическое обновление статистики.
     // Значение по умолчанию, переопределяеться сесиями
-    'dynamic_update' => 0,
+    'dynamic_update'  => 0,
     // интервал в секундах.
     'update_interval' => 1,
 );

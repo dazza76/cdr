@@ -10,7 +10,7 @@
     <input id="input-section" type="hidden" value="<?php echo $this->getSection(); ?>" />
     <div class="filter fl_l">
         <div class="fl_l" style="padding-top:5px;">
-            <a href="#"><img src="images/update.png" /><!-- Обновить --></a></div>
+            <a onclick="supervisor.actUpdate(); return false;"><img src="images/update.png" /><!-- Обновить --></a></div>
     </div>
     <div class="filter fl_l">
         <div class="label fl_l" style="margin: 2px 5px 0px 0px;">Динамическое обновление</div>

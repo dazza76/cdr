@@ -91,11 +91,11 @@
         <thead>
             <tr>
                 <!--  data-sort="" data-desc=""  -->
-                <th style="width: 150px;" <?php echo Utils::sortable("calldate", $this->sort, $this->desc); ?> >Дата</th>
-                <th style="width: 150px;" <?php echo Utils::sortable("src", $this->sort, $this->desc); ?> >Источник</th>
-                <th style="width: 135px;">Запись</th>
-                <th style="width: 70px;" <?php echo Utils::sortable("duration", $this->sort, $this->desc); ?> >Время</th>
-                <th style="" <?php echo Utils::sortable("comment", $this->sort, $this->desc); ?> >Комментарий</th>
+                <th  <?php echo Utils::sortable("calldate", $this->sort, $this->desc); ?> >Дата</th>
+                <th  <?php echo Utils::sortable("src", $this->sort, $this->desc); ?> >Источник</th>
+                <th>Запись</th>
+                <th  <?php echo Utils::sortable("duration", $this->sort, $this->desc); ?> >Время</th>
+                <th <?php echo Utils::sortable("comment", $this->sort, $this->desc); ?> >Комментарий</th>
             </tr>
         </thead>
     </table>

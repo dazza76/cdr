@@ -101,25 +101,65 @@ var supervisor = {
     actUpdate: function() {
         var self = supervisor;
 
-//        $.ajax({
-//            type: "POST",
-//            cache: false,
-//            data: {
-//                act: 'update'
-//            }
-//        }).done(function(result) {
-//            console.log("[API] supervisor::update> " + result);
-//            try {
-//                var response = JSON.parse(result).response;
-//                console.log(response);
-//            } catch (e) {
-//                console.log(e);
-//            }
-//        }).fail(function() {
-//            console.log("CONNECT ERROR");
-//            // window.alert('error save comment');
-//        });
+        $.ajax({
+            type: "POST",
+            cache: false,
+            data: {
+                act: 'update'
+            }
+        }).done(function(result) {
+            //console.log("[API] supervisor::update> " + result);
+            try {
+                var response = JSON.parse(result).response;
+                console.log(response);
+                if (self.section == 'queue') {
+                    self._updateSectionQueue(response.queuesData);
+                }
+                if (self.section == 'operator') {
+                    self._updateSectionOperator(response);
+                }
+            } catch (e) {
+                console.log(e);
+            }
+        }).fail(function() {
+            console.log("CONNECT ERROR");
+            // window.alert('error save comment');
+        });
 
         self.startUpdate();
+    },
+    _updateSectionQueue: function(queuesData) {
+        var $tabel = $('#queuesData tbody');
+        for (var i in queuesData) {
+            var $tr = $tabel.find('tr[queueid=' + i + ']');
+            var queue = queuesData[i];
+            for (var qname in queue) {
+                $tr.find('td[queue=' + qname + '] span').text(queue[qname]);
+            }
+        }
+    },
+    _updateSectionOperator: function(data) {
+        var $tableAgent = $('#queueAgents tbody');
+        for (var i in data.queueAgents) {
+            var qAgent = data.queueAgents[i];
+            var $tr = $tableAgent.find('tr[agentid=' + qAgent.agentid + ']');
+            $tr.find('td[agent=state_phone]').text(qAgent.state_phone);
+        }
+
+        var $tableData = $('#queuesData tbody');
+        for (var i in data.queuesData) {
+            var qData = data.queuesData[i];
+            $tableData.find('td[queue=' + i + '] span').text(qData);
+        }
+
+        var n = 0;
+        chartOptions.series[n++].data = [data.queueChart.free];
+        chartOptions.series[n++].data = [data.queueChart.used];
+        chartOptions.series[n++].data = [data.queueChart.aftercall];
+        chartOptions.series[n++].data = [data.queueChart.paused];
+        chartOptions.series[n++].data = [data.queueChart.ringing];
+
+
+        chart = new Highcharts.Chart(chartOptions);
     }
 };

@@ -1,6 +1,6 @@
 <?php
 include 'filters.php';
-$max  = 1;
+$max = 1;
 foreach ($this->queueChart as $value) {
     $max += $value;
 }
@@ -9,79 +9,76 @@ if ($max < 10) {
 }
 ?>
 <script type="text/javascript">
-    $(function() {
-        var chart;
-        $(document).ready(function() {
-            chart = new Highcharts.Chart({
-                chart: {
-                    renderTo: 'queueChart',
-                    type: 'column'
-                },
-                title: {
-                    align: 'left',
-                    text: 'Всего операторов'
-                },
-                legend: {
-                    layout: 'vertical',
-                    align: 'right',
-                    verticalAlign: 'top',
-                    y: 40
-                },
-                xAxis: {
-                    categories: [' ']
-                },
-                yAxis: {
-                    allowDecimals: false,
-                    max: <?php echo $max; ?>,
-                    title: {
-                        text: null
-                    }
-                },
-                tooltip: {
-                    formatter: function() {
-                        return '' + this.series.name + ': ' + this.y + '';
-                    }
-                },
-                plotOptions: {
-                    column: {borderColor: '#303030', shadow: true},
-                    series: {
-                        animation: {
-                            duration: 0
-                        }
-                    }
-                },
-                credits: {
-                    enabled: false
-                },
-                series: [{
-                        name: 'свободных',
-                        data: [<?php echo $this->queueChart['free']; ?>]
-                    }, {
-                        name: 'разговаривает',
-                        data: [<?php echo $this->queueChart['used']; ?>]
-                    }, {
-                        name: 'обработка',
-                        data: [<?php echo $this->queueChart['aftercall']; ?>]
-                    }, {
-                        name: 'перерыв',
-                        data: [<?php echo $this->queueChart['paused']; ?>]
-                    }, {
-                        name: 'звонит',
-                        data: [<?php echo $this->queueChart['ringing']; ?>]
-                    }
+    var chart;
+    var chartOptions = {
+        chart: {renderTo: 'queueChart', type: 'column'},
+        title: {align: 'left', text: 'Всего операторов'},
+        legend: {layout: 'vertical', align: 'right', verticalAlign: 'top', y: 40},
+        xAxis: {categories: [' ']},
+        yAxis: {
+            allowDecimals: false,
+            max: <?php echo $max; ?>,
+            title: {text: null}
+        },
+        tooltip: {formatter: function() {
+                return '' + this.series.name + ': ' + this.y + '';
+            }},
+        plotOptions: {column: {borderColor: '#303030', shadow: true}, series: {animation: {duration: 0}}},
+        credits: {enabled: false},
+        series: [{
+                name: 'свободных',
+                data: [0]
+            }, {
+                name: 'разговаривает',
+                data: [0]
+            }, {
+                name: 'обработка',
+                data: [0]
+            }, {
+                name: 'перерыв',
+                data: [0]
+            }, {
+                name: 'звонит',
+                data: [0]
+            }
+        ]
+    };
 
-                ]
-            });
-        });
-
+    $(document).ready(function() {
+        var series = [
+            <?php
+            echo $this->queueChart['free']
+             . ',' . $this->queueChart['used']
+             . ',' . $this->queueChart['aftercall']
+             . ',' . $this->queueChart['paused']
+             . ',' . $this->queueChart['ringing'];
+            ?>
+        ];
+        for(var i in series) {
+            chartOptions.series[i].data = [series[i]];
+        }
+        chart = new Highcharts.Chart(chartOptions);
     });
 </script>
 
 
-<div class="clear clear_fix bigblock fl_l" style="width: 600px">
-    <table id="queueAgent" class="grid">
+<div class="filters clear_fix mediumblock of_h">
+    <table class="grid">
         <thead height="50px">
             <tr>
+                <th>Операторы</th>
+                <th>Статус</th>
+                <th>Время</th>
+                <th>Очередь</th>
+            </tr>
+        </thead>
+    </table>
+</div>
+
+<div class="clear clear_fix fl_l" style="width: 600px">
+    <table id="queueAgents" class="grid">
+        <thead>
+            <tr class="b-head">
                 <th align="center" style="width: 250px">Операторы</th>
                 <th align="center" style="width: 100px">Статус</th>
                 <th align="center" style="width: 80px">Время</th>
@@ -112,35 +109,35 @@ if ($max < 10) {
             <tbody>
                 <tr>
                     <td class="head" style="width: 250px;">Уровень обслуживания:</td>
-                    <td><span queue="la"> - 0 -</span></td>
+                    <td queue="service"><span><?php echo html($this->queuesData['service']); ?></span> %</td>
                 </tr>
                 <tr>
                     <td class="head">Ожидают:</td>
-                    <td><span queue="waiting"><?php echo html($this->queuesData['waiting']); ?></span></td>
+                    <td queue="waiting"><span><?php echo html($this->queuesData['waiting']); ?></span></td>
                 </tr>
                 <tr>
                     <td class="head">Дольше всего ожидает:</td>
-                    <td><span queue="max_time"><?php echo html($this->queuesData['max_time']); ?></span></td>
+                    <td queue="max_time"><span><?php echo html($this->queuesData['max_time']); ?></span></td>
                 </tr>
                 <tr>
                     <td class="head">Обслуженно:</td>
-                    <td><span queue="served"><?php echo html($this->queuesData['served']); ?></span></td>
+                    <td queue="served"><span><?php echo html($this->queuesData['served']); ?></span></td>
                 </tr>
                 <tr>
                     <td class="head">В среднем клиенты ждут:</td>
-                    <td><span queue="avg_hold" ><?php echo html($this->queuesData['avg_hold']); ?></span> сек.</td>
+                    <td queue="avg_hold"><span><?php echo html($this->queuesData['avg_hold']); ?></span> сек.</td>
                 </tr>
                 <tr>
                     <td class="head">В среднем разговор длится:</td>
-                    <td><span queue="avg_call" ><?php echo html($this->queuesData['avg_call']); ?> сек.</td>
+                    <td queue="avg_call"><span><?php echo html($this->queuesData['avg_call']); ?></span> сек.</td>
                 </tr>
                 <tr>
                     <td class="head">Потеряно:</td>
-                    <td><span queue="lost"><?php echo html($this->queuesData['lost']); ?></span></td>
+                    <td queue="lost"><span><?php echo html($this->queuesData['lost']); ?></span></td>
                 </tr>
                 <tr>
                     <td class="head">Среднее время потеря:</td>
-                    <td><span queue="avg_abandon"><?php echo html($this->queuesData['avg_abandon']); ?></span> сек.</td>
+                    <td queue="avg_abandon"><span><?php echo html($this->queuesData['avg_abandon']); ?></span> сек.</td>
                 </tr>
             </tbody>
         </table>

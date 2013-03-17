@@ -49,8 +49,10 @@ unset($_config_system);
 if (is_array($config)) {
     App::Config()->mergeRecursive($config);
 }
-
+// шапка страниц
 App::Config()->pages = @include_once 'system/pages.php';
+// версия файлов css / js (для кеширования браузером)
+App::Config()->v = 6;
 
 
 defined('DEBUG') or define('DEBUG', (App::Config()->debug) ? 1 : false);

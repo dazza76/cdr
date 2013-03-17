@@ -1,4 +1,6 @@
-<?php ?>
+<?php
+include 'dialog-operator.php';
+?>
 <div class="filters clear_fix">
     <div class="clear_fix bigblock of_h" style="width: 660px">
         <div class="fl_l" style="padding-right: 15px;">
@@ -11,13 +13,13 @@
 
 
 <div class="filters clear_fix mediumblock of_h">
-    <table class="grid" style="width: 660px;">
+    <table class="grid">
         <thead>
             <tr>
                 <th>ФИО</th>
-                <th style="width: 100px;">Телефон</th>
-                <th style="width: 70px;">Изменить</th>
-                <th style="width: 70px;">Удалить</th>
+                <th>Телефон</th>
+                <th>Изменить</th>
+                <th>Удалить</th>
             </tr>
         </thead>
     </table>
@@ -50,8 +52,3 @@
     </table>
 </div>
 
-
-<?php
-include 'dialog-operator-add.php';
-include 'dialog-operator-delete.php';
-?>

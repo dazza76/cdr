@@ -114,17 +114,17 @@
     <table class="grid">
         <thead>
             <tr>
-                <th <?php echo Utils::sortable('timestamp', $this->sort, $this->desc); ?> style="width: 150px;">Дата - Время</th>
-                <th <?php echo Utils::sortable('callerId', $this->sort, $this->desc); ?> style="width: 250px;">Входящий номер</th>
-                <th <?php echo Utils::sortable('memberId', $this->sort, $this->desc); ?> style="width: 150px;">Оператор</th>
-                <th <?php echo Utils::sortable('callId', $this->sort, $this->desc); ?> style="width: 170px;">ID звонка</th>
-                <th <?php echo Utils::sortable('status', $this->sort, $this->desc); ?> style="width: 170px;">Действие</th>
-                <th <?php echo Utils::sortable('holdtime', $this->sort, $this->desc); ?> style="width: 150px;">Ожидание в очереди</th>
-                <th <?php echo Utils::sortable('ringtime', $this->sort, $this->desc); ?> style="width: 150px;">Поднятие трубки</th>
-                <th <?php echo Utils::sortable('callduration', $this->sort, $this->desc); ?> style="width: 150px;">Длительность</th>
-                <th <?php echo Utils::sortable('originalPosition', $this->sort, $this->desc); ?> style="width: 70px;">Вошел</th>
-                <th <?php echo Utils::sortable('position', $this->sort, $this->desc); ?> style="width: 70px;">Вышел</th>
-                <th <?php echo Utils::sortable('queue', $this->sort, $this->desc); ?> style="">Очередь</th>
+                <th <?php echo Utils::sortable('timestamp', $this->sort, $this->desc); ?> >Дата - Время</th>
+                <th <?php echo Utils::sortable('callerId', $this->sort, $this->desc); ?> >Входящий номер</th>
+                <th <?php echo Utils::sortable('memberId', $this->sort, $this->desc); ?> >Оператор</th>
+                <th <?php echo Utils::sortable('callId', $this->sort, $this->desc); ?> >ID звонка</th>
+                <th <?php echo Utils::sortable('status', $this->sort, $this->desc); ?> >Действие</th>
+                <th <?php echo Utils::sortable('holdtime', $this->sort, $this->desc); ?> >Ожидание в очереди</th>
+                <th <?php echo Utils::sortable('ringtime', $this->sort, $this->desc); ?> >Поднятие трубки</th>
+                <th <?php echo Utils::sortable('callduration', $this->sort, $this->desc); ?> >Длительность</th>
+                <th <?php echo Utils::sortable('originalPosition', $this->sort, $this->desc); ?> >Вошел</th>
+                <th <?php echo Utils::sortable('position', $this->sort, $this->desc); ?> >Вышел</th>
+                <th <?php echo Utils::sortable('queue', $this->sort, $this->desc); ?> >Очередь</th>
             </tr>
         </thead>
     </table>
