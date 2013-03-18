@@ -13,9 +13,6 @@
 error_reporting(E_ALL & ~E_NOTICE);
 
 //header('Content-Type: text/html; charset=UTF-8');
-
-
-
 // ----------------------------------------------------------------------------
 defined('TIME_START') or define('TIME_START', microtime(true));
 defined('DS') or define('DS', DIRECTORY_SEPARATOR);
@@ -32,10 +29,10 @@ require_once 'Application.php';
 
 // Установка систкмной конфигурации
 // ---------------------------------------------------------------------------
-$_config_system = @include_once 'config/system.php';
+$_config_system           = @include_once 'config/system.php';
 App::Config()->mergeRecursive($_config_system);
 App::Config()->supervisor = @include_once 'config/supervisor.php';
-$_config_file = @$_config_system['config'];
+$_config_file             = @$_config_system['config'];
 if (@$config['config']) {
     $_config_file = $config['config'];
 }
@@ -52,13 +49,21 @@ if (is_array($config)) {
 // шапка страниц
 App::Config()->pages = @include_once 'system/pages.php';
 // версия файлов css / js (для кеширования браузером)
-App::Config()->v = 6;
+App::Config()->v     = 7;
 
 
 defined('DEBUG') or define('DEBUG', (App::Config()->debug) ? 1 : false);
 // Добавлять в отчет все PHP ошибки
-if (!DEBUG) {
+if ( ! DEBUG) {
     error_reporting(0);
+}
+
+if (!App::Config()->enable_ie) {
+    if (strpos($_SERVER['HTTP_USER_AGENT'], 'MSIE') !== false) {
+        $header = "Location: http://" . $_SERVER["HTTP_HOST"] . App::Config()->webpath . "/badbrowser.php";
+        header($header);
+        exit();
+    }
 }
 // ----------------------------------------------------------------------------
 

@@ -10,6 +10,7 @@
 return array(
     'charset'  => 'utf-8',
     'webpath'  => '/cdr', // корневой путь скриптов
+    'enable_ie'=> 0, // Выполнять скрипты на Internet Explorer (некорректное отображение)
     // CDR audio file
     'cdr'      => array(
         'monitor_dir' => '/cdr/monitor', // файлы записей

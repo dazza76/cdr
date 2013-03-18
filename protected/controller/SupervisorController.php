@@ -57,6 +57,7 @@ class SupervisorController extends Controller {
                         'state_phone' => $obj->getStatePhone(),
                         'phone'       => $obj->phone,
                         'member'      => $obj->member,
+                        'queues'      => $obj->getQueuesFull()
                     );
                 }
                 $response['queueAgents'] = $queueAgents;
@@ -190,7 +191,7 @@ class SupervisorController extends Controller {
         }
 
 
-        $result = $command->query()->getFetchAssocs();
+        $result             = $command->query()->getFetchAssocs();
         $this->dataAnalogue = $result;
         Log::dump($result, "dataAnalogue");
     }

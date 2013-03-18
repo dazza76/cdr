@@ -99,3 +99,40 @@
         </div>
     </form>
 </div>
+
+
+
+<script type="text/javascript">
+    function showQueueDelete(uniqueid) {
+        var $dialog = $('#dialog-queue-delete');
+        $dialog.find('input[name=uniqueid]').val(uniqueid);
+        $dialog.dialog('open');
+    }
+
+    $(document).ready(function() {
+        $('#dialog-queue-delete').dialog({
+            disabled: false,
+            autoOpen: false,
+            modal: true,
+            closeOnEscape: false,
+            resizable: false,
+            minWidth: 350,
+            minHeight: 70,
+            buttons: {
+                "OK": function() {
+                    $('#dialog-queue-delete').find('form').eq(0).submit();
+                },
+                "Отмена": function() {
+                    $(this).dialog("close");
+                }
+            }
+        });
+    });
+</script>
+<div id="dialog-queue-delete" class="dialog hidden edit-content" title="Удалить очередь">
+    <form method="post">
+        <input type="hidden" name="action" value="delete" />
+        <input type="hidden" name="uniqueid" value="" />
+        <div> Удалить очередь? </div>
+    </form>
+</div>

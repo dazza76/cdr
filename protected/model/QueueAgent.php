@@ -29,7 +29,7 @@ class QueueAgent extends ACDataObject {
             return self::$_QueueAgent;
         }
 
-        $res = App::Db()->query("SELECT name, agentid FROM " . self::TABLE ." ORDER BY name");
+        $res = App::Db()->query("SELECT name, agentid FROM " . self::TABLE . " ORDER BY name");
         while ($row = $res->fetchAssoc()) {
             self::$_QueueAgent[$row['agentid']] = $row['name'];
         }
@@ -76,7 +76,7 @@ class QueueAgent extends ACDataObject {
     }
 
     /**
-     * Список очереддей
+     * Список очереддей определенного номера
      * @param int $number
      * @return array
      */
@@ -90,6 +90,17 @@ class QueueAgent extends ACDataObject {
         }
     }
 
+    public function getQueuesFull() {
+        $queues = $this->getQueues(1) + $this->getQueues(2) + $this->getQueues(3);
+        $queues = array_unique($queues);
+        return $queues;
+    }
+
+    /**
+     * Пеналити определенного номера
+     * @param int $number
+     * @return array
+     */
     public function getPenalty($number) {
         $number  = (int) $number;
         $penalty = "penalty" . $number;

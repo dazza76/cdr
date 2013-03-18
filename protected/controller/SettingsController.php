@@ -22,12 +22,13 @@ class SettingsController extends Controller {
      * Формирет страницу
      */
     public function index() {
-        $section = $this->_ensureSection($_GET['section']);
+        $section        = $this->_ensureSection($_GET['section']);
         $this->_section = $section;
 
 
         $action = 'section' . $section;
         $this->$action();
+
 
         $this->viewMain();
     }
@@ -43,7 +44,8 @@ class SettingsController extends Controller {
         }
         if ($_POST['action'] == 'edit') {
             $this->actionOperatorEdit();
-            App::location($this->getPage(), array('section'=>  $this->getSection()));
+            App::location($this->getPage(),
+                          array('section' => $this->getSection()));
         }
 
         if ($_GET['id']) {
@@ -76,36 +78,93 @@ class SettingsController extends Controller {
         $this->view('page/settings/operator_edit.php');
     }
 
-    public function sectionMode() {
-
-    }
-
-    public function sectionAnswering() {
-
-    }
-
     public function sectionQueue() {
-        if (in_array($_POST['action'], array('add', 'delete', 'edit') )) {
-             $this->actionQueue($_POST);
+        if (in_array($_POST['action'], array('add', 'delete', 'edit'))) {
+            $this->actionQueue($_POST);
+            App::location($this->getPage(),
+                          array('section' => $this->getSection(), 'r'       => rand()));
         }
 
-        if ($_GET['id']) {
-            return $this->sectionOperatorEdit();
+        if ($_GET['uniqueid']) {
+            $uniqueid         = $_GET['uniqueid'];
+            $result           = App::Db()->createCommand()->select()
+                    ->from('queue_member_table')
+                    ->addWhere('uniqueid', $uniqueid)
+                    ->query();
+            $this->dataQueues = $result; //->getFetchAssocs();
+
+            $this->view('page/settings/queue_edit.php');
+            return;
         }
+
+        $result           = App::Db()->createCommand()->select()
+                ->from('queue_member_table')
+                ->query(); //->getFetchAssocs();
+        $this->dataQueues = $result;
 
         $this->view('page/settings/queue.php');
     }
 
-    public function actionQueue($params) {
+    public function sectionMode() {
+        
+    }
 
+    public function sectionAnswering() {
+        
+    }
+
+    public function actionQueue($params = null) {
+        if ($params == null) {
+            $params = $_POST;
+        }
+        $action = $params['action'];
+        unset($params['action']);
+
+
+        if ($action == 'delete') {
+            $uniqueid = trim($params['uniqueid']);
+            App::Db()->createCommand()->delete()->from('queue_member_table')
+                    ->addWhere('uniqueid', $uniqueid)
+                    ->limit(1)
+                    ->query();
+            return 1;
+        }
+
+
+        if ($action == 'add' || $action == 'edit') {
+            $values               = array();
+            $values['queue_name'] = trim($params['queue_name']);
+            $values['interface']  = trim($params['interface_1']) . "(SIP/" . trim($params['interface_1']) . ")";
+            $values['penalty']    = (int) $params['penalty'];
+            $values['uniqueid']   = trim($params['uniqueid']);
+            $values['paused']     = (int) $params['paused'];
+
+            if ($action == 'add') {
+                App::Db()->createCommand()->insert()->into('queue_member_table')
+                        ->ignore()
+                        ->values($values)
+                        ->query();
+            } else {
+                $uniqueid           = $values['uniqueid'];
+                $values['uniqueid'] = trim($params['uniqueid_new']);
+                App::Db()->createCommand()->update('queue_member_table')
+                        ->set($values)
+                        ->addWhere('uniqueid', $uniqueid)
+                        ->ignore()
+                        ->query();
+            }
+            return 1;
+        }
+
+        return 0;
     }
 
     public function sectionSchedule() {
-
+        
     }
 
     public function sectionPause() {
-
+        
     }
 
     public function actionOperatorEdit($params = null) {
@@ -200,8 +259,6 @@ class SettingsController extends Controller {
                 ->into(QueueAgent::TABLE)
                 ->values($params)
                 ->query();
-
-//        ac_dump($params);
     }
 
     public function actionOperatorDelete($params = null) {
@@ -216,6 +273,4 @@ class SettingsController extends Controller {
                 ->addWhere('agentid', $agentid)
                 ->query();
     }
-
-
 }

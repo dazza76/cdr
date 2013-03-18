@@ -7,7 +7,7 @@ include 'dialog-queue.php';
 <div class="filters clear_fix">
     <div class="clear_fix bigblock of_h" style="width: 800px">
         <div class="fl_l" style="padding-right: 15px;">
-            Всего: 1
+            Всего: <?php echo @count($this->dataQueues); ?>
         </div>
         <div class="fl_r"><a onclick="$('#dialog-queue-add').dialog('open');" class="icon icon-add">добавить</a></div>
         <div class="pg-pages fl_r">  </div>
@@ -45,15 +45,17 @@ include 'dialog-queue.php';
             </tr>
         </thead>
         <tbody>
+            <?php foreach($this->dataQueues as $queue) { ?>
             <tr>
-                <td>incoming_rt</td>
-                <td>Вадим (SIP/20)</td>
-                <td align="center">5</td>
-                <td >fkg7HM23Qy</td>
-                <td align="center">1</td>
-                <td class="image-link"><a href="?section=queue&id=<?php echo 1; ?>" class="icon icon-edit"></a></td>
-                <td class="image-link"><a  onclick="showOperatorDelete(<?php echo 1; ?>);" class="icon icon-delete"></a></td>
+                <td><?php echo html($queue['queue_name']); ?></td>
+                <td><?php echo html($queue['interface']); ?></td>
+                <td align="center"><?php echo html($queue['penalty']); ?></td>
+                <td ><?php echo html($queue['uniqueid']); ?></td>
+                <td align="center"><?php echo $queue['paused']; ?></td>
+                <td class="image-link"><a href="?section=queue&uniqueid=<?php echo html($queue['uniqueid']); ?>" class="icon icon-edit"></a></td>
+                <td class="image-link"><a  onclick="showQueueDelete('<?php echo html($queue['uniqueid']); ?>');" class="icon icon-delete"></a></td>
             </tr>
+            <?php } ?>
         </tbody>
     </table>
 </div>

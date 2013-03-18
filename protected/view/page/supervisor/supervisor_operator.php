@@ -86,12 +86,12 @@ if ($max < 10) {
             </tr>
         </thead>
         <tbody>
-            <?php foreach ($this->queueAgents as $queueAgent) { ?>
+            <?php foreach ($this->queueAgents as $queueAgent) {                ?>
                 <tr agentid="<?php echo $queueAgent->agentid; ?>">
                     <td align="left" agent="name"><?php echo html($queueAgent->name); ?></td>
                     <td align="left" agent="state_phone"><?php echo html($queueAgent->getStatePhone()); ?></td>
                     <td align="right" agent="time"><span tick="time">00:00:00</span></td>
-                    <td align="right" agent="queue">1</td>
+                    <td align="right" agent="queues"><?php echo count($queueAgent->getQueuesFull()); ?></td>
                 </tr>
             <?php } ?>
         </tbody>

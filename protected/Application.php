@@ -144,7 +144,7 @@ class App extends Application {
         $get      = $_GET;
         $get["r"] = rand();
 
-        $url = $host . $page . ".php?" . http_build_query($get);
+        $url = $host . $page . "?" . http_build_query($get);
 
         parent::$_instanse->response->header('location', 'http://' . $url);
         parent::$_instanse->response->send();
