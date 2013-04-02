@@ -1,0 +1,50 @@
+#!/bin/sh
+
+# wget -r -x --no-parent --no-verbose --page-requisites --level=0 --http-user=demo03 --http-password=demo03 demo.line24.ru/autodialer/fw/
+
+
+##
+## Параметры проекта
+##
+PROJECT_NAME="cdr"
+BACKUP_DIR=".backup"
+
+DIRS_BACKUP="css js protected images lib"
+FILES_BACKUP=".htaccess"
+# -------------------------------------------
+
+##
+## Системные параметры
+##
+PHP_BIN="z:/usr/local/php5/php"
+WWW_DIR="z:/home/localhost/www"
+SXD_DIR="z:/home/localhost/www/Tools/sxd"
+# -------------------------------------------
+
+
+##
+## параметры выполнения
+##
+USE_DIR=$(pwd)
+ROOT_DIR="${WWW_DIR}/${PROJECT_NAME}"
+BC_DATE=$(date +%F_%H-%M-%S)
+BC_PREFIX=""
+if [[ $1 != "" ]]; then
+  BC_PREFIX=".$1"
+fi
+BACKUP_FILENAME="${BACKUP_DIR}/${PROJECT_NAME}.${BC_DATE}${BC_PREFIX}.tar.gz"
+# -------------------------------------------
+
+##
+## Файлы бекапа
+##
+FILES_BACKUP_SH=$(ls | grep '.php' | grep -v 'test-')
+FILES_BACKUP="${DIRS_BACKUP} ${FILES_BACKUP} ${FILES_BACKUP_SH}"
+# -------------------------------------------
+
+
+
+tar -zacf ${BACKUP_FILENAME} ${FILES_BACKUP}
+
+echo ${FILES_BACKUP}
+echo "${BACKUP_FILENAME} - ok"

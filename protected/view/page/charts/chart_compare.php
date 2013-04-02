@@ -44,7 +44,7 @@ $chart_title = "сравнение {$from_title} и {$to_title}";
             <div class="labeled">
                 <input name="fromdate" type="text" autocomplete="off" value="<?php echo $this->fromdate->format('d.m.Y'); ?>" class="datepicker" showweek="1" >
                 —
-                <input name="todate" type="text" autocomplete="off" value="<?php echo $this->fromdate->format('d.m.Y'); ?>" class="datepicker" showweek="1" >
+                <input name="todate" type="text" autocomplete="off" value="<?php echo $this->todate->format('d.m.Y'); ?>" class="datepicker" showweek="1" >
             </div>
         </div>
         <div class="filter fl_l sep">
@@ -58,7 +58,7 @@ $chart_title = "сравнение {$from_title} и {$to_title}";
                 <input type="submit" name="search" id="button-search" class="button button-search" class="button" value="Показать" />
             </div>
         </div>
-        <input type="hidden" name="chart" value="<?php echo $this->getSection(); ?>" />
+        <input type="hidden" name="section" value="<?php echo $this->getSection(); ?>" />
     </form>
 </div>
 

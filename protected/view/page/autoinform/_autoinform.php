@@ -163,7 +163,7 @@ $password = "ntrFkjd";
 //$dbName = "";
 $fromdate .= $_GET["fromdate"].' '.$_GET["fromhour"].':'.$_GET["frommin"];
 $todate .= $_GET["todate"].' '.$_GET["tohour"].':'.$_GET["tomin"];
-$db=mssql_connect($hostname,$username,$password) OR DIE("Не могу создать соединение!");
+$db = mssql_connect($hostname,$username,$password) OR DIE("Не могу создать соединение!");
 //mssql_select_db($dbName,$db) or die('Database not selected!');
 $query = "select * from dbo.autodialout order by datetotell;";
 $res = mssql_query($query) or die('Query error');
@@ -282,7 +282,12 @@ while ($row = mssql_fetch_array($res))
 	};
 	$calldate=substr($row[4],4,2).".$mon.".substr($row[4],7,4).' '.(substr($row[4],12,2)+$add_hour).":".(substr($row[4],15,2));
 	if(
-		(($todate==" 00:00")||(strtotime($date) <= strtotime($todate)))&&(($fromdate==" 00:00")||(strtotime($date) >= strtotime($fromdate)))&&(($_GET["result"]=="any")||($row[7]==$_GET["result"]))&&(($_GET["type"]=="any")||($_GET["type"]==$row[3]))&&(($_GET["phone"]=="")||($_GET["phone"]==substr($row[1],1)))&&(($_GET["retries"]==$row[6])||($_GET["retries"]=="any"))
+		(($todate==" 00:00")||(strtotime($date) <= strtotime($todate)))
+            &&(($fromdate==" 00:00")||(strtotime($date) >= strtotime($fromdate)))
+            &&(($_GET["result"]=="any")||                    ($row[7]==$_GET["result"]))
+            &&(($_GET["type"]=="any")||($_GET["type"]==$row[3]))
+            &&(($_GET["phone"]=="")||($_GET["phone"]==substr($row[1],1)))
+            &&(($_GET["retries"]==$row[6])||($_GET["retries"]=="any"))
 	)
 	{
 		$summary++;

@@ -119,7 +119,7 @@ class ACDbConnection extends mysqli {
         $this->_timeQuery = microtime(true) - $time_start;
         $this->_connect   = true;
         $this->success    = true;
-        log::trace("connect database: '{$dbname}'");
+        log::trace("connect database: '{$dbname}'", "SQL");
 
         if ($params['charset']) {
             $this->set_charset($params['charset']);

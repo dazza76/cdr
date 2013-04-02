@@ -90,10 +90,12 @@ class ACDbResult extends MySQLi_Result implements Iterator, Countable {
     }
 
     public function fetch() {
-        if ($this->_fetchMod)
-            return $this->fetch_object($this->_fetchMod[1], $this->_fetchMod[2]);
-        else
-            return $this->fetch_assoc();
+        if ($this->count()) {
+            if ($this->_fetchMod)
+                return $this->fetch_object($this->_fetchMod[1], $this->_fetchMod[2]);
+            else
+                return $this->fetch_assoc();
+        }
     }
 
     public function fetchAssoc() {

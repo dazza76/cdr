@@ -1,0 +1,70 @@
+#!/bin/sh
+
+#************************************************#
+#           backup                               #
+#           autor: Tyurin D.                     #
+#           05 03 2013                           #
+#                                                #
+#    Бэкап всего проекта                         #
+#************************************************#
+
+if [[ $1 = "--help" ]]; then
+  echo "use: backup [params] [prefix]"
+  echo "params:"
+  echo "  --min  include base files"
+  exit 0
+fi
+
+
+##
+## Параметры проекта
+##
+PROJECT_NAME="cdr"
+BACKUP_DIR=".backup"
+# -------------------------------------------
+
+##
+## Файлы бекапа
+##
+FILES_BACKUP="js css protected .htaccess"
+
+# корневые файлы
+FILE_PHP_SH=$(ls | grep '.php' | grep -v 'test-')
+FILES_BACKUP="${FILES_BACKUP} ${FILE_PHP_SH}"
+
+# # файлы css
+# FILE_CSS_SH=$(find css -maxdepth 1 -name '*.css' -type f)
+# FILES_BACKUP="${FILES_BACKUP} ${FILE_CSS_SH}"
+
+# # файлы js
+# FILE_JS_SH=$(find js -maxdepth 1 -name '*.js' -type f)
+# FILES_BACKUP="${FILES_BACKUP} ${FILE_JS_SH}"
+# # -------------------------------------------
+
+##
+## Системные параметры
+##
+PHP_BIN="z:/usr/local/php5/php"
+WWW_DIR="z:/home/localhost/www"
+SXD_DIR="z:/home/localhost/www/Tools/sxd"
+# -------------------------------------------
+
+##
+## параметры выполнения
+##
+USE_DIR=$(pwd)
+ROOT_DIR="${WWW_DIR}/${PROJECT_NAME}"
+BC_DATE=$(date +%F_%H-%M-%S)
+BC_PREFIX=""
+if [[ $1 != "" ]]; then
+  BC_PREFIX=".$1"
+fi
+BACKUP_FILENAME="${BACKUP_DIR}/${PROJECT_NAME}.${BC_DATE}${BC_PREFIX}.min.tar.gz"
+# -------------------------------------------
+
+tar -zacf ${BACKUP_FILENAME} ${FILES_BACKUP}
+
+echo ${FILES_BACKUP}
+echo "${BACKUP_FILENAME} - ok"
+
+exit 0

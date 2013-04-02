@@ -53,11 +53,20 @@ $(document).ready(function() {
     // submit
     $form.submit(function() {
         $form.find("input[name=offset]").val('');
-        $form.find('select, input').each(function() {
-            if (!$(this).val() || $(this).val() == 0 || $(this).val() == '') {
+        $form.find('input').each(function() {
+            if ($.trim($(this).val()) == '') {
                 $(this).removeAttr('name');
             }
         });
+        $form.find("select[multiple!='multiple']").each(function() {
+            if ($(this).val() == '') {
+                $(this).removeAttr('name');
+            }
+        });
+        // var $option = $("select[multiple!='multiple'] option:first");//.attr('selected', 'yes');
+        // console.log($option);
+
+
         $form.find("input[name=search]").removeAttr('name');
         return true;
     });

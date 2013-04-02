@@ -87,7 +87,7 @@
 </div>
 
 <div class="filters clear_fix bigblock of_h">
-    <table class="grid">
+    <table class="grid" htable="1">
         <thead>
             <tr>
                 <!--  data-sort="" data-desc=""  -->
@@ -102,7 +102,7 @@
 </div>
 
 <div class="clear clear_fix">
-    <table class="grid">
+    <table class="grid" htable="1">
         <thead>
             <tr class="b-head">
                 <th style="width: 150px;"> </th>
@@ -115,7 +115,7 @@
         <tbody>
             <?php foreach ($this->rows as $row) {  ?>
                 <tr callid="<?php echo $row->id; ?>">
-                    <td><?php echo $row->calldate ?></td>
+                    <td><?php echo $row->calldate->format('d.m.Y H:i:s'); ?></td>
                     <td><?php echo html($row->src); ?></td>
                     <td>
                         <div class="fl_l">

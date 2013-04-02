@@ -62,7 +62,7 @@ class QueueAgent extends ACDataObject {
 
         $oper = self::$_QueueAgent[$id];
         if ( ! $oper) {
-            $oper = 'Неизвестно';
+            $oper = "Неизвестно ({$id})";
         }
 
         return html($oper);

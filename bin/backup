@@ -1,0 +1,55 @@
+#!/bin/sh
+
+##
+## Параметры проекта
+##
+PROJECT_NAME="cdr"
+BACKUP_DIR=".backup"
+
+DIRS_BACKUP="css js protected"
+DIRS_BACKUP_FULL="images lib"
+FILES_BACKUP=".htaccess"
+# -------------------------------------------
+
+##
+## Системные параметры
+##
+PHP_BIN="z:/usr/local/php5/php"
+WWW_DIR="z:/home/localhost/www"
+# -------------------------------------------
+
+
+##
+## параметры выполнения
+##
+USE_DIR=$(pwd)
+ROOT_DIR="${WWW_DIR}/${PROJECT_NAME}"
+BC_DATE=$(date +%F_%H-%M-%S)
+BC_PREFIX=".min"
+if [[ $1 != "" ]]; then
+    if [[ $1 == "-full" ]]; then
+        DIRS_BACKUP="${DIRS_BACKUP} ${DIRS_BACKUP_FULL}"
+        BC_PREFIX=""
+        if [[ $2 != "" ]]; then
+            BC_PREFIX=".$2"
+        fi
+    else
+        BC_PREFIX=".$1.min"
+    fi
+fi
+BACKUP_FILENAME="${BACKUP_DIR}/${PROJECT_NAME}.${BC_DATE}${BC_PREFIX}.tar.gz"
+# -------------------------------------------
+
+##
+## Файлы бекапа
+##
+FILES_BACKUP_SH=$(ls | grep '.php' | grep -v 'test')
+FILES_BACKUP="${DIRS_BACKUP} ${FILES_BACKUP} ${FILES_BACKUP_SH}"
+# -------------------------------------------
+
+
+
+tar -zacf ${BACKUP_FILENAME} ${FILES_BACKUP}
+
+echo ${FILES_BACKUP}
+echo "${BACKUP_FILENAME} - ok"

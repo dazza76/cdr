@@ -30,7 +30,7 @@
 
 
 <div class="filters clear_fix bigblock of_h">
-    <table class="grid">
+    <table class="grid" htable="1">
         <thead>
             <tr height="20px">
                 <th>Номер телефона</th>
@@ -42,7 +42,7 @@
 
 
 <div class="clear clear_fix">
-    <table class="grid" style="width: 300px;">
+    <table class="grid" style="width: 300px;" htable="1" >
         <thead>
             <tr class="b-head">
                 <th style="width: 150px;"> </th>

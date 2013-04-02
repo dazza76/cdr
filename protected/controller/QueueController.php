@@ -399,9 +399,15 @@ class QueueController extends Controller {
             $oxY[$day]      = $dayNames[$i]; //."<br/>".$dateTime->format('m-d');
             $total[$day]    = 0;
             $complete[$day] = 0;
+            if ($i == 0) {
+                $_fromdate = $dateTime->format('Y-m-d');
+            }
+            if ($i == 6) {
+                $_todate = $dateTime->format('Y-m-d');
+            }
         }
 
-        Log::dump($oxY, 'Масив по oxY');
+        Log::dump($oxY, 'Масив по oxY (неделя '.$dateTime->format('W').')');
 
 
         $query_total = "
@@ -410,7 +416,7 @@ class QueueController extends Controller {
                 COUNT(*) AS `total`
             FROM `call_status`
             WHERE
-              WEEKOFYEAR(`timestamp`) = WEEKOFYEAR('{$date->format('Y-m-d')}')
+              `timestamp` BETWEEN '{$_fromdate}' AND '{$_todate}'  
               AND  LENGTH(`callerId`) > 6
               AND `status` IN ('ABANDON', 'COMPLETEAGENT', 'COMPLETECALLER', 'TRANSFER')
                {$query}
@@ -427,7 +433,7 @@ class QueueController extends Controller {
               COUNT(*) AS `complete`
             FROM `call_status`
             WHERE
-              WEEKOFYEAR(`timestamp`) = WEEKOFYEAR('{$date->format('Y-m-d')}')
+              `timestamp` BETWEEN '{$_fromdate}' AND '{$_todate}' 
               AND  LENGTH(`callerId`) > 6
               AND `status` IN ('COMPLETEAGENT', 'COMPLETECALLER')
                {$query}

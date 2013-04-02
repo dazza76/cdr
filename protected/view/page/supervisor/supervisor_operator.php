@@ -62,8 +62,8 @@ if ($max < 10) {
 </script>
 
 
-<div class="filters clear_fix mediumblock of_h">
-    <table class="grid">
+<div class="filters clear_fix mediumblock of_h" style="width: 600px">
+    <table class="grid" htable="1">
         <thead height="50px">
             <tr>
                 <th>Операторы</th>
@@ -76,7 +76,7 @@ if ($max < 10) {
 </div>
 
 <div class="clear clear_fix fl_l" style="width: 600px">
-    <table id="queueAgents" class="grid">
+    <table id="queueAgents" class="grid" htable="1">
         <thead>
             <tr class="b-head">
                 <th align="center" style="width: 250px">Операторы</th>

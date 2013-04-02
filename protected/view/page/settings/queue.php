@@ -15,7 +15,7 @@ include 'dialog-queue.php';
 </div>
 
 <div class="filters clear_fix mediumblock of_h">
-    <table class="grid">
+    <table class="grid" htable="1">
         <thead>
             <tr>
                 <th>Имя очереди</th>
@@ -32,7 +32,7 @@ include 'dialog-queue.php';
 
 
 <div id="operator_list" class="clear clear_fix">
-    <table class="grid" style="width: 800px;">
+    <table class="grid" style="width: 800px;" htable="1">
         <thead>
             <tr class="b-head">
                 <th style="width: 150px;"> </th>

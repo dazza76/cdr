@@ -50,7 +50,8 @@ class FiltersValue {
         }
 
 
-        $date = preg_replace('|([\d]{1,2})\.([\d]{1,2})\.([\d]{4})|', '$3-$2-$1', $date);
+        $date = preg_replace('|([\d]{1,2})\.([\d]{1,2})\.([\d]{4})|',
+                             '$3-$2-$1', $date);
         $date = ACPropertyValue::ensureDatetime($date);
         if ($date == '0000-00-00 00:00:00') {
             $date = $default;
@@ -172,5 +173,42 @@ class FiltersValue {
      */
     public static function parseCheck($param) {
         return ($param) ? true : false;
+    }
+
+    /**
+     * Конвертирует дату формата из "Mar 12 2013 11:00:00:000AM"
+     * @param string $date_str
+     * @return ACDateTime
+     */
+    public static function toFormatDate($date_str, $get_obj = false) {
+        //$subject_1 = "Jan 12 2013 11:10:00:000PM";
+        $pattern_1 = "#([a-z]{3}) ([\d]{2}) ([\d]{4}) ([\d]{2}):([\d]{2}):([\d]{2}):[\d]{3}(A|P)M#i";
+        //$subject_2 = "2012-11-01 12:22:11";
+        $pattern_2 = "#([\d]{4}).([\d]{2}).([\d]{2})( ([\d]{2}))?(:([\d]{2}))?(:([\d]{2}))?#i";
+
+        $eng = array('Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep',
+            'Oct', 'Nov', 'Dec');
+        $num = array('01', '02', '03', '04', '05', '06', '07', '08', '09', '10',
+            '11', '12');
+
+
+        if (preg_match($pattern_2, $date_str, $matc)) {
+            $date = $matc[3] . '.' . $matc[2] . '.' . $matc[1] . $matc[4] . $matc[6] . $matc[8];
+            return ($get_obj) ? ACDateTime::createFromFormat('d.m.Y H:i:s', $date) : $date;
+        }
+
+        preg_match($pattern_1, $date_str, $matc);
+
+        $matc[1] = str_replace($eng, $num, $matc[1]);
+        if ($matc[7] == "P" && $matc[5] != 12) {
+            $matc[5] += 12;
+        }
+        if ($matc[7] == "A" && $matc[5] != 12) {
+            $matc[5] -= 12;
+        }
+
+        $date = $matc[2] . '.' . $matc[1] . '.' . $matc[3]  . ' ' . $matc[4] . ':' . $matc[5] . ':' . $matc[6];
+
+        return ($get_obj) ? ACDateTime::createFromFormat('d.m.Y H:i:s', $date) : $date;
     }
 }

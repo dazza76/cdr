@@ -13,7 +13,7 @@ include 'filters.php';
 ?>
 
 <div class="filters clear_fix mediumblock of_h">
-    <table class="grid" style="width: 1200px;">
+    <table class="grid" style="width: 1200px;" htable="1">
         <thead >
             <tr height="30px">
                 <th align="center">Очередь</th>
@@ -32,7 +32,7 @@ include 'filters.php';
 </div>
 
 <div class="clear clear_fix">
-    <table id="queuesData" class="grid" style="width: 1200px;">
+    <table id="queuesData" class="grid" style="width: 1200px;" htable="1">
         <thead>
             <tr class="b-head">
                 <th > </th>

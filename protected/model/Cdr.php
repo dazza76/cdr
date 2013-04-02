@@ -3,7 +3,7 @@
  * Cdr class
  *
  * @property string $id            - id
- * @property string $calldate      - дата и время вызова
+ * @property ACDateTime $calldate      - дата и время вызова
  * @property string $clid          - Так называемый CALLERID (Имя в кавычках, номер в скобках).
  *                                   Выводится на телефон, по факту в самой странице не используется
  * @property string $src           - номер, с которого звонили.
@@ -56,8 +56,15 @@ class Cdr extends ACDataObject {
      * @var integer вызов исходящий
      */
     const OUTCOMING = 2;
+    
+    public function __set($name, $value) {
+        if ($name == 'calldate') {
+            $value = new ACDateTime($value);
+        }
+        parent::__set($name, $value);
+    }
 
-    /**
+        /**
      * Вызов входящий, исходящий, внутренний
      *   0 - внутренний
      *   1 - входящий

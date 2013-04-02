@@ -67,7 +67,7 @@ class ACDbCommand {
      * @param array|string $select - столбцы таблицы выборги
      * @return ACDbSelectCommand
      */
-    public function select($select = '*') {
-        return new ACDbSelectCommand($this->_dbConnection, $select);
+    public function select($select = '*', $escape = false) {
+        return new ACDbSelectCommand($this->_dbConnection, $select, $escape);
     }
 }

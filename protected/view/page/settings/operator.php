@@ -13,7 +13,7 @@ include 'dialog-operator.php';
 
 
 <div class="filters clear_fix mediumblock of_h">
-    <table class="grid">
+    <table class="grid" htable="1">
         <thead>
             <tr>
                 <th>ФИО</th>
@@ -27,7 +27,7 @@ include 'dialog-operator.php';
 
 
 <div id="operator_list" class="clear clear_fix">
-    <table class="grid" style="width: 660px;">
+    <table class="grid" style="width: 660px;" htable="1">
         <thead>
             <tr class="b-head">
                 <th> </th>

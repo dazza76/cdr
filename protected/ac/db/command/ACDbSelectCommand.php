@@ -1,4 +1,5 @@
 <?php
+
 /**
  * ACDbSelectCommand class  - ACDbSelectCommand.php file
  *
@@ -37,15 +38,28 @@ class ACDbSelectCommand extends ACDbWhereCommand {
      * Поля необходимые для чтения
      *
      * @param string|array $select
+     * @param bool $escape
      */
-    public function __construct(ACDbConnection $dbConnection, $select = "*") {
+    public function __construct(ACDbConnection $dbConnection, $select = "*", $escape = false) {
         parent::__construct($dbConnection);
-        $this->_query['select'] = ACPropertyValue::ensureFields($select);
+        $this->_query['select'] = array();
+        $this->select($select, $escape);
     }
 
-    public function select($select) {
+    /**
+     * Добавить поле выборги
+     * @param array|string $select
+     * @param bool $escape
+     * @return \ACDbSelectCommand
+     */
+    public function select($select, $escape = false) {
+        $select = ACPropertyValue::ensureFields($select);
+
         if ($select) {
-            $this->_query['select'][] = (string) $select;
+            if ($escape) {
+                array_walk($select, array($this, '_quoteTable'));
+            }
+            $this->_query['select'] = array_merge($this->_query['select'], $select);
         }
         return $this;
     }
@@ -65,8 +79,8 @@ class ACDbSelectCommand extends ACDbWhereCommand {
                 $this->_query['offset'] = 0;
             }
 
-            if($this->_calc_tables) {
-                $this->_tables =$this->_calc_tables;
+            if ($this->_calc_tables) {
+                $this->_tables = $this->_calc_tables;
             }
             $tables = $this->_tables;
             array_walk($tables, function(&$value) {
@@ -84,13 +98,13 @@ class ACDbSelectCommand extends ACDbWhereCommand {
         // Количество совпадений (без лимита)
         if ($this->_query['calc']) {
             $result_count = $DB->query("SELECT FOUND_ROWS() as count");
-            $count        = $result_count->fetch_assoc();
+            $count = $result_count->fetch_assoc();
 
             $result_count->close();
             $result->foundRows = (int) $count['count'];
-            $result->calc      = array(
-                'count'  => $result->foundRows,
-                'limit'  => $this->_query['limit'],
+            $result->calc = array(
+                'count' => $result->foundRows,
+                'limit' => $this->_query['limit'],
                 'offset' => $this->_query['offset']
             );
 
@@ -111,7 +125,7 @@ class ACDbSelectCommand extends ACDbWhereCommand {
         if ($query['calc'])
             $sql .= ' SQL_CALC_FOUND_ROWS ';
 
-        $sql .= ' ' . implode(",", $query['select']);
+        $sql .= ' ' . implode(", ", $query['select']);
 
         if (isset($query['from']))
             $sql.="\nFROM " . $query['from'];
@@ -131,12 +145,12 @@ class ACDbSelectCommand extends ACDbWhereCommand {
         if (isset($query['order']))
             $sql.="\nORDER BY " . $query['order'];
 
-        $limit  = isset($query['limit']) ? (int) $query['limit'] : -1;
+        $limit = isset($query['limit']) ? (int) $query['limit'] : -1;
         $offset = isset($query['offset']) ? (int) $query['offset'] : -1;
 
         if ($limit > 0 || $offset >= 0) {
             if ($limit <= 0)
-                $limit  = 15;
+                $limit = 15;
             if ($offset < 0)
                 $offset = 0;
 
@@ -158,7 +172,7 @@ class ACDbSelectCommand extends ACDbWhereCommand {
             $this->_query['from'] .= ",";
         }
         $this->_query['from'] .= (string) $table;
-        $this->_tables[]      = $table;
+        $this->_tables[] = $table;
 
         return $this;
     }
@@ -204,7 +218,7 @@ class ACDbSelectCommand extends ACDbWhereCommand {
      */
     public function leftJoinUsing($table, $using) {
         $this->_tables[] = $table;
-        $using           = implode(ACPropertyValue::ensureFields($using, false));
+        $using = implode(ACPropertyValue::ensureFields($using, false));
         $_join .= ' LEFT JOIN ' . $table
                 . ' USING(' . $using . ') ';
         $this->_query['join'] .= $_join;
@@ -219,8 +233,8 @@ class ACDbSelectCommand extends ACDbWhereCommand {
         return $this;
     }
 
-       /**
-         * После группировоное условие
+    /**
+     * После группировоное условие
      * Жесткое условие, без экронирования.
      * В случие масива параметры соединены 'AND'
      *
@@ -232,7 +246,7 @@ class ACDbSelectCommand extends ACDbWhereCommand {
             foreach ($having as $key => $value) {
                 $having[$key] = " $key = $value ";
             }
-            $having       = implode('AND', $having);
+            $having = implode('AND', $having);
         }
 
         $this->_query['having'] .= $having;

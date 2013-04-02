@@ -1,4 +1,5 @@
 <?php
+
 /**
  * CallStatus class
  *
@@ -6,7 +7,7 @@
  * @property string $callerId          - [1] номер, с которого звонили
  * @property string $memberId          - [2] номер оператора
  * @property string $status            - [3] состояние вызова
- * @property string $timestamp         - [4] время последнего изменения
+ * @property ACDateTime $timestamp         - [4] время последнего изменения
  * @property string $queue             - [5] очередь
  * @property string $position          - [6] позиция в очереди
  * @property string $originalPosition  - [7] начальная позиция в очереди
@@ -24,6 +25,13 @@ class CallStatus extends ACDataObject {
     const ACT_ABANDONED    = 'abandoned';
     const ACT_AVGCOMPLETE  = 'avgcomplete';
     const ACT_AVGABANDONED = 'avgabandoned';
+
+    public function __set($name, $value) {
+        if ($name == 'timestamp') {
+            $value = new ACDateTime($value);
+        }
+        parent::__set($name, $value);
+    }
 
     /**
      * Форматированный номер с которого звонили
@@ -61,6 +69,4 @@ class CallStatus extends ACDataObject {
             case 'TRANSFER': return 'Переведен на ' . $this->keyPressed;
         }
     }
-
-
 }

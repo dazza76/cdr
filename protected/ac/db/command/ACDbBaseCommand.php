@@ -1,4 +1,5 @@
 <?php
+
 /**
  * ACDbBaseCommand class  - BaseCommand.php file
  *
@@ -13,6 +14,7 @@
  */
 abstract class ACDbBaseCommand {
 
+    /** @var ACDbConnection */
     protected $_dbConnection;
 
     /**
@@ -89,8 +91,7 @@ abstract class ACDbBaseCommand {
             $sql.="\nLIMIT " . $limit;
 
         if (isset($union))
-            $sql.= "\nUNION (\n" . (is_array($union) ? implode("\n) UNION (\n",
-                                                               $union) : $union) . ')';
+            $sql.= "\nUNION (\n" . (is_array($union) ? implode("\n) UNION (\n", $union) : $union) . ')';
 
         return $sql;
     }
@@ -112,6 +113,17 @@ abstract class ACDbBaseCommand {
         $value = $this->_dbConnection->quoteEscapeString($value);
         return $value;
     }
+
+    /**
+     * Экранирует название столбцов
+     * @param string $value
+     * @return string
+     */
+    protected function _quoteTable(&$value) {
+        $value = $this->_dbConnection->quoteTableName($value);
+        return $value;
+    }
+
 }
 
 /**
@@ -130,8 +142,7 @@ abstract class ACDbWhereCommand extends ACDbBaseCommand {
         if ($this->_query['order']) {
             $this->_query['order'] .= ", ";
         }
-        $this->_query['order'] .= implode(",",
-                                          ACPropertyValue::ensureFields($cols));
+        $this->_query['order'] .= implode(",", ACPropertyValue::ensureFields($cols));
         return $this;
     }
 
@@ -142,7 +153,7 @@ abstract class ACDbWhereCommand extends ACDbBaseCommand {
      */
     public function group($cols) {
         $cols = implode(",", ACPropertyValue::ensureFields($cols));
-        if ( ! $cols) {
+        if (!$cols) {
             return $this;
         }
         if ($this->_query['group']) {
@@ -163,8 +174,7 @@ abstract class ACDbWhereCommand extends ACDbBaseCommand {
      * @param boolean $escape       - флаг, надо ли экранровать значение. по умолчанию true
      * @return self
      */
-    public function addWhere($column, $value, $partialMatch = '=',
-                             $operator = 'AND', $escape = true) {
+    public function addWhere($column, $value, $partialMatch = '=', $operator = 'AND', $escape = true) {
         if (in_array($partialMatch, array("<>", "<=", ">=", "<", ">", "="))) {
             if ($escape) {
                 $this->_quoteValeu($value);
@@ -203,7 +213,7 @@ abstract class ACDbWhereCommand extends ACDbBaseCommand {
 
 
         if ($this->_query['where']) {
-            if (( ! in_array($operator, array("AND", "OR", "XOR")))) {
+            if ((!in_array($operator, array("AND", "OR", "XOR")))) {
                 Log::error("Invalid operator Where : " . $operator);
                 $operator = "AND";
             }
@@ -227,7 +237,7 @@ abstract class ACDbWhereCommand extends ACDbBaseCommand {
             foreach ($where as $key => $value) {
                 $where[$key] = " $key = $value ";
             }
-            $where       = implode('AND', $where);
+            $where = implode('AND', $where);
         }
 
         $this->_query['where'] .= $where;
@@ -254,4 +264,5 @@ abstract class ACDbWhereCommand extends ACDbBaseCommand {
         $this->_query['limit'] = $limit;
         return $this;
     }
+
 }

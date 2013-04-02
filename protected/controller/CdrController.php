@@ -51,6 +51,11 @@ class CdrController extends Controller {
     );
 
     /**
+     * @var ACDbConnection
+     */
+    protected $_db;
+
+    /**
      * @var int
      */
     public $count;
@@ -74,6 +79,15 @@ class CdrController extends Controller {
         $from->sub(new DateInterval('P1D'));
 
         $this->_filters['fromdate'][1] = $from;
+
+        if (App::Config()->cdr->another_base) {
+            $cfg       = App::Config()->cdr->database;
+            $this->_db = new ACDbConnection($cfg->host, $cfg->user, $cfg->pass,
+                                            $cfg->dbname,
+                                            App::Config()->database->params);
+        } else {
+            $this->_db = App::Db();
+        }
     }
 
     /**
@@ -127,14 +141,15 @@ class CdrController extends Controller {
         $id      = FiltersValue::parseId($params['id']);
         $comment = FiltersValue::parseComment($params['comment']);
 
-        App::Db()->createCommand()->update(Cdr::TABLE)
+
+        $this->_db->createCommand()->update(Cdr::TABLE)
                 ->addSet('comment', $comment, true)
                 ->addWhere('id', $id)
                 ->query();
 
         $this->content = 1;
 
-        return App::Db()->success;
+        return $this->_db->success;
     }
 
     /**
@@ -147,9 +162,9 @@ class CdrController extends Controller {
         if ($limit_scan <= 0) {
             $limit_scan = 100;
         }
-        $DB         = App::Db();
 
-        $command = $DB->createCommand()->select('id, calldate, uniqueid')
+
+        $command = $this->_db->createCommand()->select('id, calldate, uniqueid')
                 ->from(Cdr::TABLE)
                 ->where(' `file_exists` IS NULL ')
                 ->limit($limit_scan);
@@ -185,19 +200,19 @@ class CdrController extends Controller {
         }
 
         if (count($file_yes_1)) {
-            App::Db()->createCommand()->update(Cdr::TABLE)
+            $this->_db->createCommand()->update(Cdr::TABLE)
                     ->addSet('`file_exists`', "1")
                     ->addWhere('id', $file_yes_1, 'IN')
                     ->query();
         }
         if (count($file_yes_2)) {
-            App::Db()->createCommand()->update(Cdr::TABLE)
+            $this->_db->createCommand()->update(Cdr::TABLE)
                     ->addSet('`file_exists`', "2")
                     ->addWhere('id', $file_yes_2, 'IN')
                     ->query();
         }
         if (count($file_no)) {
-            App::Db()->createCommand()->update(Cdr::TABLE)
+            $this->_db->createCommand()->update(Cdr::TABLE)
                     ->addSet('`file_exists`', "0")
                     ->addWhere('id', $file_no, 'IN')
                     ->query();
@@ -212,12 +227,11 @@ class CdrController extends Controller {
      * @return bool
      */
     public function searchCalls() {
-        $DB   = App::Db();
         $sort = $this->sort;
         if ($this->desc) {
             $sort .= " DESC ";
         }
-        $command = $DB->createCommand()->select()
+        $command = $this->_db->createCommand()->select()
                 ->from(Cdr::TABLE)
                 ->calc()
                 ->addWhere('file_exists', '0', '>')
@@ -237,7 +251,7 @@ class CdrController extends Controller {
         }
         // оператор
         if ($this->oper) {
-            $oper = $DB->escapeString($this->oper);
+            $oper = $this->_db->escapeString($this->oper);
             $command->where(
                     " AND ("
                     . "(`dcontext` = 'incoming' AND `dstchannel` = '$oper')"
@@ -296,12 +310,11 @@ class CdrController extends Controller {
      * @return bool
      */
     public function searchAnswering() {
-        $DB   = App::Db();
         $sort = $this->sort;
         if ($this->desc) {
             $sort .= " DESC ";
         }
-        $command = $DB->createCommand()->select()
+        $command = $this->_db->createCommand()->select()
                 ->from(Cdr::TABLE)
                 ->calc()
                 ->addWhere('file_exists', '0', '>')
@@ -352,9 +365,8 @@ class CdrController extends Controller {
      * @return int
      */
     public function getCountFileExists() {
-        $DB = App::Db();
 
-        $command = $DB->createCommand()->select('COUNT(id) AS total')
+        $command = $this->_db->createCommand()->select('COUNT(id) AS total')
                 ->from(Cdr::TABLE)
                 ->where(' `file_exists` IS NULL ');
         if ($this->fromdate) {

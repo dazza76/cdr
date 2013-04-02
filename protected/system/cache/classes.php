@@ -35,6 +35,7 @@ return array(
     'acxml' => 'ac/web/helper/ACXML.php', 
     'app' => 'Application.php', 
     'application' => 'Application.php', 
+    'autodialout' => 'model/Autodialout.php', 
     'autoinformcontroller' => 'controller/AutoinformController.php', 
     'callstatus' => 'model/CallStatus.php', 
     'cdr' => 'model/Cdr.php', 
@@ -49,6 +50,5 @@ return array(
     'sippeers' => 'model/Sippeers.php', 
     'supervisorcontroller' => 'controller/SupervisorController.php', 
     'timemancontroller' => 'controller/TimemanController.php', 
-    'user' => 'controller/component/User.php', 
     'utils' => 'Utils.php', 
 );

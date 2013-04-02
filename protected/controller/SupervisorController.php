@@ -148,6 +148,7 @@ class SupervisorController extends Controller {
 
         $result = App::Db()->createCommand()->select()
                 ->from(QueueAgent::TABLE)
+                ->addWhere('state', 'in')
                 ->order('name')
                 ->query();
 
@@ -166,6 +167,8 @@ class SupervisorController extends Controller {
         $this->queuesData = $this->getStatisticOperator($date);
 
         $this->dataPage['links'] .= '<script src="' . Utils::linkUrl('lib/highcharts/highcharts.js') . "\"></script>\n";
+
+        // header('Refresh: 1; url='.$_SERVER['PHP_SELF'].'?section=operator');
     }
 
     public function sectionAnalogue() {

@@ -7,12 +7,11 @@ $(document).ready(function() {
         return;
     }
 
-
-
-    if ($(".grid tr.b-head").length) {
-        var $thead = $(".grid thead").eq(0);
-
-        $thead.parents('table').width($(".grid tr.b-head").parents('table').width() + 2);
+    $(".grid tr.b-head").each(function() {
+        var h = $(this).parents('table').attr('htable');
+        var $thead = $('table[htable=' + h + ']');
+        
+        $thead.width($(this).parents('table').width() + 2);
 
         $(".grid tr.b-head th").each(function() {
             var index = $(this).index();
@@ -20,7 +19,20 @@ $(document).ready(function() {
             $(this).text(' ');
             $thead.find("th").eq(index).width(w);
         });
-    }
+    });
+
+//    if ($(".grid tr.b-head").length) {
+//        var $thead = $(".grid thead").eq(0);
+//
+//        $thead.parents('table').width($(".grid tr.b-head").parents('table').width() + 2);
+//
+//        $(".grid tr.b-head th").each(function() {
+//            var index = $(this).index();
+//            var w = $(this).width();
+//            $(this).text(' ');
+//            $thead.find("th").eq(index).width(w);
+//        });
+//    }
 
 
 //    $(".grid tr.b-head").each(function() {

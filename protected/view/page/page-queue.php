@@ -67,7 +67,7 @@
 
 
 <div class="filters clear clear_fix bigblock">
-    <table class="grid">
+    <table class="grid" >
         <tr>
             <td class="head" style="width: 400px;">ВСЕГО:</td>
             <td><?php echo $this->totalResult['total']; ?></td>
@@ -111,7 +111,7 @@
 </div>
 
 <div class="filters clear_fix bigblock of_h">
-    <table class="grid">
+    <table class="grid" htable="1">
         <thead>
             <tr>
                 <th <?php echo Utils::sortable('timestamp', $this->sort, $this->desc); ?> >Дата - Время</th>
@@ -133,7 +133,7 @@
 
 
 <div class="clear clear_fix">
-    <table class="grid">
+    <table class="grid" htable="1">
         <thead>
             <tr class="b-head">
                 <th style="width: 150px;"> </th>
@@ -158,7 +158,7 @@
                 }
                 ?>
                 <tr>
-                    <td><?php echo $row->timestamp; ?></td>
+                    <td><?php echo $row->timestamp->format('d.m.Y H:i:s');; ?></td>
                     <td><?php echo $row->getCaller(); ?></td>
                     <td><?php echo $row->getOper(); ?></td>
                     <td><?php echo $row->callId; ?></td>
