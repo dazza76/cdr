@@ -7,7 +7,7 @@
  * @property string $callerId          - [1] номер, с которого звонили
  * @property string $memberId          - [2] номер оператора
  * @property string $status            - [3] состояние вызова
- * @property ACDateTime $timestamp         - [4] время последнего изменения
+ * @property ACDateTime $timestamp     - [4] время последнего изменения
  * @property string $queue             - [5] очередь
  * @property string $position          - [6] позиция в очереди
  * @property string $originalPosition  - [7] начальная позиция в очереди
@@ -39,7 +39,11 @@ class CallStatus extends ACDataObject {
      */
     public function getCaller() {
         $vip = ($this->priorityId) ? '(VIP №' . $this->priorityId . ')' : '';
-        return html($this->callerId . " " . $vip);
+        $callerId = $this->callerId;
+        if (substr($callerId, 0, 3) == "989" && strlen($callerId) == 12) {
+            $callerId = substr($callerId, 2);
+        }
+        return html($callerId . " " . $vip);
     }
 
     /**

@@ -87,6 +87,7 @@ $result = App::Db()->query($query);
         <link href="/cdr/css/common.css?<?php echo App::Config()->v; ?>" rel="stylesheet" >
 
         <script src="/cdr/js/base.js?<?php echo App::Config()->v; ?>"></script>
+        <script src="/cdr/js/datetimepicker.js?<?php echo App::Config()->v; ?>"></script>
         <script src="/cdr/js/filters-form.js?<?php echo App::Config()->v; ?>"></script>
         <script src="/cdr/js/multiselect.js?<?php echo App::Config()->v; ?>"></script>
         <script src="/cdr/js/fixed-header.js?<?php echo App::Config()->v; ?>"></script>

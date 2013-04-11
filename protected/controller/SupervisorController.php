@@ -1,4 +1,5 @@
 <?php
+
 /**
  * SupervisorController class  - SupervisorController.php file
  *
@@ -14,29 +15,36 @@
 class SupervisorController extends Controller {
 
     const STATE_MEMBER_AFTERCALL = "aftercall";
-    const STATE_MEMBER_PAUSED    = "paused";
-    const STATE_MEMBER_ONLINE    = "online";
+    const STATE_MEMBER_PAUSED = "paused";
+    const STATE_MEMBER_ONLINE = "online";
     const STATE_PHONE_NOT_IN_USE = "not_in_use";
-    const STATE_PHONE_RINGING    = "ringing";
-    const STATE_PHONE_USED       = "used";
+    const STATE_PHONE_RINGING = "ringing";
+    const STATE_PHONE_USED = "used";
 
     protected $_filters = array(
         'fromdate' => array('parseDatetime'),
-        'todate'   => array('parseDatetime')
+        'todate' => array('parseDatetime')
     );
     public $queues;
 
     public function init($params = null) {
         parent::init($params);
 
-        if ( ! empty($_COOKIE['supervisor_update'])) {
+        if (!empty($_COOKIE['supervisor_update'])) {
             App::Config()->supervisor['dynamic_update'] = $_COOKIE['supervisor_update'];
         }
-        if ( ! empty($_COOKIE['supervisor_interval'])) {
+        if (!empty($_COOKIE['supervisor_interval'])) {
             App::Config()->supervisor['update_interval'] = $_COOKIE['supervisor_interval'];
         }
 
-        $this->index();
+
+        if ($this->export && $_GET['export']) {
+            $section = "section" . $this->getSection();
+            $this->$section();
+            $this->export();
+        } else {
+            $this->index();
+        }
     }
 
     public function index() {
@@ -51,18 +59,18 @@ class SupervisorController extends Controller {
             if ($this->queueAgents) {
                 $queueAgents = array();
                 foreach ($this->queueAgents as $obj) {
-                    $queueAgents[]           = array(
-                        'agentid'     => $obj->agentid,
+                    $queueAgents[] = array(
+                        'agentid' => $obj->agentid,
                         //'state' => $obj->state,//sgetStatePhone(),
                         'state_phone' => $obj->getStatePhone(),
-                        'phone'       => $obj->phone,
-                        'member'      => $obj->member,
-                        'queues'      => $obj->getQueuesFull()
+                        'phone' => $obj->phone,
+                        'member' => $obj->member,
+                        'queues' => $obj->getQueuesFull()
                     );
                 }
                 $response['queueAgents'] = $queueAgents;
             }
-            $this->content           = ACJavaScript::encode(array('response' => $response));
+            $this->content = ACJavaScript::encode(array('response' => $response));
             return;
         }
 
@@ -70,21 +78,39 @@ class SupervisorController extends Controller {
         $this->viewMain('page/supervisor/supervisor_' . $this->getSection() . '.php');
     }
 
+    public function export() {
+        $data = array();
+        foreach ($this->dataAnalogue as $row) {
+            $data[] = array($row['dst'], $row['count']);
+        }
+
+
+        $export = new Export($data);
+        $export->type = $this->export;
+        $export->thead = array(
+            'Номер телефона',
+            'Количество вызовов',
+        );
+
+        $export->send('supervisor_analogue');
+        exit();
+    }
+
     /**
      * Очереди
      */
     public function sectionQueue() {
         $que_arr = Queue::getQueueArr();
-        $date    = new DateTime(date('Y-m-d')); // '2011-03-11 00:00:00'
-        $data    = $this->getStatisticQueue($date, array_keys($que_arr));
+        $date = new DateTime(date('Y-m-d')); // '2011-03-11 00:00:00'
+        $data = $this->getStatisticQueue($date, array_keys($que_arr));
 
 
         foreach ($que_arr as $queue => $queue_name) {
-            $data[$queue]['name']       = $queue_name;
+            $data[$queue]['name'] = $queue_name;
             $data[$queue]['count_oper'] = 0;
 
             // Операторы
-            $q      = App::Db()->escapeString($queue);
+            $q = App::Db()->escapeString($queue);
             $result = App::Db()->createCommand()->select('COUNT(agentid)')
                     ->from('queue_agents')
                     ->where("`state` IN ('in','paused','aftercall') ")
@@ -110,34 +136,34 @@ class SupervisorController extends Controller {
      */
     public function sectionOperator() {
         // статусы
-        $states           = $this->getStates();
+        $states = $this->getStates();
         $this->queueChart = array(
-            'ringing'   => 0,
-            'free'      => 0,
-            'used'      => 0,
-            'paused'    => 0,
+            'ringing' => 0,
+            'free' => 0,
+            'used' => 0,
+            'paused' => 0,
             'aftercall' => 0
         );
         // диограма
         foreach ($states as $value) {
             switch ($value['phone']) {
                 case 'ringing':
-                    $this->queueChart['ringing'] ++;
+                    $this->queueChart['ringing']++;
                     break;
                 case 'not_in_use':
                     if ($value['member'] == 'online')
-                        $this->queueChart['free'] ++;
+                        $this->queueChart['free']++;
                     break;
                 case 'used':
-                    $this->queueChart['used'] ++;
+                    $this->queueChart['used']++;
                     break;
             }
             switch ($value['member']) {
                 case 'paused':
-                    $this->queueChart['paused'] ++;
+                    $this->queueChart['paused']++;
                     break;
                 case 'aftercall':
-                    $this->queueChart['aftercall'] ++;
+                    $this->queueChart['aftercall']++;
                     break;
             }
         }
@@ -148,14 +174,14 @@ class SupervisorController extends Controller {
 
         $result = App::Db()->createCommand()->select()
                 ->from(QueueAgent::TABLE)
-                ->addWhere('state', 'in')
+                ->addWhere('state', 'out', '<>')
                 ->order('name')
                 ->query();
 
         while ($queueAgent = $result->fetchObject('QueueAgent')) {
             /* @var $queueAgent QueueAgent */
-            $queueAgent->phone   = $states[$queueAgent->agentid]['phone'];
-            $queueAgent->member  = $states[$queueAgent->agentid]['member'];
+            $queueAgent->phone = $states[$queueAgent->agentid]['phone'];
+            $queueAgent->member = $states[$queueAgent->agentid]['member'];
             $this->queueAgents[] = $queueAgent;
         }
         Log::dump($this->queueAgents, 'queueAgents');
@@ -179,22 +205,20 @@ class SupervisorController extends Controller {
         $command = App::Db()->createCommand()->select("`dst`, COUNT(*) AS `count`")
                 ->from(Cdr::TABLE)
                 ->addWhere("dcontext", "incoming")
-                ->addWhere('`calldate`',
-                           "'{$this->fromdate}' AND '{$this->todate}'",
-                           "BETWEEN")
+                ->addWhere('`calldate`', "'{$this->fromdate}' AND '{$this->todate}'", "BETWEEN")
                 ->group("`dst`");
 
         $channel = array();
         foreach (App::Config()->supervisor['analogue_channel'] as $value) {
             $channel[] = "`channel` LIKE '{$value}'";
         }
-        $channel   = implode(' OR ', $channel);
+        $channel = implode(' OR ', $channel);
         if ($channel) {
             $command->where(" AND ({$channel})");
         }
 
 
-        $result             = $command->query()->getFetchAssocs();
+        $result = $command->query()->getFetchAssocs();
         $this->dataAnalogue = $result;
         Log::dump($result, "dataAnalogue");
     }
@@ -205,25 +229,25 @@ class SupervisorController extends Controller {
      * @return string
      */
     public function shell($params = null) {
-        if ( ! is_array($params)) {
+        if (!is_array($params)) {
             $params = array();
         }
         $params = array_replace(App::Config()->supervisor, $params);
 
 
         $queue_arr = $params['queues'];
-        if ( ! is_array($queue_arr)) {
+        if (!is_array($queue_arr)) {
             $queue_arr = array_keys(Queue::getQueueArr());
         }
 
         if ($params['shell_exec']) {
-            $shell        = array();
+            $shell = array();
             $shell_string = $params['shell'];
             foreach ($queue_arr as $queue) {
-                $vars    = array('queue' => $queue);
+                $vars = array('queue' => $queue);
                 $shell[] = ACUtils::parseTemplateString($shell_string, $vars);
             }
-            $shell   = implode(' && ', $shell);
+            $shell = implode(' && ', $shell);
             Log::trace($shell);
             if ($shell) {
                 $result = shell_exec($shell);
@@ -249,7 +273,7 @@ class SupervisorController extends Controller {
             $agentid = substr(trim($row), 0, 4);
             // Log::trace('calc agentid: ' . $agentid);
 
-            if ( ! is_numeric($agentid)) {
+            if (!is_numeric($agentid)) {
                 // Log::trace('---> no numeric > continue');
                 continue;
             }
@@ -286,8 +310,8 @@ class SupervisorController extends Controller {
             }
 
             $state[$agentid]['agentid'] = $agentid;
-            $state[$agentid]['member']  = $member;
-            $state[$agentid]['phone']   = $phone;
+            $state[$agentid]['member'] = $member;
+            $state[$agentid]['phone'] = $phone;
         }
 
         return ($state) ? $state : array();
@@ -303,17 +327,17 @@ class SupervisorController extends Controller {
         $servicelevel = 60;
 
         $datetime = $datetime->format('Y-m-d H:i:s');
-        $data     = array();
+        $data = array();
         foreach ($queue as $value) {
             $data[$value] = array(
-                'waiting'     => 0,
-                'max_time'    => 0,
-                'served'      => 0,
-                'avg_call'    => 0,
-                'avg_hold'    => 0,
-                'lost'        => 0,
+                'waiting' => 0,
+                'max_time' => 0,
+                'served' => 0,
+                'avg_call' => 0,
+                'avg_hold' => 0,
+                'lost' => 0,
                 'avg_abandon' => 0,
-                'service'     => 0
+                'service' => 0
             );
         }
 
@@ -325,8 +349,8 @@ class SupervisorController extends Controller {
                 ->addWhere('status', 'inQue')
                 ->group('queue')
                 ->query();
-        while ($row    = $result->fetchAssoc()) {
-            $data[$row['queue']]['waiting']  = (int) $row['waiting'];
+        while ($row = $result->fetchAssoc()) {
+            $data[$row['queue']]['waiting'] = (int) $row['waiting'];
             $data[$row['queue']]['max_time'] = ($row['max_time']) ? (time() - strtotime($row['max_time'])) : 0;
         }
 
@@ -337,18 +361,14 @@ class SupervisorController extends Controller {
                 ->select('queue')
                 ->from('call_status')
                 ->addWhere('queue', $queue, 'IN')
-                ->addWhere('status',
-                           array('COMPLETECALLER', 'COMPLETEAGENT', 'TRANSFER'),
-                           'IN')
+                ->addWhere('status', array('COMPLETECALLER', 'COMPLETEAGENT', 'TRANSFER'), 'IN')
                 ->addWhere('timestamp', $datetime, '>=')
                 ->group('queue')
                 ->query();
-        while ($row    = $result->fetchAssoc()) {
-            $data[$row['queue']]['served']   = (int) $row['served'];
-            $data[$row['queue']]['avg_call'] = (string) round($row['avg_call'],
-                                                              2);
-            $data[$row['queue']]['avg_hold'] = (string) round($row['avg_hold'],
-                                                              2);
+        while ($row = $result->fetchAssoc()) {
+            $data[$row['queue']]['served'] = (int) $row['served'];
+            $data[$row['queue']]['avg_call'] = (string) round($row['avg_call'], 2);
+            $data[$row['queue']]['avg_hold'] = (string) round($row['avg_hold'], 2);
         }
 
         $result = App::Db()->createCommand()
@@ -361,10 +381,9 @@ class SupervisorController extends Controller {
                 ->addWhere('timestamp', $datetime, '>=')
                 ->group('queue')
                 ->query();
-        while ($row    = $result->fetchAssoc()) {
-            $data[$row['queue']]['lost']        = (int) $row['lost'];
-            $data[$row['queue']]['avg_abandon'] = (string) round($row['avg_abandon'],
-                                                                 2);
+        while ($row = $result->fetchAssoc()) {
+            $data[$row['queue']]['lost'] = (int) $row['lost'];
+            $data[$row['queue']]['avg_abandon'] = (string) round($row['avg_abandon'], 2);
         }
 
 
@@ -374,9 +393,7 @@ class SupervisorController extends Controller {
                 ->select('queue')
                 ->from('call_status')
                 ->addWhere('queue', $queue, 'IN')
-                ->addWhere('status',
-                           array('COMPLETECALLER', 'COMPLETEAGENT', 'TRANSFER'),
-                           'IN')
+                ->addWhere('status', array('COMPLETECALLER', 'COMPLETEAGENT', 'TRANSFER'), 'IN')
                 ->addWhere('timestamp', $datetime, '>=')
                 ->addWhere('holdtime + callduration', $servicelevel, '>=')
                 ->group('queue')
@@ -408,15 +425,15 @@ class SupervisorController extends Controller {
         $servicelevel = 60;
 
         $datetime = $datetime->format('Y-m-d H:i:s');
-        $data     = array(
-            'waiting'     => 0,
-            'max_time'    => 0,
-            'served'      => 0,
-            'avg_call'    => 0,
-            'avg_hold'    => 0,
-            'lost'        => 0,
+        $data = array(
+            'waiting' => 0,
+            'max_time' => 0,
+            'served' => 0,
+            'avg_call' => 0,
+            'avg_hold' => 0,
+            'lost' => 0,
             'avg_abandon' => 0,
-            'service'     => 0
+            'service' => 0
         );
 
         $result = App::Db()->createCommand()->select('COUNT(callid) AS waiting') // Ожидающих
@@ -425,7 +442,7 @@ class SupervisorController extends Controller {
                         ->addWhere('status', 'inQue')
                         ->query()->fetchAssoc();
 
-        $data['waiting']  = (int) $result['waiting'];
+        $data['waiting'] = (int) $result['waiting'];
         $data['max_time'] = (string) ($result['max_time']) ? (time() - strtotime($result['max_time'])) : 0;
 
         $result = App::Db()->createCommand()
@@ -433,13 +450,11 @@ class SupervisorController extends Controller {
                         ->select('AVG(callduration) AS avg_call') // Ср. время разговора
                         ->select('AVG(holdtime) AS avg_hold') // // Ср. время ожидание
                         ->from('call_status')
-                        ->addWhere('status',
-                                   array('COMPLETECALLER', 'COMPLETEAGENT', 'TRANSFER'),
-                                   'IN')
+                        ->addWhere('status', array('COMPLETECALLER', 'COMPLETEAGENT', 'TRANSFER'), 'IN')
                         ->addWhere('timestamp', $datetime, '>=')
                         ->query()->fetchAssoc();
 
-        $data['served']   = (int) $result['served'];
+        $data['served'] = (int) $result['served'];
         $data['avg_call'] = (string) round($result['avg_call'], 2);
         $data['avg_hold'] = (string) round($result['avg_hold'], 2);
 
@@ -452,7 +467,7 @@ class SupervisorController extends Controller {
                         ->addWhere('timestamp', $datetime, '>=')
                         ->query()->fetchAssoc();
 
-        $data['lost']        = (int) $result['lost'];
+        $data['lost'] = (int) $result['lost'];
         $data['avg_abandon'] = (string) round($result['avg_abandon'], 2);
 
 
@@ -461,12 +476,9 @@ class SupervisorController extends Controller {
         $result = App::Db()->createCommand()
                         ->select('COUNT(callid) AS `service`') // SERVICE LEVEL
                         ->from('call_status')
-                        ->addWhere('status',
-                                   array('COMPLETECALLER', 'COMPLETEAGENT', 'TRANSFER'),
-                                   'IN')
+                        ->addWhere('status', array('COMPLETECALLER', 'COMPLETEAGENT', 'TRANSFER'), 'IN')
                         ->addWhere('timestamp', $datetime, '>=')
-                        ->addWhere('holdtime + callduration', $servicelevel,
-                                   '>=')
+                        ->addWhere('holdtime + callduration', $servicelevel, '>=')
                         ->query()->fetchAssoc();
 
         $full = $data['served'] + $data['lost'];
@@ -523,4 +535,5 @@ class SupervisorController extends Controller {
         }
         return ($num) ? $num : 0;
     }
+
 }

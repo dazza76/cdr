@@ -20,7 +20,7 @@ return array(
             'host'   => 'localhost',
             'user'   => 'admin',
             'pass'   => 'almazov123321',
-            'dbname' => 'asterisk',
+            'dbname' => 'asterix',
         ),
     ),
     // база данных
@@ -28,7 +28,7 @@ return array(
         'host'   => 'localhost',
         'user'   => 'root',
         'pass'   => '',
-        'dbname' => 'asterisk',
+        'dbname' => 'asterix',
         'params' => array(// дополнительные параметры базы
             'exception' => 0, // выбрасывать исключения
             'log'       => 0, // вести локальные логи запросов (большие затраты времени)

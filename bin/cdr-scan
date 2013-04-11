@@ -1,0 +1,568 @@
+<?php
+
+/* @var $mysqli MySQLI */
+/* @var $result mysqli_result */
+
+require_once dirname(__FILE__) . '/protected/ac/utils/ACConsole.php';
+require_once dirname(__FILE__) . '/protected/ac/utils/ACValidation.php';
+
+$cfg = include dirname(__FILE__) . '/protected/config/system.php';
+$mysqli = @new mysqli($cfg['database']['host'], $cfg['database']['user'], $cfg['database']['pass'], $cfg['database']['dbname']);
+if ($mysqli->connect_errno) {
+    die("Error connect database!");
+}
+
+class ConsoleCdrScan {
+
+    /** @var DateTime */
+    public $fromDate;
+
+    /** @var DateTime */
+    public $toDate;
+
+    /** @var array */
+    public $config;
+
+    /** @var array */
+    private $print;
+
+    /** @var array */
+    private $argv;
+
+    /**
+     * @param mixed $argv
+     */
+    public function __construct($argv) {
+        $this->config = array(
+            'document_root' => '',
+            'monitor_dir' => '',
+            'file_format' => '',
+        );
+        $this->print = array();
+
+        $argv = $this->_parseArgs($argv);
+
+        $date = (ACValidation::date($argv['from-date'])) ? new DateTime($argv['from-date']) : new DateTime();
+        $this->fromDate = $date->format("Y-m-d");
+
+        $date = (ACValidation::date($argv['to-date'])) ? new DateTime($argv['to-date']) : new DateTime();
+        $this->toDate = $date->format("Y-m-d");
+
+        if ($argv['print']) {
+            $this->print = explode(',', $argv['print']);
+        }
+
+        $this->argv = $argv;
+    }
+
+    public function __get($name) {
+        return $this->argv[$name];
+    }
+
+    public function getTotalRows($exists_null = false) {
+        $mysqli = $this->_getMysqli();
+
+        if ($exists_null) {
+            $exists_null = 'file_exists IS NULL';
+        } else {
+            $exists_null = '1';
+        }
+
+        $query = "SELECT COUNT(id) AS total
+                 FROM cdr WHERE {$exists_null}
+                 AND calldate BETWEEN '{$this->fromDate}' AND '{$this->toDate}'";
+
+        $result = @$mysqli->query($query);
+        $row = @$result->fetch_assoc();
+
+        return (int) $row['total'];
+    }
+
+    /**
+     * Проверяет наличия файлов аудиозаписей и редактирует записи в таблицы.
+     * Проверка проходитпорциями
+     * @param int $limit_scan количество сканируемых файлов за раз
+     * @return array результат работы [count_yes_1, count_file_yes_2, count__no]
+     */
+    public function getCheckFileNull($limit_scan = 500) {
+        if ($limit_scan <= 0) {
+            $limit_scan = 100;
+        }
+
+        $mysqli = $this->_getMysqli();
+
+        $file_yes_1 = array();
+        $file_yes_2 = array();
+        $file_no = array();
+
+        $query = "SELECT id, calldate, uniqueid
+                  FROM cdr WHERE file_exists IS NULL
+                  AND calldate BETWEEN '{$this->fromDate}' AND '{$this->toDate}'
+                  LIMIT {$limit_scan}";
+
+        /* @var $result mysqli_result */
+        $result = $mysqli->query($query);
+        if ($result->num_rows) {
+            while ($row = $result->fetch_assoc()) {
+                $dir = $this->config['document_root'] . $this->config['monitor_dir'] . "/";
+                $file = $row['uniqueid'] . "." . $this->config['file_format'];
+
+                if (file_exists($dir . $file)) {
+                    $file_yes_1[] = $row['id'];
+                    $this->_print_row($row['id'], $dir . $file, 1);
+                    continue;
+                }
+
+                $date = new DateTime($row['calldate']);
+                if (file_exists($dir . $date->format("Y/m/d") . "/" . $file)) {
+                    $file_yes_2[] = $row['id'];
+                    $this->_print_row($row['id'], $dir . $date->format("Y/m/d") . "/" . $file, 2);
+                    continue;
+                }
+
+                $file_no[] = $row['id'];
+                $this->_print_row($row['id'], $dir . $file, 0);
+            }
+        } else {
+            return false;
+        }
+
+        return array(
+            'yes_1' => $file_yes_1,
+            'yes_2' => $file_yes_2,
+            'no' => $file_no,
+        );
+    }
+
+    public function isPrint($param) {
+        return (in_array($param, $this->print));
+    }
+
+    private function _print_row($id, $uniqueid, $check) {
+        if (
+                ($check > 0 && $this->isPrint('fe') ) ||
+                ($check == 0 && $this->isPrint('ff') )
+        ) {
+            echo $id . "\t" . $uniqueid . "\t" . $check . "\n";
+        }
+    }
+
+    /**
+     * @global MySQLI $mysqli
+     * @return MySQLI
+     */
+    private function _getMysqli() {
+        global $mysqli;
+
+        return $mysqli;
+    }
+
+    private function _parseArgs($argv) {
+
+        array_shift($argv);
+        $out = array();
+
+        foreach ($argv as $arg) {
+
+            // --foo --bar=baz
+            if (substr($arg, 0, 2) == '--') {
+                $eqPos = strpos($arg, '=');
+
+                // --foo
+                if ($eqPos === false) {
+                    $key = substr($arg, 2);
+                    $value = isset($out[$key]) ? $out[$key] : true;
+                    $out[$key] = $value;
+                }
+                // --bar=baz
+                else {
+                    $key = substr($arg, 2, $eqPos - 2);
+                    $value = substr($arg, $eqPos + 1);
+                    $out[$key] = $value;
+                }
+            }
+            // -k=value -abc
+            else if (substr($arg, 0, 1) == '-') {
+
+                // -k=value
+                if (substr($arg, 2, 1) == '=') {
+                    $key = substr($arg, 1, 1);
+                    $value = substr($arg, 3);
+                    $out[$key] = $value;
+                }
+                // -abc
+                else {
+                    $chars = str_split(substr($arg, 1));
+                    foreach ($chars as $char) {
+                        $key = $char;
+                        $value = isset($out[$key]) ? $out[$key] : true;
+                        $out[$key] = $value;
+                    }
+                }
+            }
+            // plain-arg
+            else {
+                $value = $arg;
+                $out[] = $value;
+            }
+        }
+        return $out;
+    }
+
+    public function dump() {
+        echo get_class($this) . "::";
+        $this->_dump($this, '    ');
+    }
+
+    private function _dump($obj, $tab) {
+        $f = false;
+        foreach ($obj as $k => $v) {
+            if (!$f) {
+                echo "\n";
+            }
+            echo $tab . "[$k] => ";
+            if (is_object($v) || is_array($v)) {
+                echo gettype($v) . " ( ";
+                $this->_dump($v, $tab . "    ");
+                echo ")\n";
+            } else {
+                echo $v . "\n";
+            }
+            $f = true;
+        }
+    }
+
+}
+
+$console = new ConsoleCdrScan($argv);
+$console->config = array(
+    'document_root' => dirname(dirname(__FILE__)),
+    'monitor_dir' => $cfg['cdr']['monitor_dir'],
+    'file_format' => $cfg['cdr']['file_format'],
+);
+//$console->dump();
+
+
+if ($console->help) {
+    echo <<<HELP
+Usage: $file [Arguments]
+Arguments:
+  --from-date=DATE         NO lower classname in array.
+  --to-date=DAETE
+  --action=ACT
+  --print=TYPE      
+            ff     - сканируемый файл
+            fe     - найденный файл
+            update - обновляемые строки
+  --help
+
+Config:
+  database: '{$cfg['database']['host']}'@'{$cfg['database']['dbname']}'
+  document root: {$console->config['document_root']}
+  monitor dir: {$console->config['document_root']}{$console->config['monitor_dir']}
+  file format: {$console->config['file_format']}
+HELP;
+    exit();
+}
+
+
+switch ($console->action) {
+    case 'null':
+        echo "action: null\n";
+        $query = "UPDATE cdr SET file_exists = NULL
+              WHERE calldate BETWEEN '{$console->fromDate}' AND '{$console->toDate}'";
+        $mysqli->query($query);
+        $rows = (int) $mysqli->affected_rows;
+
+        if ($console->isPrint('update')) {
+            echo "update NULL:" . $rows . "\n";
+        }
+        exit();
+    case 'scan':
+        echo "total: " . $console->getTotalRows() . "\n";
+        while($rows = $console->getCheckFileNull()) {
+//        $rows = $console->getCheckFileNull();
+            $yes_1 = $yes_2 = $no = 0;
+            
+            $query_str = "UPDATE cdr SET file_exists = '{EXISTS}' WHERE id IN ({ID})";
+            $search = array('{EXISTS}', '{ID}');
+
+            if (count($rows['yes_1'])) {
+                $query = str_replace($search, array(1, implode(',', $rows['yes_1'])), $query_str);
+                $mysqli->query($query);
+                $yes_1 = $mysqli->affected_rows;
+            }
+
+            if (count($rows['yes_2'])) {
+                $query = str_replace($search, array(2, implode(',', $rows['yes_2'])), $query_str);
+                $mysqli->query($query);
+                $yes_2 = $mysqli->affected_rows;
+            }
+
+            if (count($rows['no'])) {
+                $query = str_replace($search, array(0, implode(',', $rows['no'])), $query_str);
+                $mysqli->query($query);
+                $no = $mysqli->affected_rows;
+            }
+
+            if ($console->isPrint('update')) {
+                echo "update '0':{$no},\t'1':{$yes_1},\t'2':{$yes_2}\n";
+            }
+        }
+        exit();
+
+    case 'rescan':
+        echo "total: " . $console->getTotalRows();
+        break;
+}
+
+
+
+
+
+
+
+//if ($console->argv['help']) {
+//    echo $console->getHelp();
+//    exit();
+//}
+//
+//if ($console->argv['action'] == 'null') {
+//    $console->setNull();
+//    exit();
+//}
+//
+//while ($files = $console->getCheckFile()) {
+//    list($yes_1, $yes_2, $no, $rows) = $files;
+//    $console->setExists($yes_1, $yes_2, $no);
+//}
+
+
+//class ConsoleCdrScan extends ACConsole {
+//
+//    /** @var DateTime */
+//    public $fromDate;
+//
+//    /** @var DateTime */
+//    public $toDate;
+//
+//    /** @var array */
+//    public $print = array();
+//
+//    /** @var array */
+//    public $config = array();
+//
+//    /**
+//     * @param mixed $argv
+//     */
+//    public function __construct($argv) {
+//        parent::__construct($argv);
+//
+//        require_once dirname(__FILE__) . '/protected/ac/utils/ACValidation.php';
+//
+//        $date = (ACValidation::date($this->argv['from-date'])) ? new DateTime($this->argv['from-date']) : new DateTime();
+//        $this->fromDate = $date->format("Y-m-d");
+//
+//        $date = (ACValidation::date($this->argv['to-date'])) ? new DateTime($this->argv['to-date']) : new DateTime();
+//        $this->toDate = $date->format("Y-m-d");
+//
+//        if ($this->argv['print']) {
+//            $this->print = explode(",", $this->argv['print']);
+//        }
+//
+//        switch ($this->argv['action']) {
+//            case 'scan':
+//            case 'rescan':
+//            case 'null':
+//                $this->action = $this->argv['action'];
+//        }
+//    }
+//
+//    /**
+//     * @global MySQLI $mysqli
+//     * @return MySQLI
+//     */
+//    public function getMysqli() {
+//        global $mysqli;
+//
+//        return $mysqli;
+//    }
+//
+//    /**
+//     * @return int
+//     */
+//    public function getTotalNull() {
+//        $mysqli = $this->getMysqli();
+//
+//        $query = "SELECT COUNT(id) AS total
+//                  FROM cdr WHERE file_exists IS NULL
+//                  AND calldate BETWEEN '{$this->fromDate}' AND '{$this->toDate}'";
+//
+//        $result = @$mysqli->query($query);
+//        $row = @$result->fetch_assoc();
+//
+//        return $row['total'];
+//    }
+//
+//    /**
+//     * Проверяет наличия файлов аудиозаписей и редактирует записи в таблицы.
+//     * Проверка проходитпорциями
+//     * @param int $limit_scan количество сканируемых файлов за раз
+//     * @return array результат работы [count_yes_1, count_file_yes_2, count__no]
+//     */
+//    public function getCheckFile($limit_scan = 500) {
+//        if ($limit_scan <= 0) {
+//            $limit_scan = 100;
+//        }
+//
+//        $mysqli = $this->getMysqli();
+//
+//        $file_yes_1 = array();
+//        $file_yes_2 = array();
+//        $file_no = array();
+//
+//        $query = "SELECT id, calldate, uniqueid
+//                  FROM cdr WHERE file_exists IS NULL
+//                  AND calldate BETWEEN '{$this->fromDate}' AND '{$this->toDate}'
+//                  LIMIT {$limit_scan}";
+//
+//        /* @var $result mysqli_result */
+//        $result = $mysqli->query($query);
+//        if ($result->num_rows) {
+//            while ($row = $result->fetch_assoc()) {
+//                $dir = $this->config['document_root'] . $this->config['monitor_dir'] . "/";
+//                $file = $row['uniqueid'] . "." . $this->config['file_format'];
+//
+//                if (file_exists($dir . $file)) {
+//                    $file_yes_1[] = $row['id'];
+//                    $this->_print_row($row['id'], $dir . $file, 1);
+//                    continue;
+//                }
+//
+//                $date = new DateTime($row['calldate']);
+//                if (file_exists($dir . $date->format("Y/m/d") . "/" . $file)) {
+//                    $file_yes_2[] = $row['id'];
+//                    $this->_print_row($row['id'], $dir . $date->format("Y/m/d") . "/" . $file, 2);
+//                    continue;
+//                }
+//
+//                $file_no[] = $row['id'];
+//                $this->_print_row($row['id'], $dir . $file, 0);
+//            }
+//        } else {
+//            return false;
+//        }
+//
+//        return array(
+//            'yes_1' => implode(",", $file_yes_1),
+//            'yes_2' => implode(",", $file_yes_2),
+//            'no' => implode(",", $file_no),
+//            'rows' => $result->num_rows
+//        );
+//    }
+//
+//    public function setNull() {
+//        $mysqli = $this->getMysqli();
+//
+//        $query = "UPDATE cdr SET file_exists = NULL
+//                  WHERE calldate BETWEEN '{$this->fromDate}' AND '{$this->toDate}'";
+//        $mysqli->query($query);
+//        $rows = (int) $mysqli->affected_rows;
+//
+//        if (in_array('update', $this->print)) {
+//            echo "update NULL:" . $rows . "\n";
+//        }
+//
+//        return $rows;
+//    }
+//
+//    public function setExists($yes_1, $yes_2, $no) {
+//        $mysqli = $this->getMysqli();
+//
+//        $query_str = "UPDATE cdr SET file_exists = '{EXISTS}' WHERE id IN ({ID})";
+//        $search = array('{EXISTS}', '{ID}');
+//
+//        if ($yes_1) {
+//            $query = str_replace($search, array(1, $yes_1), $query_str);
+//            $mysqli->query($query);
+//            $yes_1 = $mysqli->affected_rows;
+//        }
+//
+//        if ($yes_2) {
+//            $query = str_replace($search, array(2, $yes_2), $query_str);
+//            $mysqli->query($query);
+//            $yes_2 = $mysqli->affected_rows;
+//        }
+//
+//        if ($no) {
+//            $query = str_replace($search, array(0, $no), $query_str);
+//            $mysqli->query($query);
+//            $no = $mysqli->affected_rows;
+//        }
+//
+//        if (in_array('update', $this->print)) {
+//            echo "update '0':{$no},\t'1':{$yes_1},\t'2':{$yes_2}\n";
+//        }
+//    }
+//
+//    private function _print_row($id, $uniqueid, $check) {
+//        if (in_array('row', $this->print)) {
+//            echo $id . "\t" . $uniqueid . "\t" . $check . "\n";
+//        }
+//    }
+//
+//    public function getHelp() {
+//        $file = basename(__FILE__);
+//
+//        return <<<HELP
+//Usage: $file [Arguments]
+//Arguments:
+//  --from-date=DATE         NO lower classname in array.
+//  --to-date=DAETE
+//  --action=ACT
+//  --print=TYPE
+//  --help
+//
+//Config:
+//  database: '{$this->config['database']['host']}'@'{$this->config['database']['dbname']}'
+//  document root: {$this->config['document_root']}
+//  monitor dir: {$this->config['document_root']}{$this->config['monitor_dir']}
+//  file format: {$this->config['file_format']}
+//HELP;
+//    }
+//
+//}
+//
+//$console = new ConsoleCdrScan($argv);
+//
+//
+//
+//$console->config = array(
+//    'document_root' => dirname(dirname(__FILE__)),
+//    'monitor_dir' => $config['cdr']['monitor_dir'],
+//    'file_format' => $config['cdr']['file_format'],
+//    'database' => $config['database'],
+//);
+//
+//
+//if ($console->argv['help']) {
+//    echo $console->getHelp();
+//    exit();
+//}
+//
+//if ($console->argv['action'] == 'null') {
+//    $console->setNull();
+//    exit();
+//}
+//
+//while ($files = $console->getCheckFile()) {
+//    list($yes_1, $yes_2, $no, $rows) = $files;
+//    $console->setExists($yes_1, $yes_2, $no);
+//}
+
+
+
+
+//print_r($mysqli);
+//$r = $console->getCheckFile(1000, 0);
+//$console->setExists($r['yes_1'], '', $r['no']);

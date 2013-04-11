@@ -115,13 +115,13 @@ a.icon-clients-big { background: url(../img/icons_big/report_user.png) 2px 70% n
 /* Menu
 -------------------------------------*/
 ul.menu { background-color: #F0F0F0; border: solid #C6C6C6 1px; padding: 10px 6px; -moz-border-radius: 6px; -webkit-border-radius: 6px; margin: 0; border-radius: 6px; }
-ul.menu > li + li {border-left: 1px solid #C6C6C6; }
+ul.menu > li  {border-right:  1px solid #C6C6C6; }
 ul.menu ul,
 ul.menu li,
 ul.menu .submenu-title { display: block; float: left; }
 ul.menu li.submenu { padding-left:0; padding-right:0; overflow: hidden; }
 ul.menu li,
-ul.menu .submenu-title { padding: 3px 10px; margin: -3px 0;}
+ul.menu .submenu-title { padding: 0px 10px;  }
 ul.menu li.submenu li {padding-left: 0; }
 ul.menu .submenu-title { font-weight: bold; }
 ul.menu .submenu-title a { color: #333; }
@@ -168,13 +168,20 @@ ul.menu li.right {float:right; }
 .ui-datepicker-trigger { margin-left: -19px; margin-right: 5px; margin-top: -5px; width: 18px; height: 18px; background: url("../images/date.png") no-repeat 0 100%; border: none; vertical-align: middle; }
 .ui-timepicker-div .ui-widget-header{ margin-bottom: 8px; }
 .ui-timepicker-div dl{ text-align: left; }
-.ui-timepicker-div dl dt{ height: 25px; }
-.ui-timepicker-div dl dd{ margin: -25px 0 10px 65px; }
+/*.ui-timepicker-div dl dt{ height: 25px; }
+.ui-timepicker-div dl dd{ margin: -25px 0 10px 65px; }*/
+.ui-timepicker-div dl dt { height: 25px; margin-bottom: -25px; }
+.ui-timepicker-div dl dd { margin: 0 10px 10px 65px; }
 .ui-timepicker-div .ui_tpicker_hour div { padding-right: 2px; }
 .ui-timepicker-div .ui_tpicker_minute div { padding-right: 6px; }
 .ui-timepicker-div .ui_tpicker_second div { padding-right: 6px; }
 .ui-timepicker-div td, .ui-timepicker-div, .ui-datepicker-buttonpane { font-size: 90%; }
 .ui-timepicker-div { padding: 0 2px; }
+
+
+.ui-timepicker-rtl{ direction: rtl; }
+.ui-timepicker-rtl dl { text-align: right; }
+.ui-timepicker-rtl dl dd { margin: 0 65px 10px 10px; }
 
 #highcharts-wrap > tspan:last-of-type { display: none; }
 

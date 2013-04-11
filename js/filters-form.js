@@ -63,11 +63,17 @@ $(document).ready(function() {
                 $(this).removeAttr('name');
             }
         });
-        // var $option = $("select[multiple!='multiple'] option:first");//.attr('selected', 'yes');
-        // console.log($option);
-
-
-        $form.find("input[name=search]").removeAttr('name');
         return true;
+    });
+    
+    $("#button-search").click(function() {
+        $form.find(".button").removeAttr('name');
+        $("#export_type").removeAttr('name');
+        $form.removeAttr('target').submit();
+    });
+    
+    $("#button-export").click(function() {
+        $("#export_type").attr('name', 'export');
+       $form.attr("target", "_blank").submit();
     });
 });

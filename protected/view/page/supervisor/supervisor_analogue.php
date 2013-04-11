@@ -22,9 +22,23 @@
 
         <div class="filter fl_l">
             <div class="labeled">
-                <input type="submit" name="search" id="button-search" class="button button-search" class="button" value="Показать" />
+                <input type="submit" name="search" id="button-search" class="button button-search" value="Показать" />
             </div>
         </div>
+        
+        
+        <div class="filter fl_l sep">
+            <div class="label">Формат экспорта</div>
+            <div class="labeled">
+                <select id="export_type" name="export">
+                    <option value="csv">CSV</option>
+                    <option value="xls">XLS</option>
+                </select>
+                <input type="submit" id="button-export" class="button" value="Экспорт" />
+            </div>
+        </div>  
+        
+        
     </form>
 </div>
 

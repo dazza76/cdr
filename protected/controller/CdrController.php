@@ -1,4 +1,5 @@
 <?php
+
 /**
  * CdrController class  - CdrController.php file
  *
@@ -24,29 +25,30 @@
  */
 class CdrController extends Controller {
 
-    protected $_filters  = array(
-        'fromdate'  => array('parseDatetime'), // array('_parseDatetime'),
-        'todate'    => array('parseDatetime'),
-        'oper'      => 1,
-        'src'       => array('parsePhone'),
-        'dst'       => array('parsePhone'),
-        'coming'    => 1,
+    protected $_filters = array(
+        'fromdate' => array('parseDatetime'), // array('_parseDatetime'),
+        'todate' => array('parseDatetime'),
+        'oper' => 1,
+        'src' => array('parsePhone'),
+        'dst' => array('parsePhone'),
+        'coming' => 1,
         'fileExist' => 1,
-        'comment'   => 1,
-        'limit'     => 1,
-        'offset'    => 1,
-        'sort'      => array('parseSort', array(
+        'comment' => 1,
+        'limit' => 1,
+        'offset' => 1,
+        'sort' => array('parseSort', array(
                 "calldate",
                 "src",
                 "dst",
                 "duration",
                 "comment",
             )),
-        'mob'       => array('parseCheck'),
-        'desc'      => 1
+        'mob' => array('parseCheck'),
+        'vip' => 1,
+        'desc' => 1
     );
     protected $_sections = array(
-        'calls'     => 'Звонки',
+        'calls' => 'Звонки',
         'answering' => 'Автоинформатор',
     );
 
@@ -81,10 +83,8 @@ class CdrController extends Controller {
         $this->_filters['fromdate'][1] = $from;
 
         if (App::Config()->cdr->another_base) {
-            $cfg       = App::Config()->cdr->database;
-            $this->_db = new ACDbConnection($cfg->host, $cfg->user, $cfg->pass,
-                                            $cfg->dbname,
-                                            App::Config()->database->params);
+            $cfg = App::Config()->cdr->database;
+            $this->_db = new ACDbConnection($cfg->host, $cfg->user, $cfg->pass, $cfg->dbname, App::Config()->database->params);
         } else {
             $this->_db = App::Db();
         }
@@ -99,7 +99,7 @@ class CdrController extends Controller {
 
         if ($this->_actType === self::TYPE_ACTION) {
             $action = "action" . $this->_atcion;
-            if ( ! method_exists($this, $action)) {
+            if (!method_exists($this, $action)) {
                 $this->content = $action . "  error action";
                 return;
             }
@@ -134,11 +134,11 @@ class CdrController extends Controller {
      * @return bool
      */
     public function actionEditComment($params = null) {
-        if ( ! is_array($params)) {
+        if (!is_array($params)) {
             $params = $_POST;
         }
 
-        $id      = FiltersValue::parseId($params['id']);
+        $id = FiltersValue::parseId($params['id']);
         $comment = FiltersValue::parseComment($params['comment']);
 
 
@@ -181,7 +181,7 @@ class CdrController extends Controller {
         // $dir        = Cdr::monitorDir(); // $_SERVER['DOCUMENT_ROOT'] . App::Config()->cdr->monitor_dir . "/";
         $file_yes_1 = array();
         $file_yes_2 = array();
-        $file_no    = array();
+        $file_no = array();
         foreach ($rows as $row) {
             $file = $_SERVER['DOCUMENT_ROOT'] . Cdr::monitorFile($row['uniqueid']);
             if (file_exists($file)) {
@@ -189,8 +189,7 @@ class CdrController extends Controller {
                 continue;
             }
 
-            $file = $_SERVER['DOCUMENT_ROOT'] . Cdr::monitorFile($row['uniqueid'],
-                                                                 $row['calldate']);
+            $file = $_SERVER['DOCUMENT_ROOT'] . Cdr::monitorFile($row['uniqueid'], $row['calldate']);
             if (file_exists($file)) {
                 $file_yes_2[] = $row['id'];
                 continue;
@@ -235,8 +234,7 @@ class CdrController extends Controller {
                 ->from(Cdr::TABLE)
                 ->calc()
                 ->addWhere('file_exists', '0', '>')
-                ->addWhere('dcontext',
-                           array('autoinform', 'outgoing', 'dialout'), 'NOT IN')
+                ->addWhere('dcontext', array('autoinform', 'outgoing', 'dialout'), 'NOT IN')
                 ->limit($this->limit)
                 ->offset($this->offset)
                 ->order($sort);
@@ -262,7 +260,7 @@ class CdrController extends Controller {
         if ($this->src) {
             $command->addWhere('src', "%{$this->src}%", 'LIKE');
         }
-        // поиск по исходящим номерам (или наоборот, не помню)
+        // поиск по исходящим номерам
         if ($this->dst) {
             $command->addWhere('dst', "%{$this->dst}%", 'LIKE');
         }
@@ -295,11 +293,16 @@ class CdrController extends Controller {
                     . ")");
         }
 
-        $result       = $command->query();
+        if ($this->vip) {
+            $command->leftJoinOn('queue_priority', 'number', 'src')
+                    ->having('callerid IS NOT NULL');
+        }
+
+        $result = $command->query();
         $this->offset = $result->calc['offset'];
-        $this->limit  = $result->calc['limit'];
-        $this->count  = $result->calc['count'];
-        $this->rows   = $result->getFetchObjects('Cdr');
+        $this->limit = $result->calc['limit'];
+        $this->count = $result->calc['count'];
+        $this->rows = $result->getFetchObjects('Cdr');
 
         return ($result->count()) ? true : false;
     }
@@ -318,8 +321,7 @@ class CdrController extends Controller {
                 ->from(Cdr::TABLE)
                 ->calc()
                 ->addWhere('file_exists', '0', '>')
-                ->addWhere('dcontext',
-                           array('autoinform', 'outgoing', 'dialout'), 'IN')
+                ->addWhere('dcontext', array('autoinform', 'outgoing', 'dialout'), 'IN')
                 ->limit($this->limit)
                 ->offset($this->offset)
                 ->order($sort);
@@ -351,11 +353,11 @@ class CdrController extends Controller {
                     . ")");
         }
 
-        $result       = $command->query();
+        $result = $command->query();
         $this->offset = $result->calc['offset'];
-        $this->limit  = $result->calc['limit'];
-        $this->count  = $result->calc['count'];
-        $this->rows   = $result->getFetchObjects('Cdr');
+        $this->limit = $result->calc['limit'];
+        $this->count = $result->calc['count'];
+        $this->rows = $result->getFetchObjects('Cdr');
 
         return ($result->count()) ? true : false;
     }
@@ -379,4 +381,5 @@ class CdrController extends Controller {
         $arr = $command->query()->fetch();
         return $arr['total'];
     }
+
 }

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * FiltersValue class  - FiltersValue.php file
  *
@@ -50,8 +51,7 @@ class FiltersValue {
         }
 
 
-        $date = preg_replace('|([\d]{1,2})\.([\d]{1,2})\.([\d]{4})|',
-                             '$3-$2-$1', $date);
+        $date = preg_replace('|([\d]{1,2})\.([\d]{1,2})\.([\d]{4})|', '$3-$2-$1', $date);
         $date = ACPropertyValue::ensureDatetime($date);
         if ($date == '0000-00-00 00:00:00') {
             $date = $default;
@@ -77,7 +77,7 @@ class FiltersValue {
      */
     public static function parseOffset($offset, $limit = 30) {
         $offset = ACPropertyValue::ensurePositive($offset);
-        $limit  = self::parseLimit($limit);
+        $limit = self::parseLimit($limit);
         return ($offset % $limit != 0) ? 0 : $offset;
     }
 
@@ -175,6 +175,18 @@ class FiltersValue {
         return ($param) ? true : false;
     }
 
+    public static function parseExport($export) {
+        switch ($export) {
+            case 'csv':
+            case 'xls':
+                return $export;
+                break;
+            default : 
+                return null;
+                break;
+        }
+    }
+
     /**
      * Конвертирует дату формата из "Mar 12 2013 11:00:00:000AM"
      * @param string $date_str
@@ -207,8 +219,9 @@ class FiltersValue {
             $matc[5] -= 12;
         }
 
-        $date = $matc[2] . '.' . $matc[1] . '.' . $matc[3]  . ' ' . $matc[4] . ':' . $matc[5] . ':' . $matc[6];
+        $date = $matc[2] . '.' . $matc[1] . '.' . $matc[3] . ' ' . $matc[4] . ':' . $matc[5] . ':' . $matc[6];
 
         return ($get_obj) ? ACDateTime::createFromFormat('d.m.Y H:i:s', $date) : $date;
     }
+
 }

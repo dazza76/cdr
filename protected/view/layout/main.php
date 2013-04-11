@@ -26,6 +26,7 @@ $v = (int) App::Config()->v;
         <link href="<?php  echo Utils::linkUrl('css/common.css'); ?>" rel="stylesheet" >
 
         <script src="<?php echo Utils::linkUrl('js/base.js'); ?>"></script>
+        <script src="<?php echo Utils::linkUrl('js/datetimepicker.js'); ?>"></script>
         <script src="<?php echo Utils::linkUrl('js/filters-form.js'); ?>"></script>
         <script src="<?php echo Utils::linkUrl('js/multiselect.js'); ?>"></script>
         <script src="<?php echo Utils::linkUrl('js/fixed-header.js'); ?>"></script>

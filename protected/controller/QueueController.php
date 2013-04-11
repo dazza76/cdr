@@ -28,6 +28,7 @@ class QueueController extends Controller {
         'vip'      => 1,
         'limit'    => 1,
         'offset'   => 1,
+        'mob'       => array('parseCheck'),
         'sort'     => array('parseSort', array(
                 'timestamp',
                 'callerId',
@@ -124,7 +125,8 @@ class QueueController extends Controller {
      */
     public function chartDay() {
         $this->highcharts = $this->getDataStatisticDay($this->fromdate,
-                                                       $this->queue);
+                                                       $this->queue,
+                $this->mob);
         $this->viewMain("page/charts/chart_{$this->getSection()}.php");
     }
 
@@ -133,7 +135,7 @@ class QueueController extends Controller {
      */
     public function chartWeek() {
         $this->highcharts = $this->getDataStatisticWeek($this->fromdate,
-                                                        $this->queue);
+                                                        $this->queue, $this->mob);
         $this->viewMain("page/charts/chart_{$this->getSection()}.php");
     }
 
@@ -142,7 +144,7 @@ class QueueController extends Controller {
      */
     public function chartMonth() {
         $this->highcharts = $this->getDataStatisticMonth($this->fromdate,
-                                                         $this->queue);
+                                                         $this->queue, $this->mob);
         $this->viewMain("page/charts/chart_{$this->getSection()}.php");
     }
 
@@ -158,8 +160,8 @@ class QueueController extends Controller {
 
         $act = "getDataStatistic" . $this->compareType;
 
-        $from = $this->$act($this->fromdate, $this->queue);
-        $to   = $this->$act($this->todate, $this->queue);
+        $from = $this->$act($this->fromdate, $this->queue, $this->mob);
+        $to   = $this->$act($this->todate, $this->queue, $this->mob);
 
         $this->highcharts = array(
             'total'    => array($from[0], $from[1], $to[1]),
@@ -187,7 +189,6 @@ class QueueController extends Controller {
                 ->leftJoinOn('queue_priority', 'number',
                              'SUBSTRING(' . CallStatus::TABLE . '.callerId, 3)')
                 ->where("`timestamp` BETWEEN '{$this->fromdate}' AND '{$this->todate}' ")
-                ->addWhere('LENGTH(' . CallStatus::TABLE . '.callerId)', 6, ">")
                 ->order($sort);
 
         /* @var $command ACDbSelectCommand */
@@ -201,6 +202,21 @@ class QueueController extends Controller {
         if ($this->queue) {
             $command->addWhere('queue', $this->queue, 'IN');
         }
+        
+        
+        // только мобильные
+        // AND LEFT(call_status.callerId, 3)='989' AND CHAR_LENGTH(call_status.callerId)=12
+        if ($this->mob) {
+            // "[9]89XXXXXXXXX".
+            $command->where(" AND (
+                ( LEFT(`call_status`.`callerId`, 3)='989' AND CHAR_LENGTH(`call_status`.`callerId`)=12 )
+             OR ( LEFT(`call_status`.`callerId`, 1)='9'   AND CHAR_LENGTH(`call_status`.`callerId`)=10 )
+             ) ");
+        }  else {
+            $command->addWhere('LENGTH(' . CallStatus::TABLE . '.callerId)', 6, ">");
+        }      
+        
+        
         if ($this->vip) {
             $command->having('priorityId IS NOT NULL');
         }
@@ -300,7 +316,7 @@ class QueueController extends Controller {
      * @return array
      */
     public function getDataStatisticDay(DateTime $date = null,
-                                        array $query = null) {
+                                        array $query = null, $mob = false) {
         if ($date == null) {
             $date = $this->fromdate;
         }
@@ -310,6 +326,8 @@ class QueueController extends Controller {
         if (count($query)) {
             $query = " AND `queue` IN ( '" . @implode("','", $query) . "' ) ";
         }
+        $mob =  ($mob) ? "AND LEFT(`callerId`, 3)='989' AND CHAR_LENGTH(`callerId`)=12" 
+                : "AND  LENGTH(`callerId`) > 6";
 
         $oxY = array();
         for ($i = 0; $i <= 23; $i ++ ) {
@@ -332,9 +350,9 @@ class QueueController extends Controller {
             FROM `call_status`
             WHERE
               DATE(`timestamp`) = '{$date->format('Y-m-d')}'
-              AND  LENGTH(`callerId`) > 6
               AND `status` IN ('ABANDON', 'COMPLETEAGENT', 'COMPLETECALLER', 'TRANSFER')
               {$query}
+              {$mob}
             GROUP BY `hour`";
         $result      = App::Db()->query($query_total);
         while ($row         = $result->fetchAssoc()) {
@@ -348,9 +366,9 @@ class QueueController extends Controller {
             FROM `call_status`
             WHERE
               DATE(`timestamp`) = '{$date->format('Y-m-d')}'
-              AND  LENGTH(`callerId`) > 6
               AND `status` IN ('COMPLETEAGENT', 'COMPLETECALLER')
               {$query}
+              {$mob}    
             GROUP BY `hour`";
 
         $result = App::Db()->query($query_complete);
@@ -372,7 +390,7 @@ class QueueController extends Controller {
      * @return array
      */
     public function getDataStatisticWeek(DateTime $date = null,
-                                         array $query = null) {
+                                         array $query = null, $mob = false) {
         if ($date == null) {
             $date = $this->fromdate;
         }
@@ -382,7 +400,9 @@ class QueueController extends Controller {
         if (count($query)) {
             $query = " AND queue IN ( '" . @implode("','", $query) . "' ) ";
         }
-
+        $mob =  ($mob) ? "AND LEFT(`callerId`, 3)='989' AND CHAR_LENGTH(`callerId`)=12" 
+                : "AND  LENGTH(`callerId`) > 6";
+        
         $dateTime = new DateTime($date->format('Y-m-d'));
         $n        = $date->format('N');
         $pnd      = "P{$n}D";
@@ -403,7 +423,9 @@ class QueueController extends Controller {
                 $_fromdate = $dateTime->format('Y-m-d');
             }
             if ($i == 6) {
-                $_todate = $dateTime->format('Y-m-d');
+                $_dateTime  = clone $dateTime;
+                $_dateTime->add(new DateInterval('P1D'));
+                $_todate = $_dateTime->format('Y-m-d');
             }
         }
 
@@ -417,9 +439,9 @@ class QueueController extends Controller {
             FROM `call_status`
             WHERE
               `timestamp` BETWEEN '{$_fromdate}' AND '{$_todate}'  
-              AND  LENGTH(`callerId`) > 6
               AND `status` IN ('ABANDON', 'COMPLETEAGENT', 'COMPLETECALLER', 'TRANSFER')
                {$query}
+               {$mob}
             GROUP BY `date`";
         $result      = App::Db()->query($query_total);
         while ($row         = $result->fetchAssoc()) {
@@ -434,9 +456,9 @@ class QueueController extends Controller {
             FROM `call_status`
             WHERE
               `timestamp` BETWEEN '{$_fromdate}' AND '{$_todate}' 
-              AND  LENGTH(`callerId`) > 6
               AND `status` IN ('COMPLETEAGENT', 'COMPLETECALLER')
                {$query}
+               {$mob}
             GROUP BY `date`";
 
         $result = App::Db()->query($query_complete);
@@ -459,7 +481,7 @@ class QueueController extends Controller {
      * @return array
      */
     public function getDataStatisticMonth(DateTime $date = null,
-                                          array $query = null) {
+                                          array $query = null, $mob = false) {
         if ($date == null) {
             $date = $this->fromdate;
         }
@@ -470,6 +492,9 @@ class QueueController extends Controller {
         if (count($query)) {
             $query = " AND queue IN ( '" . @implode("','", $query) . "' ) ";
         }
+                $mob =  ($mob) ? "AND LEFT(`callerId`, 3)='989' AND CHAR_LENGTH(`callerId`)=12" 
+                : "AND  LENGTH(`callerId`) > 6";
+        
 
         $t = $date->format('t');
         for ($i = 1; $i <= $t; $i ++ ) {
@@ -486,9 +511,9 @@ class QueueController extends Controller {
             WHERE
               YEAR(`timestamp`) = '{$date->format('Y')}'
               AND  MONTH(`timestamp`) = '{$date->format('m')}'
-              AND  LENGTH(`callerId`) > 6
               AND `status` IN ('ABANDON', 'COMPLETEAGENT', 'COMPLETECALLER', 'TRANSFER')
                {$query}
+               {$mob}    
             GROUP BY `day`";
         $result      = App::Db()->query($query_total);
         while ($row         = $result->fetchAssoc()) {
@@ -504,9 +529,9 @@ class QueueController extends Controller {
             WHERE
               YEAR(`timestamp`) = '{$date->format('Y')}'
               AND  MONTH(`timestamp`) = '{$date->format('m')}'
-              AND  LENGTH(`callerId`) > 6
               AND `status` IN ('COMPLETEAGENT', 'COMPLETECALLER')
                {$query}
+               {$mob} 
             GROUP BY `day`";
 
         $result = App::Db()->query($query_complete);

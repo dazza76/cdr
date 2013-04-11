@@ -1,4 +1,5 @@
 <?php
+
 /**
  * TimemanController class  - TimemanController.php file
  *
@@ -17,8 +18,10 @@ class TimemanController extends Controller {
 
     protected $_filters = array(
         'fromdate' => array('parseDatetime'),
-        'todate'   => array('parseDatetime'),
-        'queue'    => 1,
+        'todate' => array('parseDatetime'),
+        'queue' => 1,
+        'mob' => array('parseCheck'),
+        'vip' => 1,
     );
     public $timeStep = array('0', '15', '30', '45', '60', '90', '120', '180', '32768');
 
@@ -37,20 +40,13 @@ class TimemanController extends Controller {
     }
 
     public function init($params = null) {
-//        if ($params === null) {
-//            if ( ! count($_GET)) {
-//                $params               = $_SESSION['pg_timeman'];
-//                $this->_sessionParams = true;
-//            } else {
-//                $params             = $_GET;
-//            }
-//        }
-//        $_SESSION['pg_timeman'] = $params;
-//
-//        Log::trace('Session parametr: ' . ((int) $this->_sessionParams));
-//        Log::vardump($params);
         parent::init($params);
-        $this->index();
+
+        if ($this->export && $_GET['export']) {
+            $this->export();
+        } else {
+            $this->index();
+        }
     }
 
     /**
@@ -58,6 +54,53 @@ class TimemanController extends Controller {
      */
     public function index() {
         $this->viewMain('page/page-timeman.php');
+    }
+
+    public function export() {
+        $data = array(
+            array(
+                'Принято',
+                $this->getComplete(0, 15),
+                $this->getComplete(15, 30),
+                $this->getComplete(30, 45),
+                $this->getComplete(45, 60),
+                $this->getComplete(60, 90),
+                $this->getComplete(90, 120),
+                $this->getComplete(120, 180),
+                $this->getComplete(180, 32768),
+                $this->getAvgComplete(),
+            ),
+            array(
+                'Потеряно',
+                $this->getAbandoned(0, 15),
+                $this->getAbandoned(15, 30),
+                $this->getAbandoned(30, 45),
+                $this->getAbandoned(45, 60),
+                $this->getAbandoned(60, 90),
+                $this->getAbandoned(90, 120),
+                $this->getAbandoned(120, 180),
+                $this->getAbandoned(180, 32768),
+                $this->getAvgAbandoned(),
+            )
+        );
+
+        $export = new Export($data);
+        $export->thead = array(
+                'Время ожидания',
+                '0 - 15',
+                '15 - 30',
+                '30 - 45',
+                '45 - 60',
+                '60 - 90',
+                '90 - 120',
+                '120 - 180',
+                '180 - +',
+                'Среднее',
+            );
+        $export->type = $this->export;
+
+        $export->send('timeman');
+        exit();
     }
 
     /**
@@ -97,8 +140,8 @@ class TimemanController extends Controller {
         $command = $this->_createCommand()
                 ->select('AVG(holdtime)  AS result')
                 ->where(" AND status IN ('COMPLETECALLER','COMPLETEAGENT','TRANSFER')");
-        $result  = $command->query()->fetchAssoc();
-        $result  = $result['result'];
+        $result = $command->query()->fetchAssoc();
+        $result = $result['result'];
 
         return ($result ) ? $result : 0;
     }
@@ -110,8 +153,8 @@ class TimemanController extends Controller {
         $command = $this->_createCommand()
                 ->select('AVG(holdtime)  AS result')
                 ->where(" AND status = 'ABANDON'");
-        $result  = $command->query()->fetchAssoc();
-        $result  = $result['result'];
+        $result = $command->query()->fetchAssoc();
+        $result = $result['result'];
 
         return ($result ) ? $result : 0;
     }
@@ -121,8 +164,8 @@ class TimemanController extends Controller {
      * @return ACDbSelectCommand
      */
     protected function _createCommand() {
-        $from   = $this->fromdate;
-        $to     = $this->todate;
+        $from = $this->fromdate;
+        $to = $this->todate;
         $queues = ACPropertyValue::ensureNumbers($this->queue, null);
         $queues = implode(',', $queues);
         if ($queues) {
@@ -135,6 +178,25 @@ class TimemanController extends Controller {
                 ->where($queues)
                 ->addWhere('`timestamp`', array($from, $to), 'BETWEEN');
 
+
+        // только мобильные
+        if ($this->mob) {
+            // "9ХХХХХХХХХ" и исходящие вида
+            // "[9]89XXXXXXXXX".
+            $command->where(" AND ("
+                    . "   (LEFT(`call_status`.`callerId`, 1)='9'   AND CHAR_LENGTH(`call_status`.`callerId`)=10)"
+                    . "OR (LEFT(`call_status`.`callerId`, 3)='989' AND CHAR_LENGTH(`call_status`.`callerId`)=12)"
+                    . ")");
+        }
+
+        // МШЗ
+        if ($this->vip) {
+            $command->leftJoinOn('queue_priority', '`queue_priority`.`number`', '`call_status`.`callerId`')
+                    ->select('`queue_priority`.`callerid`')
+                    ->having('`queue_priority`.`callerid` IS NOT NULL');
+        }
+
         return $command;
     }
+
 }

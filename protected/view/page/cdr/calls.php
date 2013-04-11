@@ -61,6 +61,14 @@
                 <input name="mob" type="checkbox" value="1" <?php if ($this->mob) echo "default=\"1\""; ?> />
             </div>
         </div>
+        
+        <div class="filter fl_l sep">
+            <div class="label">VIP</div>
+            <div class="labeled" style="padding: 3px 0px 4px 0px;">
+                <input name="vip" type="checkbox" value="1" <?php if ($this->vip) echo "default=\"1\""; ?> />
+            </div>
+        </div>
+        
 
         <div class="filter fl_l sep">
             <div class="label">Показать</div>
@@ -75,7 +83,7 @@
 
         <div class="filter fl_l">
             <div class="labeled">
-                <input type="submit" name="search" id="button-search" class="button button-search" class="button" value="Показать" />
+                <input type="submit" name="search" id="button-search" class="button button-search" value="Показать" />
             </div>
         </div>
 
@@ -97,7 +105,7 @@
 </div>
 
 <div class="filters clear_fix bigblock of_h">
-    <table class="grid" htable="1">
+    <table class="grid" htable="1" >
         <thead>
             <tr>
                 <!--  data-sort="" data-desc=""  -->
@@ -115,7 +123,7 @@
 </div>
 
 <div class="clear clear_fix">
-    <table class="grid" htable="1">
+    <table class="grid" htable="1" style="width: 1100px;">
         <thead>
             <tr class="b-head">
                 <th style="width: 60px;" > </th>
@@ -124,8 +132,8 @@
                 <th style="width: 150px;"> </th>
                 <th style="width: 150px;"> </th>
                 <th style="width: 135px;"> </th>
-                <th style="width: 70px;" > </th>
-                <th style=""             > </th>
+                <th style="width: 70px;"> </th>
+                <th style=""> </th>
             </tr>
         </thead>
         <tbody>

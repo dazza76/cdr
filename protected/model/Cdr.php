@@ -56,7 +56,7 @@ class Cdr extends ACDataObject {
      * @var integer вызов исходящий
      */
     const OUTCOMING = 2;
-    
+
     public function __set($name, $value) {
         if ($name == 'calldate') {
             $value = new ACDateTime($value);
@@ -113,16 +113,51 @@ class Cdr extends ACDataObject {
      * @return string в формате hh:mm::ss
      */
     public function getTime() {
-        $seconds = (int) $this->duration;
-        $di      = new DateInterval('PT' . $seconds . 'S');
-        $di->h   = floor($seconds / 60 / 60);
-        $seconds -= $di->h * 3600;
-        $di->i   = floor($seconds / 60);
-        $seconds -= $di->i * 60;
-        $di->s   = $seconds;
+        $file = $file = $_SERVER['DOCUMENT_ROOT'] .  $this->getFile();
 
-        return $di->format('%H:%I:%S');
+        // $f = fopen($file, 'r');
+        // fseek($f, 16);
+        // list(, $chunk_size) = unpack('V', fread($f, 4));
+        // fseek($f, 28);
+        // list(, $bps) = unpack('V', fread($f, 4));
+        // fseek($f, 24 + $chunk_size);
+        // list(, $data_size) = unpack('V', fread($f, 4));
+
+        // return $data_size / $bps;
+
+
+
+        $fp = @fopen($file, 'r');
+        if ($fp && fread($fp, 4) == "RIFF") {
+            fseek($fp, 20);
+            $rawheader = fread($fp, 16);
+            $header = unpack('vtype/vchannels/Vsamplerate/Vbytespersec/valignment/vbits', $rawheader);
+            $pos = ftell($fp);
+            while (fread($fp, 4) != "data" && !feof($fp)) {
+                $pos++;
+                fseek($fp, $pos);
+            }
+            $rawheader = fread($fp, 4);
+            $data = unpack('Vdatasize', $rawheader);
+            $sec = $data[datasize] / $header[bytespersec];
+            $minutes = intval(($sec / 60) % 60);
+            $seconds = intval($sec % 60);
+            return str_pad($minutes, 2, "0", STR_PAD_LEFT) . ":" . str_pad($seconds, 2, "0", STR_PAD_LEFT);
+        }
+
+        // $seconds = (int) $this->duration;
+        // $di      = new DateInterval('PT' . $seconds . 'S');
+        // $di->h   = floor($seconds / 60 / 60);
+        // $seconds -= $di->h * 3600;
+        // $di->i   = floor($seconds / 60);
+        // $seconds -= $di->i * 60;
+        // $di->s   = $seconds;
+
+        // return $di->format('%H:%I:%S');
     }
+
+
+
 
     /**
      * Ссылка на файл
@@ -136,6 +171,11 @@ class Cdr extends ACDataObject {
         }
     }
 
+    /**
+     * Директория с аудиозаписями
+     * @param string $date  искать в папках по датам
+     * @return string
+     */
     public static function monitorDir($date = null) {
         $dir = App::Config()->cdr->monitor_dir . "/";
         if ($date == null) {
@@ -145,6 +185,12 @@ class Cdr extends ACDataObject {
         return $dir . implode('/', $date) . '/';
     }
 
+    /**
+     * Полный путь к файлу
+     * @param string $uniqueid
+     * @param string $date  искать в папках по датам
+     * @return string
+     */
     public static function monitorFile($uniqueid, $date = null) {
         return self::monitorDir($date) . $uniqueid . '.' . App::Config()->cdr->file_format;
     }

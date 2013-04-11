@@ -16,8 +16,8 @@ switch ($this->compareType) {
         break;
     case 'day' :
     default :
-        $from_title  = "<b>" . $this->fromdate->format(ACDateTime::DATE) . "</b>";
-        $to_title    = "<b>" . $this->todate->format(ACDateTime::DATE) . "</b>";
+        $from_title  = "<b>" . $this->fromdate->format('d.m.Y') . "</b>";
+        $to_title    = "<b>" . $this->todate->format('d.m.Y') . "</b>";
         break;
 }
 $chart_title = "сравнение {$from_title} и {$to_title}";
@@ -53,9 +53,19 @@ $chart_title = "сравнение {$from_title} и {$to_title}";
                     <?php echo Queue::showMultiple("queue[]", $this->queue); ?>
             </div>
         </div>
+        
+        <div class="filter fl_l sep">
+            <div class="label">мобильные</div>
+            <div class="labeled" style="padding: 3px 0px 4px 0px;">
+                <input name="mob" type="checkbox" value="1" <?php if ($this->mob) echo "default=\"1\""; ?> />
+            </div>
+        </div>   
+        
+        
+        
         <div class="filter fl_l">
             <div class="labeled">
-                <input type="submit" name="search" id="button-search" class="button button-search" class="button" value="Показать" />
+                <input type="submit" name="search" id="button-search" class="button button-search" value="Показать" />
             </div>
         </div>
         <input type="hidden" name="section" value="<?php echo $this->getSection(); ?>" />

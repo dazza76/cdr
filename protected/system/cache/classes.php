@@ -1,6 +1,7 @@
 <?php
 return array(
     'acarrayobject' => 'ac/base/ACObject.php', 
+    'acconsole' => 'ac/utils/ACConsole.php', 
     'acdataobject' => 'ac/base/ACObject.php', 
     'acdatetime' => 'ac/utils/ACDateTime.php', 
     'acdbbasecommand' => 'ac/db/command/ACDbBaseCommand.php', 
@@ -41,6 +42,7 @@ return array(
     'cdr' => 'model/Cdr.php', 
     'cdrcontroller' => 'controller/CdrController.php', 
     'controller' => 'controller/component/Controller.php', 
+    'export' => 'controller/component/Export.php', 
     'filtersvalue' => 'controller/component/FiltersValue.php', 
     'log' => 'ac/logger/Log.php', 
     'queue' => 'model/Queue.php', 

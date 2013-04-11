@@ -24,12 +24,41 @@
                 <?php echo Queue::showMultiple("queue[]", $this->queue); ?>
             </div>
         </div>
-
-        <div class="filter fl_l">
-            <div class="labeled">
-                <input type="submit" name="search" id="button-search" class="button button-search" class="button" value="Показать" />
+        
+        <div class="filter fl_l sep">
+            <div class="label">мобильные</div>
+            <div class="labeled" style="padding: 3px 0px 4px 0px;">
+                <input name="mob" type="checkbox" value="1" <?php if ($this->mob) echo "default=\"1\""; ?> />
             </div>
         </div>
+        
+        <div class="filter fl_l sep">
+            <div class="label">VIP</div>
+            <div class="labeled" style="padding: 3px 0px 4px 0px;">
+                <input name="vip" type="checkbox" value="1" <?php if ($this->vip) echo "default=\"1\""; ?> />
+            </div>
+        </div>
+        
+
+        <div class="filter fl_l ">
+            <div class="labeled">
+                <input type="submit" name="search" id="button-search" class="button button-search" value="Показать" />
+            </div>
+        </div>
+        
+        
+        <div class="filter fl_l sep">
+            <div class="label">Формат экспорта</div>
+            <div class="labeled">
+                <select id="export_type" name="export">
+                    <option value="csv">CSV</option>
+                    <option value="xls">XLS</option>
+                </select>
+                <input type="submit" id="button-export" class="button" value="Экспорт" />
+            </div>
+        </div>        
+       
+        
     </form>
 </div>
 

@@ -76,7 +76,7 @@
 
         <div class="filter fl_l">
             <div class="labeled">
-                <input type="submit" name="search" id="button-search" class="button button-search" class="button" value="Показать" />
+                <input type="submit" name="search" id="button-search" class="button button-search" value="Показать" />
             </div>
         </div>
     </form>

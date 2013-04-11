@@ -58,25 +58,6 @@ $(document).ready(function() {
     });
     $(".datepicker[showweek=1]").datepicker("option", "showWeek", true);
 
-    /** datetimepicker */
-    $(".datetimepicker").datetimepicker({
-        changeMonth: true,
-        changeYear: true,
-        showOn: "button",
-        dateFormat: "dd.mm.yy",
-        buttonText: '',
-        timeText: 'Время',
-        hourText: 'Часы',
-        minuteText: 'Минуты',
-        secondText: 'Секунды',
-        currentText: 'Сейчас',
-        stepMinute: 10
-    }).keydown(function() {
-        $(this).datetimepicker("show");
-        return false;
-    }).focus(function() {
-        $(this).datetimepicker("show");
-    });
 
     $('.dialog').dialog({
         disabled: false,

@@ -13,10 +13,10 @@
 error_reporting(E_ALL & ~E_NOTICE);
 
 // Проверка конфигурации apache
-if ( ini_get('magic_quotes_gpc') != "0" ) die ("'magic_quotes_gpc' is not 1");
-if ( ini_get('magic_quotes_runtime') != "0" ) die ("'magic_quotes_runtime' is not 1");
-if ( ini_get('variables_order') != "GPCS" ) die ("'variables_order' is not GPCS");
-if ( ini_get('register_globals') != "Off" ) die ("'register_globals' is not Off");
+//if ( ini_get('magic_quotes_gpc') != "0" ) die ("'magic_quotes_gpc' is not 1");
+//if ( ini_get('magic_quotes_runtime') != "0" ) die ("'magic_quotes_runtime' is not 1");
+//if ( ini_get('variables_order') != "GPCS" ) die ("'variables_order' is not GPCS");
+//if ( ini_get('register_globals') != "Off" ) die ("'register_globals' is not Off");
 // ----------------------------------------------------------------------------
 
 
@@ -57,7 +57,7 @@ if (is_array($config)) {
 // шапка страниц
 App::Config()->pages = @include_once 'system/pages.php';
 // версия файлов css / js (для кеширования браузером)
-App::Config()->v     = 8;
+App::Config()->v     = 11;
 
 
 defined('DEBUG') or define('DEBUG', (App::Config()->debug) ? 1 : false);
