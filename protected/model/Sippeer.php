@@ -74,13 +74,9 @@
  * @property string   $videosupport      -
  * @property string   $vmexten           -
  */
-class Sippeers extends ACDataObject {
-
-    const TABLE = "sippeers";
-
-    public static $fields = array(
-    );
-    public $expert = array('accountcode', 'allowoverlap', 'amaflags', 'autoframing',
+class Sippeer extends ACDataObject {
+    // Расширенные
+    public static $expert = array('accountcode', 'allowoverlap', 'amaflags', 'autoframing',
         'buggymwi', 'callingpres', 'canreinvite', 'defaultip', 'fromuser', 'fromdomain',
         'fullcontact', 'g726nonstandard', 'insecure', 'lastms', 'mailbox', 'maxcallbitrate',
         'mohsuggest', 'musiconhold', 'outboundproxy', 'deny', 'permit', 'port', 'progressinband',
@@ -88,19 +84,25 @@ class Sippeers extends ACDataObject {
         'rtptimeout', 'rtpholdtimeout', 'sendrpid', 'setvar', 'subscribecontext',
         'subscribemwi', 't38pt_udptl', 'trustrpid', 'useclientcode', 'usereqphone',
         'vmexten');
-    public $main   = array('disallow', 'allow', 'allowsubscribe', 'allowtransfer',
+    // Основные
+    public static $main = array('disallow', 'allow', 'allowsubscribe', 'allowtransfer',
         'auth', 'busylevel', 'callgroup', 'callerid', 'cid_number', 'fullname', 'call-limit',
         'context', 'dtmfmode', 'host', 'ipaddr', 'language', 'name', 'nat', 'pickupgroup',
         'type', 'user', 'username', 'videosupport');
-    public $hidden = array(
+    // Скрытые
+    public static $hidden = array(
         'md5secret', 'useragent'
     );
-    
-    
+    public static $notNull = array(
+        'busylevel', 'notifyhold',
+        'notifyringing', 'regserver', 'user', 'useragent'
+    );
+
     public function __set($name, $value) {
-        if($name == 'call-limit') {
+        if ($name == 'call-limit') {
             $name = 'call_limit';
         }
         parent::__set($name, $value);
     }
+
 }

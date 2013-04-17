@@ -1,4 +1,5 @@
 <?php
+
 /**
  * SettingsController class  - SettingsController.php file
  *
@@ -22,7 +23,7 @@ class SettingsController extends Controller {
      * Формирет страницу
      */
     public function index() {
-        $section        = $this->_ensureSection($_GET['section']);
+        $section = $this->_ensureSection($_GET['section']);
         $this->_section = $section;
 
 
@@ -37,27 +38,48 @@ class SettingsController extends Controller {
         if ($_POST['action'] == 'add') {
             $this->actionOperatorAdd();
             App::refresh();
+            exit();
         }
         if ($_POST['action'] == 'delete') {
             $this->actionOperatorDelete();
             App::refresh();
+            exit();
         }
         if ($_POST['action'] == 'edit') {
             $this->actionOperatorEdit();
-            App::location($this->getPage(),
-                          array('section' => $this->getSection()));
+            App::location($this->getPage(), array('section' => $this->getSection()));
+            exit();
         }
 
         if ($_GET['id']) {
             return $this->sectionOperatorEdit();
         }
 
-        $this->queueAgent = App::Db()->createCommand()
+        $queue = FiltersValue::parseQueue($this->queue);
+        Log::dump($queue, "queue");
+
+
+        $command = App::Db()->createCommand()
                 ->select()
                 ->from(QueueAgent::TABLE)
-                ->order('name')
-                ->query()
-                ->getFetchObjects('QueueAgent');
+                ->calc()
+                ->order('name');
+        if ($this->fio) {
+            $command->addWhere('name', "%{$this->fio}%", 'LIKE');
+        }
+        if ($this->agent) {
+            $command->addWhere('agentid', "%{$this->agent}%", 'LIKE');
+        }
+
+        $command->limit(20);
+        if ($this->offset) {
+            $command->offset($this->offset);
+        }
+
+
+        $result = $command->query();
+        $this->count = $result->foundRows;
+        $this->queueAgent =        $result->getFetchObjects('QueueAgent');
 
         $this->view('page/settings/operator.php');
     }
@@ -79,15 +101,16 @@ class SettingsController extends Controller {
     }
 
     public function sectionQueue() {
+        // return;
+
         if (in_array($_POST['action'], array('add', 'delete', 'edit'))) {
             $this->actionQueue($_POST);
-            App::location($this->getPage(),
-                          array('section' => $this->getSection(), 'r'       => rand()));
+            App::location($this->getPage(), array('section' => $this->getSection(), 'r' => rand()));
         }
 
         if ($_GET['uniqueid']) {
-            $uniqueid         = $_GET['uniqueid'];
-            $result           = App::Db()->createCommand()->select()
+            $uniqueid = $_GET['uniqueid'];
+            $result = App::Db()->createCommand()->select()
                     ->from('queue_member_table')
                     ->addWhere('uniqueid', $uniqueid)
                     ->query();
@@ -97,7 +120,7 @@ class SettingsController extends Controller {
             return;
         }
 
-        $result           = App::Db()->createCommand()->select()
+        $result = App::Db()->createCommand()->select()
                 ->from('queue_member_table')
                 ->query(); //->getFetchAssocs();
         $this->dataQueues = $result;
@@ -106,11 +129,11 @@ class SettingsController extends Controller {
     }
 
     public function sectionMode() {
-        
+
     }
 
     public function sectionAnswering() {
-        
+
     }
 
     public function actionQueue($params = null) {
@@ -132,12 +155,12 @@ class SettingsController extends Controller {
 
 
         if ($action == 'add' || $action == 'edit') {
-            $values               = array();
+            $values = array();
             $values['queue_name'] = trim($params['queue_name']);
-            $values['interface']  = trim($params['interface_1']) . "(SIP/" . trim($params['interface_1']) . ")";
-            $values['penalty']    = (int) $params['penalty'];
-            $values['uniqueid']   = trim($params['uniqueid']);
-            $values['paused']     = (int) $params['paused'];
+            $values['interface'] = trim($params['interface_1']) . "(SIP/" . trim($params['interface_1']) . ")";
+            $values['penalty'] = (int) $params['penalty'];
+            $values['uniqueid'] = trim($params['uniqueid']);
+            $values['paused'] = (int) $params['paused'];
 
             if ($action == 'add') {
                 App::Db()->createCommand()->insert()->into('queue_member_table')
@@ -145,7 +168,7 @@ class SettingsController extends Controller {
                         ->values($values)
                         ->query();
             } else {
-                $uniqueid           = $values['uniqueid'];
+                $uniqueid = $values['uniqueid'];
                 $values['uniqueid'] = trim($params['uniqueid_new']);
                 App::Db()->createCommand()->update('queue_member_table')
                         ->set($values)
@@ -160,11 +183,11 @@ class SettingsController extends Controller {
     }
 
     public function sectionSchedule() {
-        
+
     }
 
     public function sectionPause() {
-        
+
     }
 
     public function actionOperatorEdit($params = null) {
@@ -177,28 +200,25 @@ class SettingsController extends Controller {
 
 
         $agentid = (int) @$params['agentid'];
-        if ( ! $agentid) {
+        if (!$agentid) {
             echo "no agentid";
         }
         $queueAgent = new QueueAgent($_POST);
         Log::dump($queueAgent, 'queueAgent');
 
-        $sets         = array();
+        $sets = array();
         $sets['name'] = trim(@$params['name']);
-        if ( ! $sets['name']) {
+        if (!$sets['name']) {
             echo "no name";
         }
 
-        $sets['queues1']  = implode(',',
-                                    ACPropertyValue::ensureFields($params['queues1']));
+        $sets['queues1'] = implode(',', ACPropertyValue::ensureFields($params['queues1']));
         $sets['penalty1'] = (int) @$params['penalty1'];
 
-        $sets['queues2']  = implode(',',
-                                    ACPropertyValue::ensureFields($params['queues2']));
+        $sets['queues2'] = implode(',', ACPropertyValue::ensureFields($params['queues2']));
         $sets['penalty2'] = (int) @$params['penalty2'];
 
-        $sets['queues3']  = implode(',',
-                                    ACPropertyValue::ensureFields($params['queues3']));
+        $sets['queues3'] = implode(',', ACPropertyValue::ensureFields($params['queues3']));
         $sets['penalty3'] = (int) @$params['penalty3'];
 
         App::Db()->createCommand()->update(QueueAgent::TABLE)
@@ -214,44 +234,41 @@ class SettingsController extends Controller {
         unset($params['action']);
 
         $params['name'] = trim(@$params['name']);
-        if ( ! $params['name']) {
+        if (!$params['name']) {
             echo "no name";
         }
         $params['agentid'] = (int) @$params['agentid'];
-        if ( ! $params['agentid']) {
+        if (!$params['agentid']) {
             echo "no agentid";
         }
 
 
-        $params['queues1'] = implode(',',
-                                     ACPropertyValue::ensureFields($params['queues1']));
-        if ( ! $params['queues1']) {
+        $params['queues1'] = implode(',', ACPropertyValue::ensureFields($params['queues1']));
+        if (!$params['queues1']) {
             unset($params['queues1']);
         }
         $params['penalty1'] = (int) @$params['penalty1'];
-        if ( ! $params['penalty1']) {
+        if (!$params['penalty1']) {
             unset($params['penalty1']);
         }
 
 
-        $params['queues2'] = implode(',',
-                                     ACPropertyValue::ensureFields($params['queues2']));
-        if ( ! $params['queues2']) {
+        $params['queues2'] = implode(',', ACPropertyValue::ensureFields($params['queues2']));
+        if (!$params['queues2']) {
             unset($params['queues2']);
         }
         $params['penalty2'] = (int) @$params['penalty2'];
-        if ( ! $params['penalty2']) {
+        if (!$params['penalty2']) {
             unset($params['penalty2']);
         }
 
 
-        $params['queues3'] = implode(',',
-                                     ACPropertyValue::ensureFields($params['queues3']));
-        if ( ! $params['queues3']) {
+        $params['queues3'] = implode(',', ACPropertyValue::ensureFields($params['queues3']));
+        if (!$params['queues3']) {
             unset($params['queues3']);
         }
         $params['penalty3'] = (int) @$params['penalty3'];
-        if ( ! $params['penalty3']) {
+        if (!$params['penalty3']) {
             unset($params['penalty3']);
         }
 
@@ -273,4 +290,5 @@ class SettingsController extends Controller {
                 ->addWhere('agentid', $agentid)
                 ->query();
     }
+
 }

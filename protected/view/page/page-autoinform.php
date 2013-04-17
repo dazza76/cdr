@@ -8,7 +8,6 @@
 /* @var $this AutoinformController */
 
 /* @var $row Autodialout */
-
 ?>
 <div class="filters clear_fix">
     <form method="get" action="" class="of_h">
@@ -26,8 +25,11 @@
             <div class="labeled">
                 <select name="type" size="1"  default="<?php echo $this->type; ?>">
                     <option value="" selected="selected">Любой</option>
-                    <option value="1">Анализ</option>
-                    <option value="2">Прием</option>
+                    <?php
+                    foreach (App::Config()->autoinform['type'] as $key => $val) {
+                        echo "<option value=\"$key\">" . html($val) . "</option>";
+                    }
+                    ?>
                 </select>
             </div>
         </div>
@@ -35,19 +37,15 @@
 
         <div class="filter fl_l sep">
             <div class="label">Результат</div>
-            <div class="labeled">              
+            <div class="labeled">
                 <select name="result" size="1"  default="<?php echo $this->result; ?>">
                     <option value="">Любой</option>
-                    <option value="0">Не обработано</option>
-                    <option value="98">Карантин</option>
-                    <option value="99">В обработке</option>
-                    <option value="1">Не дослушано</option>
-                    <option value="2">Дослушано</option>
-                    <option value="3">Подтверждено</option>
-                    <option value="5">Отменено</option>
-                    <option value="97">Неудачно</option>
-                    <option value="96">Удалено из МИС</option>
-                    <option value="95">Нет номера</option>
+                    <?php
+                    foreach (App::Config()->autoinform['result'] as $key => $result) {
+                        $val = explode(";", $result);
+                        echo "<option value=\"$key\">" . html($val[1]) . "</option>";
+                    }
+                    ?>
                 </select>
             </div>
         </div>
@@ -85,9 +83,9 @@
 
 
 <div class="clear clear_fix" >
-    <table class="grid" htable="1">
+    <table class="grid">
         <thead>
-            <tr class="b-head">
+            <tr>
                 <th style="width: 60px;" >ID</th>
                 <th style="width: 150px;">Дата приема</th>
                 <th >Тип вызова</th>
@@ -97,79 +95,36 @@
         </thead>
         <tbody>
             <?php
-            while ($row = $this->fetchArray()) {
+            $_result_arr_test = array();
+            $_result_state = array();
+
+            while ($row = $this->fetchArray() ) {
+                $date = @new DateTime($row[2]);
+                $date =($date) ? $date : $row[2] ;
+
+
                 echo "<tr>";
                 echo "<td >$row[0]</td>";
-                echo "<td >".FiltersValue::toFormatDate($row[2])."</td>";
-                
+                echo "<td >" . /* FiltersValue::toFormatDate($row[2]) */ $date->format('d.m.Y H:i:s') . "</td>";
+
                 // type_name
                 $type_name = App::Config()->autoinform['type_code'][$row[3]];
-                if($type_name) {
+                if ($type_name) {
                     $type_name .= " ({$row[3]})";
                 } else {
                     $type_name = $row[3];
                 }
                 echo "<td>{$type_name}</td>";
-//                switch ($row[3]) {
-//                    case '1':
-//                        echo "<td>Страховая</td>";
-//                        $analis ++;
-//                        break;
-//                    case '2':
-//                        echo "<td>Медцентр</td>";
-//                        $vizit ++;
-//                        break;
-//                    default :
-//                        echo "<td>{$row[3]}</td>";
-//                        break;
-//                }
-                
                 echo "<td>+7" . substr($row[1], 1) . "</td>";
-                switch ($row[7]) {
-                    case '99':
-                        echo "<td>Обрабатывается</td>";
-                        $in_work ++;
-                        break;
-                    case '98':
-                        echo "<td>Карантин</td>";
-                        $quarantine ++;
-                        break;
-                    case '97':
-                        echo "<td>Неудачно</td>";
-                        $failed ++;
-                        break;
-                    case '95':
-                        echo "<td>Нет номера</td>";
-                        $removed ++;
-                        break;
-                    case '96':
-                        echo "<td>Удалено из МИС</td>";
-                        $removed ++;
-                        break;
-                    case '0':
-                        echo "<td>Не обрабатывался</td>";
-                        $no_call ++;
-                        break;
-                    case '1':
-                        echo "<td>Не дослушан</td>";
-                        $uncompleted ++;
-                        break;
-                    case '2':
-                        echo "<td>Дослушал/подтвердил</td>";
-                        $completed ++;
-                        break;
-                    case '3':
-                        echo "<td>Направлен в КЦ</td>";
-                        $queued ++;
-                        break;
-                    case '5':
-                        echo "<td>Направлен в КЦ</td>";
-                        $queued ++;
-                        break;
-                    default:
-                        echo "<td bgcolor=#990000>{$row[7]}</td>";
-                        break;
-                };
+                $_result_arr_test[$row[7]] = 1;
+                if (App::Config()->autoinform['result'][$row[7]]) {
+
+                    $_result = explode(";", App::Config()->autoinform['result'][$row[7]]);
+                    $_result_state[$row[7]]++;
+                    echo "<td>{$_result[1]}</td>";
+                } else {
+                    echo "<td bgcolor=#990000>{$row[7]}</td>";
+                }
                 switch ($row[6]) {
                     case '0':
                         echo "<td>0 попыток</td>";
@@ -183,6 +138,7 @@
                 }
                 echo "</tr>\n";
             }
+
             ?>
         </tbody>
     </table>
@@ -190,30 +146,35 @@
 
 <?php
 $summary = $this->numRows();
+$state_sum = array();
+Log::dump(array_keys($_result_arr_test), "<font color='#cc0000'>Найденые уникальных <i>result</i></font>");
+Log::trace("--------------------------------");
+Log::dump($_result_state, "Количество по result");
+foreach ($_result_state as $key => $value) {
+    $_result = explode(";", App::Config()->autoinform['result'][$key]);
+    $state_sum[$_result[0]] += (int) $value;
+    switch ($_result[0]) {
+        case 'in_work':
+            $state[0]++;
+            break;
+        case 'completed':
+            $state[1]++;
+            break;
+        case 'failed':
+            $state[2]++;
+            break;
+    }
+}
+Log::dump($state_sum, "Суммарный по состоянию");
+Log::trace("Суммарный итог: " . $summary);
+Log::trace("--------------------------------");
 
-if($no_call != 0)
-	$state[0]++;
-if($in_work != 0)
-	$state[0]++;
-if($quarantine != 0)
-	$state[0]++;
-if($failed != 0)
-	$state[2]++;
-if($removed != 0)
-	$state[2]++;
-if($completed != 0)
-	$state[1]++;
-if($uncompleted != 0)
-	$state[1]++;
-if($confirmed != 0)
-	$state[1]++;
-if($unconfirmed != 0)
-	$state[1]++;
-if($queued != 0)
-	$state[1]++;
-for($i=0;$i<3;$i++)
-	if($state[$i]>0)
-		$state[$i]++;
+
+for ($i = 0; $i < 3; $i++)
+    if ($state[$i] > 0)
+        $state[$i]++;
+
+
 $table = '<table class="grid" align="center" style="width:500px;">
         <thead>
 			<tr>
@@ -224,115 +185,59 @@ $table = '<table class="grid" align="center" style="width:500px;">
 			</tr>
 		</thead>
 		<tr>';
-if($state[0]>0) {
-	$table .= '<td rowspan="'.$state[0].'" class="head">Обработка идет</td>';
-}
-if($no_call != 0)
-{
-	$table .= "		<td align=\"center\">Не обработано</td>
-				<td align=\"center\">$no_call</td>
-				<td align=\"center\">".round(($no_call/$summary*100),2)." %</td>
+if ($state[0] > 0) {
+    $table .= '<td rowspan="' . $state[0] . '" class="head">Обработка идет</td>';
+
+    foreach ($_result_state as $key => $value) {
+        $_result = explode(";", App::Config()->autoinform['result'][$key]);
+        if ($_result[0] == 'in_work') {
+            $table .= "		<td align=\"center\">{$_result[1]}</td>
+				<td align=\"center\">$value</td>
+				<td align=\"center\">" . round(($value / $summary * 100), 2) . " %</td>
 			</tr>
 			<tr>";
+        }
+    }
+    $table .= "<td align=\"center\">Итого</td>"
+            . "<td align=\"center\">" . $state_sum['in_work'] . "</td>"
+            . "<td align=\"center\">" . round(($state_sum['in_work']) / $summary * 100, 2) . " %</td>"
+            . "</tr><tr>";
 }
-if($quarantine != 0)
-{
-	$table .= "		<td align=\"center\">Карантин</td>
-				<td align=\"center\">$quarantine</td>
-				<td align=\"center\">".round(($quarantine/$summary*100),2)." %</td>
+if ($state[1] > 0) {
+    $table .= '<td rowspan="' . $state[1] . '" class="head">Обработка завершена</td>';
+
+    foreach ($_result_state as $key => $value) {
+        $_result = explode(";", App::Config()->autoinform['result'][$key]);
+        if ($_result[0] == 'completed') {
+            $table .= "		<td align=\"center\">{$_result[1]}</td>
+				<td align=\"center\">$value</td>
+				<td align=\"center\">" . round(($value / $summary * 100), 2) . " %</td>
 			</tr>
 			<tr>";
+        }
+    }
+    $table .= "<td align=\"center\">Итого</td>"
+            . "<td align=\"center\">" . $state_sum['completed'] . "</td>"
+            . "<td align=\"center\">" . round(($state_sum['completed']) / $summary * 100, 2) . " %</td>"
+            . "</tr><tr>";
 }
-if($in_work != 0)
-{
-	$table .= "		<td align=\"center\">В обработке</td>
-				<td align=\"center\">$in_work</td>
-				<td align=\"center\">".round(($in_work/$summary*100),2)." %</td>
+if ($state[2] > 0) {
+    $table .= '<td rowspan="' . $state[2] . '" class="head">Обработка завершена</td>';
+
+    foreach ($_result_state as $key => $value) {
+        $_result = explode(";", App::Config()->autoinform['result'][$key]);
+        if ($_result[0] == 'failed') {
+            $table .= "		<td align=\"center\">{$_result[1]}</td>
+				<td align=\"center\">$value</td>
+				<td align=\"center\">" . round(($value / $summary * 100), 2) . " %</td>
 			</tr>
 			<tr>";
-}
-if($state[0] != 0)
-{
-	$table .= "		<td align=\"center\">Итого</td>
-				<td align=\"center\">".($no_call+$quarantine+$in_work)."</td>
-				<td align=\"center\">".round(($no_call+$quarantine+$in_work)/$summary*100,2)." %</td>
-			</tr>
-			<tr>";
-}
-if($state[1]>0)
-	$table .= "<td rowspan=\"$state[1]\" class=\"head\" >Обработка завершена</td>";
-if($uncompleted != 0)
-{
-	$table .= "		<td align=\"center\">Не дослушано</td>
-				<td align=\"center\">$uncompleted</td>
-				<td align=\"center\">".round(($uncompleted/$summary*100),2)." %</td>
-			</tr>
-			<tr>";
-}
-if($completed != 0)
-{
-	$table .= "		<td align=\"center\">Дослушано</td>
-				<td align=\"center\">$completed</td>
-				<td align=\"center\">".round(($completed/$summary*100),2)." %</td>
-			</tr>
-			<tr >";
-}
-if($confirmed != 0)
-{
-	$table .= "		<td align=\"center\">Подтверждено</td>
-				<td align=\"center\">$confirmed</td>
-				<td align=\"center\">".round(($confirmed/$summary*100),2)." %</td>
-			</tr>
-			<tr >";
-}
-if($unconfirmed != 0)
-{
-	$table .= "		<td align=\"center\">Отменено</td>
-				<td align=\"center\">$unconfirmed</td>
-				<td align=\"center\">".round(($unconfirmed/$summary*100),2)." %</td>
-			</tr>
-			<tr>";
-}
-if($queued != 0)
-{
-	$table .= "		<td align=\"center\">Переведено в КЦ</td>
-				<td align=\"center\">$queued</td>
-				<td align=\"center\">".round(($queued/$summary*100),2)." %</td>
-			</tr>
-                        <tr>";
-}
-if($state[1] != 0)
-{
-	$table .= "		<td align=\"center\">Итого</td>
-				<td align=\"center\">".($completed+$uncompleted+$queued+$confirmed+$unconfirmed)."</td>
-				<td align=\"center\">".round(($completed+$uncompleted+$queued+$confirmed+$unconfirmed)/$summary*100,2)." %</td>
-			</tr>";
-}
-if($state[2]>0)
-	$table .= "<td rowspan=\"$state[2]\" class=\"head\" >Обработка отменена</td>";
-if($failed != 0)
-{
-	$table .= "		<td align=\"center\">Неудачно</td>
-				<td align=\"center\">$failed</td>
-				<td align=\"center\">".round(($failed/$summary*100),2)." %</td>
-			</tr>
-			<tr>";
-}
-if($removed != 0)
-{
-	$table .= "		<td align=\"center\">Удалено из МИС</td>
-				<td align=\"center\">$removed</td>
-				<td align=\"center\">".round(($removed/$summary*100),2)." %</td>
-			</tr>
-			<tr>";
-}
-if($state[2] != 0)
-{
-	$table .= "		<td align=\"center\">Итого</td>
-				<td align=\"center\">".($failed+$removed)."</td>
-				<td align=\"center\">".round(($failed+$removed)/$summary*100,2)." %</td>
-			</tr>
-			<tr>";
+        }
+    }
+    $table .= "<td align=\"center\">Итого</td>"
+            . "<td align=\"center\">" . $state_sum['failed'] . "</td>"
+            . "<td align=\"center\">" . round(($state_sum['failed']) / $summary * 100, 2) . " %</td>"
+            . "</tr><tr>";
 }
 $table .= "		<thead>
 				<tr>
@@ -341,25 +246,10 @@ $table .= "		<thead>
 				</tr>
 			</thead>";
 $table .= "</table><br />";
-
 ?>
 
 
 <div class="filters clear clear_fix bigblock">
-    <?php    echo $table; ?>
+    <?php echo $table; ?>
 </div>
 
-
-<div class="filters clear_fix miniblock of_h" >
-    <table class="grid" htable="1">
-        <thead>
-            <tr>
-                <th >ID</th>
-                <th >Дата приема</th>
-                <th >Тип вызова</th>
-                <th >Номер телефона</th>
-                <th colspan="3">Результат</th>
-            </tr>
-        </thead>
-    </table>
-</div>

@@ -61,24 +61,10 @@ if ($max < 10) {
     });
 </script>
 
-
-<div class="filters clear_fix mediumblock of_h" style="width: 600px">
-    <table class="grid" htable="1">
-        <thead height="50px">
-            <tr>
-                <th>Операторы</th>
-                <th>Статус</th>
-                <th>Время</th>
-                <th>Очередь</th>
-            </tr>
-        </thead>
-    </table>
-</div>
-
 <div class="clear clear_fix fl_l" style="width: 600px">
-    <table id="queueAgents" class="grid" htable="1">
+    <table id="queueAgents" class="grid">
         <thead>
-            <tr class="b-head">
+            <tr>
                 <th align="center" style="width: 250px">Операторы</th>
                 <th align="center" style="width: 100px">Статус</th>
                 <th align="center" style="width: 80px">Время</th>
@@ -88,10 +74,10 @@ if ($max < 10) {
         <tbody>
             <?php foreach ($this->queueAgents as $queueAgent) {                ?>
                 <tr agentid="<?php echo $queueAgent->agentid; ?>">
-                    <td align="left" agent="name"><?php echo html($queueAgent->name); ?></td>
-                    <td align="left" agent="state_phone"><?php echo html($queueAgent->getStatePhone()); ?></td>
-                    <td align="right" agent="time"><span tick="time">00:00:00</span></td>
-                    <td align="right" agent="queues"><?php echo count($queueAgent->getQueuesFull()); ?></td>
+                    <td align="left" valign="top" agent="name"><?php echo html($queueAgent->name); ?></td>
+                    <td align="left" valign="top" agent="state_phone"><?php echo html($queueAgent->getStatePhone()); ?></td>
+                    <td align="right" valign="top" agent="time"><span tick="time">00:00:00</span></td>
+                    <td align="right" valign="top" agent="queues"><?php echo implode("<br />", $queueAgent->getQueuesFull(true)); ?></td>
                 </tr>
             <?php } ?>
         </tbody>

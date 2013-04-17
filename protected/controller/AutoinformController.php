@@ -1,4 +1,5 @@
 <?php
+
 /**
  * AutoinformController class  - AutoinformController.php file
  *
@@ -16,11 +17,11 @@ class AutoinformController extends Controller {
     /** @var array */
     protected $_filters = array(
         'fromdate' => array('parseDatetime'),
-        'todate'   => array('parseDatetime'),
-        'type'     => array('controller', 'parseType'),
-        'result'   => array('controller', 'parseResult'),
-        'phone'    => 1,
-        'retries'  => array('controller', 'parseRetries')
+        'todate' => array('parseDatetime'),
+        'type' => array('controller', 'parseType'),
+        'result' => array('controller', 'parseResult'),
+        'phone' => 1,
+        'retries' => array('controller', 'parseRetries')
     );
 
     /** @var int */
@@ -48,7 +49,7 @@ class AutoinformController extends Controller {
 
         if ($_GET['section'] == 'log') {
             $this->section = 'log';
-            $this->id      = FiltersValue::parseId($_GET['id']);
+            $this->id = FiltersValue::parseId($_GET['id']);
         }
 
         $section = 'section' . $this->section;
@@ -61,11 +62,14 @@ class AutoinformController extends Controller {
     public function sectionList() {
         $this->rows = array();
 
+        if (!is_array(App::Config()->autoinform['type'])) {
+            $this->iniType();
+        }
+
         // Подготавливаем запрос
-        $query = App::Db()->createCommand()->select()->from('autodialout')
-                ->addWhere(App::Config()->autoinform['datetime'],
-                           array($this->fromdate->format(), $this->todate->format()),
-                           'BETWEEN')
+        $query = App::Db()->createCommand()->select()
+                ->from('autodialout')
+                ->addWhere(App::Config()->autoinform['datetime'], array($this->fromdate->format(), $this->todate->format()), 'BETWEEN')
                 ->order('datetotell');
         if ($this->type != null) {
             $query->addWhere('type', $this->type);
@@ -86,6 +90,12 @@ class AutoinformController extends Controller {
         $this->viewMain('page/page-autoinform.php');
     }
 
+    public function iniType() {
+        $type = @include APPPATH . 'config/autoinform_callback.php';
+        Log::dump($type , "<font color=\"#cc0000\">парамет \"<i>Тип вызова</i>\" загружен из файла</font>");
+        App::Config()->autoinform['type'] = $type;
+    }
+
     /**
      * Страница лога автоинформатора
      */
@@ -101,23 +111,22 @@ class AutoinformController extends Controller {
     private function _query($query) {
         if (App::Config()->autoinform['mssql']['enable']) {
             $cfg = App::Config()->autoinform['mssql'];
-            $db  = mssql_connect($cfg['host'], $cfg['user'], $cfg['pass']);
-            if ( ! $db) {
-                Log::error("mssql_connect> Не удаеться создать соединение с MSSQL!",
-                           'MSSQL');
+            $db = mssql_connect($cfg['host'], $cfg['user'], $cfg['pass']);
+            if (!$db) {
+                Log::error("mssql_connect> Не удаеться создать соединение с MSSQL!", 'MSSQL');
                 return;
             }
-            if ( ! mssql_select_db($cfg['dbname'], $db)) {
-                Log::error("mssql_select_db> Не удаеться подключиться к базе MSSQL! ",
-                           'MSSQL');
-                return;
+            if ($cfg['dbname']) {
+                if (!mssql_select_db($cfg['dbname'], $db)) {
+                    Log::error("mssql_select_db> Не удаеться подключиться к базе MSSQL! ", 'MSSQL');
+                    return;
+                }
             }
 
             $this->_result = mssql_query($query);
             Log::trace($query, 'MSSQL');
-            if ( ! $this->_result) {
-                Log::error("mssql_query> Не удаеться выполнить запрос MSSQL!",
-                           'MSSQL');
+            if (!$this->_result) {
+                Log::error("mssql_query> Не удаеться выполнить запрос MSSQL!", 'MSSQL');
                 return;
             }
         } else {
@@ -158,13 +167,12 @@ class AutoinformController extends Controller {
      */
     public function numRows() {
         if ($this->_result instanceof ACDbResult) {
-            $count =  $this->_result->count();
+            $count = $this->_result->count();
         } else {
-            $count =  @mssql_num_rows($this->_result);
+            $count = @mssql_num_rows($this->_result);
         }
         return (int) $count;
     }
-
 
     /**
      * Тип вызова 0, 1, 2
@@ -184,7 +192,8 @@ class AutoinformController extends Controller {
     public function parseResult($result) {
         if ($result === null)
             return;
-        if (in_array($result, array(0, 1, 2, 3, 4, 98, 99, 97, 96))) {
+        //if (in_array($result, array(0, 1, 2, 3, 4, 98, 99, 97, 96))) {
+        if (@App::Config()->autoinform['result'][$result]) {
             return $result;
         }
     }
@@ -200,4 +209,5 @@ class AutoinformController extends Controller {
         }
         return -1;
     }
+
 }

@@ -42,10 +42,10 @@ class QueueAgent extends ACDataObject {
      * @return string
      */
     public static function showOperslist() {
-        $result     = "<option value=\"\" selected=\"selected\">все</option>";
+        $result = "<option value=\"\" selected=\"selected\">все</option>";
         $QueueAgent = self::_init();
         foreach ($QueueAgent as $key => $value) {
-            $key   = html($key);
+            $key = html($key);
             $value = html($value);
             $result .= "<option value=\"{$key}\">{$value}</option>";
         }
@@ -61,7 +61,7 @@ class QueueAgent extends ACDataObject {
         self::_init();
 
         $oper = self::$_QueueAgent[$id];
-        if ( ! $oper) {
+        if (!$oper) {
             $oper = "Неизвестно ({$id})";
         }
 
@@ -83,17 +83,29 @@ class QueueAgent extends ACDataObject {
     public function getQueues($number) {
         $number = (int) $number;
         $queues = "queues" . $number;
-        if ( ! $this->$queues) {
-            return array();
-        } else {
-            return explode(",", $this->$queues);
+        $queues_arr = array();
+        if ($this->$queues) {
+            $queues_arr = explode(",", $this->$queues);
         }
+
+        return $queues_arr;
     }
 
-    public function getQueuesFull() {
-        $queues = $this->getQueues(1) + $this->getQueues(2) + $this->getQueues(3);
-        $queues = array_unique($queues);
-        return $queues;
+    public function getQueuesFull($title = false) {
+        $queues_arr = array_merge($this->getQueues(1), $this->getQueues(2), $this->getQueues(3));
+        if ($title) {
+            $arr = array();
+            foreach ($queues_arr as $n) {
+                $queue = Queue::getQueue($n);
+                if ($queue) {
+                 $arr[] = $queue;
+                }
+            }
+            $queues_arr = $arr;
+        }
+        // $queues = $this->getQueues(1) + $this->getQueues(2) + $this->getQueues(3);
+        $queues_arr = array_unique($queues_arr);
+        return $queues_arr;
     }
 
     /**
@@ -102,7 +114,7 @@ class QueueAgent extends ACDataObject {
      * @return array
      */
     public function getPenalty($number) {
-        $number  = (int) $number;
+        $number = (int) $number;
         $penalty = "penalty" . $number;
         return $this->$penalty;
     }
@@ -110,7 +122,7 @@ class QueueAgent extends ACDataObject {
     public function getStatePhone() {
         switch ($this->phone) {
             case "not_in_use" : return "Свободен";
-            case "used" : return "Занят";
+            case "used" : return "Разговаривает";
             case "ringing" : return "Звонит";
         }
     }
@@ -122,4 +134,5 @@ class QueueAgent extends ACDataObject {
             case "aftercall" : return "Обработка";
         }
     }
+
 }

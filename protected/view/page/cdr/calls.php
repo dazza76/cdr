@@ -61,14 +61,14 @@
                 <input name="mob" type="checkbox" value="1" <?php if ($this->mob) echo "default=\"1\""; ?> />
             </div>
         </div>
-        
+
         <div class="filter fl_l sep">
             <div class="label">VIP</div>
             <div class="labeled" style="padding: 3px 0px 4px 0px;">
                 <input name="vip" type="checkbox" value="1" <?php if ($this->vip) echo "default=\"1\""; ?> />
             </div>
         </div>
-        
+
 
         <div class="filter fl_l sep">
             <div class="label">Показать</div>
@@ -104,36 +104,19 @@
     </div>
 </div>
 
-<div class="filters clear_fix bigblock of_h">
-    <table class="grid" htable="1" >
-        <thead>
-            <tr>
-                <!--  data-sort="" data-desc=""  -->
-                <th >Напр.</th>
-                <th <?php echo Utils::sortable("calldate", $this->sort, $this->desc); ?> >Дата</th>
-                <th <?php echo Utils::sortable("src", $this->sort, $this->desc); ?> >Источник</th>
-                <th <?php echo Utils::sortable("dst", $this->sort, $this->desc); ?> >Назначение</th>
-                <th >Оператор</th>
-                <th >Запись</th>
-                <th <?php echo Utils::sortable("duration", $this->sort, $this->desc); ?> >Время</th>
-                <th <?php echo Utils::sortable("comment", $this->sort, $this->desc); ?> >Комментарий</th>
-            </tr>
-        </thead>
-    </table>
-</div>
 
 <div class="clear clear_fix">
-    <table class="grid" htable="1" style="width: 1100px;">
+    <table class="grid" style="width: 1100px;">
         <thead>
-            <tr class="b-head">
-                <th style="width: 60px;" > </th>
-                <th style="width: 150px;"> </th>
-                <th style="width: 150px;"> </th>
-                <th style="width: 150px;"> </th>
-                <th style="width: 150px;"> </th>
-                <th style="width: 135px;"> </th>
-                <th style="width: 70px;"> </th>
-                <th style=""> </th>
+            <tr>
+                <th style="width: 60px;"  >Напр.</th>
+                <th style="width: 150px;" <?php echo Utils::sortable("calldate", $this->sort, $this->desc); ?> >Дата</th>
+                <th style="width: 150px;" <?php echo Utils::sortable("src", $this->sort, $this->desc); ?> >Источник</th>
+                <th style="width: 150px;" <?php echo Utils::sortable("dst", $this->sort, $this->desc); ?> >Назначение</th>
+                <th style="width: 150px;" >Оператор</th>
+                <th style="width: 135px;" >Запись</th>
+                <th style="width: 70px;" <?php echo Utils::sortable("duration", $this->sort, $this->desc); ?> >Время</th>
+                <th style="" <?php echo Utils::sortable("comment", $this->sort, $this->desc); ?> >Комментарий</th>
             </tr>
         </thead>
         <tbody>

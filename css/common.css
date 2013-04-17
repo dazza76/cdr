@@ -14,8 +14,13 @@ table, caption, tbody, tfoot, thead, tr, th, td
 img { border: 0; }
 html { height: 100% }
 body { font: 12px Tahoma, Geneva, sans-serif; min-width: 600px; height: 100%; }
-a { text-decoration: underline; cursor: pointer; color: #069; border-style: none;}
-a:hover { text-decoration: none; cursor: pointer; color: #E80005;}
+/*a { text-decoration: underline; cursor: pointer; color: #069; border-style: none;}*/
+/*a:hover { text-decoration: none; cursor: pointer; color: #E80005;}*/
+a, a:hover {text-decoration: none; outline-style: none; }
+a:link, a:visited {color: #0088cc; }
+a:hover {color: #E68C3B; }
+
+
 div { border: solid #000 0px; }
 
 /*input, select { border: 1px solid #abadb3; 	height: 22px; margin: 0px; }*/
@@ -57,14 +62,14 @@ div { border: solid #000 0px; }
 /* Layout
 ----------------------------------*/
 #wrapper { margin: 0 auto; min-height: 100%; height: auto !important; height: 100%; }
-#header { padding: 10px 10px 0px 10px; background: white; z-index: 10; }
+#header { padding: 10px 10px 10px 10px; background: white; z-index: 10; }
 #middle { padding: 0px 10px 40px 10px; /* height: 1%; */  }
 #footer { margin: -30px 0 0; padding: 0 10px; height: 30px; line-height: 26px; text-align: right; }
 
 #header.fixed { position: fixed; width: 100%; box-sizing: border-box; -moz-box-sizing: border-box; }
 #header.fixed .filters,
 #header.fixed .control-bar { top: 10px; position: relative; }
-/*#header.fixed-now { box-shadow: 0 0 4px 2px #999; border-bottom: 1px solid #999; }*/
+#header.fixed-now { box-shadow: 0 0 4px 2px #999; border-bottom: 1px solid #999; }
 
 /* Icons
 -------------------------------------*/
@@ -73,7 +78,7 @@ a.icon { padding: 1px 0 1px 22px; line-height: 18px; }
 a.icon-add { background: url(../images/add.png) 2px 70% no-repeat; }
 a.icon-edit { background: url(../images/edit.png) 2px 70% no-repeat; }
 a.icon-delete { background: url(../images/delete.png) 2px 70% no-repeat; }
-
+a.icon_excel {    background: url(../images/page_white_excel.png) 2px 70% no-repeat;    }
 
 /* big icon */
 a.header-icon { padding: 12px 0 12px 38px; line-height: 36px; }
@@ -83,6 +88,7 @@ a.icon-queue-big { background: url(../images/chart_bar.png) 2px 70% no-repeat; }
 a.icon-settings-big{ background: url(../images/interface_preferences.png) 2px 70% no-repeat; }
 a.icon-supervisor-big { background: url(../images/monitor_lightning.png) 2px 70% no-repeat; }
 a.icon-autoinform-big { background: url(../images/atm.png) 2px 70% no-repeat; }
+a.icon-operator-big { background: url(../images/premium_support.png) 2px 70% no-repeat; }
 /*
 a.icon-phones-big {background: url(../img/icons_big/phones.png) 2px 70% no-repeat; }
 a.icon-calls-big { background: url(../img/icons_big/blackberry_white.png) 2px 70% no-repeat; }
@@ -115,20 +121,20 @@ a.icon-clients-big { background: url(../img/icons_big/report_user.png) 2px 70% n
 /* Menu
 -------------------------------------*/
 ul.menu { background-color: #F0F0F0; border: solid #C6C6C6 1px; padding: 10px 6px; -moz-border-radius: 6px; -webkit-border-radius: 6px; margin: 0; border-radius: 6px; }
-ul.menu > li  {border-right:  1px solid #C6C6C6; }
+ul.menu > li  {border-right:  1px solid #C6C6C6; height: 38px; }
 ul.menu ul,
 ul.menu li,
 ul.menu .submenu-title { display: block; float: left; }
 ul.menu li.submenu { padding-left:0; padding-right:0; overflow: hidden; }
 ul.menu li,
 ul.menu .submenu-title { padding: 0px 10px;  }
-ul.menu li.submenu li {padding-left: 0; }
+ul.menu li.submenu li {padding-left: 0; line-height: 36px;}
 ul.menu .submenu-title { font-weight: bold; }
 ul.menu .submenu-title a { color: #333; }
 ul.menu li.submenu li.current a { color: #777; text-decoration: none; font-weight:bold; }
 ul.menu li.submenu li a { text-decoration: underline; }
 ul.menu li.current a { font-weight:bold; color: #333 }
-ul.menu a {color:#666666; text-decoration: none; line-height: 28px;}
+ul.menu a {color:#666666; text-decoration: none; /*line-height: 28px;*/}
 ul.menu li.right {float:right; }
 
 /* filters
@@ -204,6 +210,8 @@ td.coming-img div { margin-left: 8px; width: 25px; height: 25px; background: url
 td.coming-img div.coming_0 { background-position: 0px 0px; }
 td.coming-img div.coming_1 { background-position: -25px 0px; }
 td.coming-img div.coming_2 { background-position: -50px 0px; }
+
+#queueAgents tr td { padding-top: 5px; }
 
 /* comment edit */
 #comment_edit { margin: 0; padding: 0; position: absolute; }

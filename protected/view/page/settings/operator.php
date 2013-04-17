@@ -2,38 +2,61 @@
 include 'dialog-operator.php';
 ?>
 <div class="filters clear_fix">
+    <form method="get" action="" class="of_h">
+        <input name="section" type="hidden" value="operator" />
+        <div class="filter fl_l sep">
+            <div class="label">ФИО</div>
+            <div class="labeled">
+                <input name="fio" type="text" value="<?php echo $this->fio; ?>" />
+            </div>
+        </div>
+
+<!--        <div class="filter fl_l sep">
+            <div class="label">Очередь</div>
+            <div class="labeled">
+                <?php echo Queue::showMultiple("queue[]", $this->queue); ?>
+            </div>
+        </div>-->
+
+        <div class="filter fl_l sep">
+            <div class="label">телефон</div>
+            <div class="labeled">
+                <input name="agent" type="text" value="<?php echo $this->agent; ?>" />
+            </div>
+        </div>
+
+        <div class="filter fl_l">
+            <div class="labeled">
+                <input type="submit" name="search" id="button-search" class="button button-search" value="Показать" />
+            </div>
+        </div>
+
+        <input type="hidden" name="sort" value="<?php echo $this->sort; ?>" />
+        <input type="hidden" name="desc" value="<?php echo $this->desc; ?>" />
+        <input type="hidden" name="offset" value="<?php echo $this->offset; ?>" />
+    </form>
+</div>
+
+<div class="filters clear_fix">
     <div class="clear_fix bigblock of_h" style="width: 660px">
         <div class="fl_l" style="padding-right: 15px;">
-            Всего операторов: <?php echo @count($this->queueAgent); ?>
+            Всего операторов: <?php echo $this->count; ?>
         </div>
-        <div class="fl_r"><a onclick="$('#dialog-operator-add').dialog('open');" class="icon icon-add">добавить</a></div>
+        <?php echo Utils::pagenator($this->count, $this->offset, 20); ?>
+        <div class="fl_r" style="margin-right:15px;"><a onclick="$('#dialog-operator-add').dialog('open');" class="icon icon-add">добавить</a></div>
         <div class="pg-pages fl_r">  </div>
     </div>
 </div>
 
 
-<div class="filters clear_fix mediumblock of_h">
-    <table class="grid" htable="1">
-        <thead>
-            <tr>
-                <th>ФИО</th>
-                <th>Телефон</th>
-                <th>Изменить</th>
-                <th>Удалить</th>
-            </tr>
-        </thead>
-    </table>
-</div>
-
-
 <div id="operator_list" class="clear clear_fix">
-    <table class="grid" style="width: 660px;" htable="1">
+    <table class="grid" style="width: 660px;">
         <thead>
-            <tr class="b-head">
-                <th> </th>
-                <th style="width: 100px;"> </th>
-                <th style="width: 70px;" > </th>
-                <th style="width: 70px;" > </th>
+            <tr >
+                <th> ФИО</th>
+                <th style="width: 100px;"> Телефон</th>
+                <th style="width: 70px;" > Изменить</th>
+                <th style="width: 70px;" > Удалить</th>
             </tr>
         </thead>
         <tbody>

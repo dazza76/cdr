@@ -25,8 +25,8 @@
                 <input type="submit" name="search" id="button-search" class="button button-search" value="Показать" />
             </div>
         </div>
-        
-        
+
+
         <div class="filter fl_l sep">
             <div class="label">Формат экспорта</div>
             <div class="labeled">
@@ -36,31 +36,22 @@
                 </select>
                 <input type="submit" id="button-export" class="button" value="Экспорт" />
             </div>
-        </div>  
-        
-        
+        </div>
+
+
     </form>
 </div>
 
 
-<div class="filters clear_fix bigblock of_h">
-    <table class="grid" htable="1">
-        <thead>
-            <tr height="20px">
-                <th>Номер телефона</th>
-                <th>Количество вызовов</th>
-            </tr>
-        </thead>
-    </table>
-</div>
+
 
 
 <div class="clear clear_fix">
-    <table class="grid" style="width: 300px;" htable="1" >
+    <table class="grid" style="width: 300px;"  >
         <thead>
-            <tr class="b-head">
-                <th style="width: 150px;"> </th>
-                <th style="width: 150px;"> </th>
+            <tr>
+                <th style="width: 150px;">Номер телефона</th>
+                <th style="width: 150px;">Количество вызовов</th>
             </tr>
         </thead>
         <tbody>

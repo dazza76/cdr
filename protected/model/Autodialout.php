@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Autodialout class  - Autodialout.php file
  *
@@ -31,25 +32,27 @@ class Autodialout extends ACDataObject {
 
     const TABLE = 'autodialout';
 
-    public function __construct(/* $row */) {
-//        $this->id           = $row[0];
-//        $this->dialnum      = $row[1];
-//        $this->datetime     = FiltersValue::toFormatDate($row[2]);
-//        $this->type         = $row[3];
-//        $this->datetotell   = $row[4];
-//        $this->dateofcall   = $row[5];
-//        $this->retries      = $row[6];
-//        $this->result       = $row[7];
-//        $this->clinic       = $row[8];
-//        $this->doctorspec   = $row[9];
-//        $this->doctorname   = $row[10];
-//        $this->comment      = $row[11];
-//        $this->dateofremind = $row[12];
-//        $this->record       = $row[13];
+    public function __construct($row = null) {
+        if ($row != null) {
+            $this->id = $row[0];
+            $this->dialnum = $row[1];
+            $this->datetime = FiltersValue::toFormatDate($row[2]);
+            $this->type = $row[3];
+            $this->datetotell = $row[4];
+            $this->dateofcall = $row[5];
+            $this->retries = $row[6];
+            $this->result = $row[7];
+            $this->clinic = $row[8];
+            $this->doctorspec = $row[9];
+            $this->doctorname = $row[10];
+            $this->comment = $row[11];
+            $this->dateofremind = $row[12];
+            $this->record = $row[13];
+        }
     }
-    
+
     public function __set($name, $value) {
-        if($name == App::Config()->autoinform['datetime']) {
+        if ($name == App::Config()->autoinform['datetime']) {
             $name = 'datetime';
             $value = FiltersValue::toFormatDate($value, true);
         }
@@ -58,9 +61,9 @@ class Autodialout extends ACDataObject {
         }
         parent::__set($name, $value);
     }
-    
+
     public function getDialnum() {
-        return "+7" . substr($this->dialnum, 1) ;
+        return "+7" . substr($this->dialnum, 1);
     }
 
 }

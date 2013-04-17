@@ -97,8 +97,6 @@ class TimemanController extends Controller {
                 '180 - +',
                 'Среднее',
             );
-        $export->type = $this->export;
-
         $export->send('timeman');
         exit();
     }

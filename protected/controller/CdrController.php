@@ -320,11 +320,15 @@ class CdrController extends Controller {
         $command = $this->_db->createCommand()->select()
                 ->from(Cdr::TABLE)
                 ->calc()
-                ->addWhere('file_exists', '0', '>')
-                ->addWhere('dcontext', array('autoinform', 'outgoing', 'dialout'), 'IN')
                 ->limit($this->limit)
                 ->offset($this->offset)
                 ->order($sort);
+        if (!@array_key_exists('fignore', $_GET)) {
+            $command->addWhere('file_exists', '0', '>');
+        }
+        // ->addWhere('file_exists', '0', '>')
+        $command->addWhere('dcontext', array('autoinform', 'outgoing', 'dialout'), 'IN');
+
 
 
         // начальная дата

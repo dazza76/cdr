@@ -65,15 +65,18 @@ $(document).ready(function() {
         });
         return true;
     });
-    
+
     $("#button-search").click(function() {
         $form.find(".button").removeAttr('name');
         $("#export_type").removeAttr('name');
-        $form.removeAttr('target').submit();
+        //$form.removeAttr('target');
+        $form.submit();
     });
-    
+
     $("#button-export").click(function() {
         $("#export_type").attr('name', 'export');
-       $form.attr("target", "_blank").submit();
+//       $form.attr("target", "_blank");
+        $form.submit();
+        return false;
     });
 });

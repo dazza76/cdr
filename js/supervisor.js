@@ -144,7 +144,7 @@ var supervisor = {
             var qAgent = data.queueAgents[i];
             var $tr = $tableAgent.find('tr[agentid=' + qAgent.agentid + ']');
             $tr.find('td[agent=state_phone]').text(qAgent.state_phone);
-            $tr.find('td[agent=queues]').text(qAgent.queues.length);
+            $tr.find('td[agent=queues]').html(qAgent.queues);
         }
 
         var $tableData = $('#queuesData tbody');

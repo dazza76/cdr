@@ -4,19 +4,44 @@
  *
  * charset="UTF-8"
  */
+
 return array(
     // название столбца в "дата обзвона" в таблицы "autodialout"
-    'datetime' => 'datetime', 
+    'datetime' => 'datetime',
                  // 'timestamp',
     // база данных MSSQL
     'mssql'  => array(
         // отключена, используються запросы череp MySQL, ранее созданым конектом
-        'enable' => 0,  
+        'enable' => 0,
         'host'   => 'localhost',
         'user'   => 'admin',
         'pass'   => '',
         'dbname' => '',
     ),
+        // in_work   - Обработка идет
+        // completed - Обработка завершена
+        // failed    - Обработка отменена
+        // none      - игнорировать
+    'result' => array(
+            0 => "in_work;Не обработано",
+            1 => "completed;Не дослушан",
+             2 => "completed;Дослушал;Дослушал/подтвердил",
+             3 => "completed;Подтверждено",
+             99 => "in_work;В обработке",
+             98 => "in_work;Карантин",
+             97 => "failed;Неудачно",
+             96 => "failed;Удалено из МИС",
+             95 => "none;Нет номера",
+    ),
+
+    // Если не маси или поле отсутствует, то береться из файла autoinform_callback.php
+    'type' => null,
+    // array(
+    //     "code" => "label code",
+    //     '1' => "Анализ",
+    //     '2' => "Прием"
+    // ),
+
     'type_code' => array(
         '1'=>'Страховая',
         '2'=> 'Медцентр',

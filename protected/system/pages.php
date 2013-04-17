@@ -43,13 +43,13 @@ return array(
     'autoinform' => array(
         'page' => 'Автоинформатор',
     ),
-//    'analysis' => array(
-//        'page' => 'Система анализа',
-//        'section' => array(
-//            'load' => 'загруженност',
-//            'operlog' => 'действий',
-//            'monthly' => 'Месячный отчет'
-//        ),
-//    )
+    'operator' => array(
+        'page' => 'Операторы',
+        'section' => array(
+            'operlog' => 'Действия',
+            'load' => 'Загруженность',
+            'monthly' => 'Месячный отчет'
+        )
+    ),
 );
 

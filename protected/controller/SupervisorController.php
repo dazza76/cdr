@@ -65,7 +65,7 @@ class SupervisorController extends Controller {
                         'state_phone' => $obj->getStatePhone(),
                         'phone' => $obj->phone,
                         'member' => $obj->member,
-                        'queues' => $obj->getQueuesFull()
+                        'queues' => implode("<br />", $obj->getQueuesFull(true))
                     );
                 }
                 $response['queueAgents'] = $queueAgents;
@@ -195,6 +195,7 @@ class SupervisorController extends Controller {
         $this->dataPage['links'] .= '<script src="' . Utils::linkUrl('lib/highcharts/highcharts.js') . "\"></script>\n";
 
         // header('Refresh: 1; url='.$_SERVER['PHP_SELF'].'?section=operator');
+        // connect, complete%
     }
 
     public function sectionAnalogue() {
@@ -266,7 +267,7 @@ class SupervisorController extends Controller {
     public function getStates() {
         $shell_res = $this->shell();
         Log::trace("<b>shell result::</b><pre>{$shell_res}</pre>");
-//        Log::dump($shell_res, 'shell result');
+        // Log::dump($shell_res, 'shell result');
 
         $shell_arr = explode("\n", $shell_res);
         foreach ($shell_arr as $row) {
@@ -416,7 +417,7 @@ class SupervisorController extends Controller {
     }
 
     /**
-     * Статистика по всем очарядям
+     * Статистика по всем очередям
      * @param DateTime $datetime
      * @param array $queue
      * @return array

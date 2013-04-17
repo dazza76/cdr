@@ -181,7 +181,7 @@ class FiltersValue {
             case 'xls':
                 return $export;
                 break;
-            default : 
+            default :
                 return null;
                 break;
         }
@@ -223,5 +223,6 @@ class FiltersValue {
 
         return ($get_obj) ? ACDateTime::createFromFormat('d.m.Y H:i:s', $date) : $date;
     }
+
 
 }

@@ -12,9 +12,10 @@ include 'filters.php';
 
 ?>
 
-<div class="filters clear_fix mediumblock of_h">
-    <table class="grid" style="width: 1200px;" htable="1">
-        <thead >
+
+<div class="clear clear_fix">
+    <table id="queuesData" class="grid" style="width: 1200px;">
+        <thead>
             <tr height="30px">
                 <th align="center">Очередь</th>
                 <th align="center" style="width: 100px;">Операторы</th>
@@ -26,25 +27,6 @@ include 'filters.php';
                 <th align="center" style="width: 100px;">Потеряно</th>
                 <th align="center" style="width: 100px;">Ср. ожидание потеряных</th>
                 <th align="center" style="width: 100px;">SERVICE<br>LEVEL (60)</th>
-            </tr>
-        </thead>
-    </table>
-</div>
-
-<div class="clear clear_fix">
-    <table id="queuesData" class="grid" style="width: 1200px;" htable="1">
-        <thead>
-            <tr class="b-head">
-                <th > </th>
-                <th style="width: 100px;"> </th>
-                <th style="width: 100px;"> </th>
-                <th style="width: 100px;"> </th>
-                <th style="width: 100px;"> </th>
-                <th style="width: 100px;"> </th>
-                <th style="width: 100px;"> </th>
-                <th style="width: 100px;"> </th>
-                <th style="width: 100px;"> </th>
-                <th style="width: 100px;"> </th>
             </tr>
         </thead>
         <tbody>

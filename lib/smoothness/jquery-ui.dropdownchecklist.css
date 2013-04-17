@@ -1,5 +1,5 @@
 .ui-dropdownchecklist {font-size: inherit; color: inherit; }
-.ui-dropdownchecklist-selector {height: 18px; border: 1px solid #c6c6c6; background: #fff; font-size: inherit; line-height: 18px; background: url('images/magnifier.png') #fff no-repeat 99% 50%; padding: 0px 28px 1px 1px; vertical-align: middle; }
+.ui-dropdownchecklist-selector {height: 18px; border: 1px solid #c6c6c6; background: #fff; font-size: inherit; line-height: 18px; background: url('images/magnifier.png') #fff no-repeat 99% 50%; padding: 0px 28px 2px 1px; vertical-align: middle; }
 /* IE7-8 hack */
 html > body .ui-dropdownchecklist-selector {vertical-align: baseline\0/; background: url('images/magnifier.png') #fff no-repeat 98% 50%\0/; background: url('images/magnifier.png') #fff no-repeat 98% 50% !ie; }
 /* Firefox hack */
