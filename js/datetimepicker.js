@@ -1,4 +1,7 @@
 $(function() {
+    $.datepicker.setDefaults($.extend($.datepicker.regional["ru"]));
+
+    /** datetimepicker */
     $.timepicker.setDefaults({
         changeMonth: true,
         changeYear: true,
@@ -12,7 +15,6 @@ $(function() {
         currentText: 'Сейчас',
         stepMinute: 10
     });
-
 
     var dtControl = {
         create: function(tp_inst, obj, unit, val, min, max, step) {
@@ -45,9 +47,6 @@ $(function() {
         }
     };
 
-
-
-    /** datetimepicker */
     $(".datetimepicker").datetimepicker({
         controlType: dtControl
     }).keydown(function() {
@@ -57,7 +56,22 @@ $(function() {
         $(this).datetimepicker("show");
     });
 
-    // $(".datetimepicker").datetimepicker({
-    //     controlType: dtControl
-    // });
+
+    /** datepicker */
+    $(".datepicker").datetimepicker({
+                    showHour: false,
+            showMinute: false,
+            showTime: false,
+            alwaysSetTime: false,
+            timeFormat: '',
+            separator: '',
+        showAnim: "fadeIn"
+    }).keydown(function() {
+        $(this).datetimepicker("show");
+        return false;
+    }).focus(function() {
+        $(this).datetimepicker("show");
+    });
+    $(".datepicker[showweek=1]").datepicker("option", "showWeek", true);
+
 });

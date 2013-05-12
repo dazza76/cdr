@@ -58,6 +58,13 @@
         </div>
 
         <div class="filter fl_l sep">
+            <div class="label">Кол. обрз. символов</div>
+            <div class="labeled">
+                <input class="spinner" name="cutnum" type="text" placeholder="0" autocomplete="off" style="width: 8em;" value="<?php echo html($this->cutnum); ?>">
+            </div>
+        </div>
+
+        <div class="filter fl_l sep">
             <div class="label">Кол-во попыток</div>
             <div class="labeled">
                 <div class="labeled">
@@ -77,6 +84,16 @@
                 <input type="submit" name="search" id="button-search" class="button button-search" value="Показать" />
             </div>
         </div>
+
+
+        <div class="filter fl_r">
+            <div class="labeled" style="margin-top: 24px;">
+                <span>
+                    <input type="hidden" id="export_type" name="export" value="1" />
+                    <a id="button-export" href="" class="icon icon_excel">Экспорт</a>
+                </span>
+            </div>
+        </div>
     </form>
 </div>
 
@@ -86,11 +103,11 @@
     <table class="grid">
         <thead>
             <tr>
-                <th style="width: 60px;" >ID</th>
-                <th style="width: 150px;">Дата приема</th>
-                <th >Тип вызова</th>
-                <th style="width: 150px;">Номер телефона</th>
-                <th style="width: 300px;" colspan="3">Результат</th>
+                <td class="head"  style="width: 60px;" >ID</td>
+                <td class="head"  style="width: 150px;">Дата приема</td>
+                <td class="head"  >Тип вызова</td>
+                <td class="head"  style="width: 150px;">Номер телефона</td>
+                <td class="head"  style="width: 300px;" colspan="3">Результат</td>
             </tr>
         </thead>
         <tbody>

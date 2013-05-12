@@ -6,9 +6,20 @@
  */
 
 return array(
+    // Файл с настройками автоинформатора.
+    //
+    // Путь являеться абсолютным, и должен начинаться с корня системы.
+    // Windows:     Z:/var/www/autoinform.conf
+    // Unix:        /var/www/autoinform.conf
+    'file_conf' => APPPATH. 'config/autoinform.conf',
+
+
+
     // название столбца в "дата обзвона" в таблицы "autodialout"
     'datetime' => 'datetime',
                  // 'timestamp',
+
+
     // база данных MSSQL
     'mssql'  => array(
         // отключена, используються запросы череp MySQL, ранее созданым конектом
@@ -34,7 +45,7 @@ return array(
              95 => "none;Нет номера",
     ),
 
-    // Если не маси или поле отсутствует, то береться из файла autoinform_callback.php
+    // Если не масив или поле отсутствует, то береться из файла autoinform_callback.php
     'type' => null,
     // array(
     //     "code" => "label code",

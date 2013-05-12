@@ -73,10 +73,21 @@ class App extends Application {
     /**
      * @return ACObject
      */
-    public static function Config() {
+    public static function Config($section_load = null) {
         if (self::$_config === null) {
             self::$_config = new ACObject();
         }
+
+        if ($section_load !== null) {
+            if (!isset(self::$_config->$section_load)) {
+                self::$_config->$section_load = array();
+                $filename = APPPATH . "config/{$section_load}.php";
+                if (file_exists($filename)) {
+                    self::$_config->$section_load = @include $filename;
+                }
+            }
+        }
+
         return self::$_config;
     }
 

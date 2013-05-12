@@ -7,7 +7,12 @@
 
 /* @var $this SupervisorController */
 ?>
-
+<script type="text/javascript">
+    var pageOptions = {
+        section: 'analogue',
+        onUpdate: 0
+    };
+</script>
 <div class="filters clear_fix">
     <form method="get" action="" class="of_h">
         <input type="hidden" name="section" value="analogue" />
@@ -50,8 +55,8 @@
     <table class="grid" style="width: 300px;"  >
         <thead>
             <tr>
-                <th style="width: 150px;">Номер телефона</th>
-                <th style="width: 150px;">Количество вызовов</th>
+                <td class="head"  style="width: 150px;">Номер телефона</td>
+                <td class="head"  style="width: 150px;">Количество вызовов</td>
             </tr>
         </thead>
         <tbody>

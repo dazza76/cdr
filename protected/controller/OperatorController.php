@@ -18,6 +18,7 @@ class OperatorController extends Controller {
         'fromdate' => array('parseDatetime'), // array('_parseDatetime'),
         'todate' => array('parseDatetime'),
         'oper' => 1,
+        'oaction' => array('controller', 'parseOaction'),
         'limit' => 1,
         'offset' => 1,
     );
@@ -28,12 +29,20 @@ class OperatorController extends Controller {
     // --------------------------------------------------------------
 
     function __construct() {
+        App::Config('operator');//->operator = @include APPPATH . 'config/operator.php';
+
         parent::__construct();
 
         $from = new ACDateTime();
         $from->sub(new DateInterval('P1D'));
 
         $this->_filters['fromdate'][1] = $from;
+    }
+
+    public function parseOaction($oaction) {
+        if ($oaction == 1 || $oaction == 2) {
+            return $oaction;
+        }
     }
 
     public function init($params = null) {
@@ -60,41 +69,52 @@ class OperatorController extends Controller {
         if ($this->oper) {
             $select->addWhere('agentid', $this->oper);
         }
+        if ($this->oaction) {
+            if ($this->oaction == 1) {
+                $select->addWhere('action', App::Config()->operator['calls'], 'IN');
+            } else {
+                $select->addWhere('action', App::Config()->operator['calls'], 'NOT IN');
+            }
+        }
+
         $query = $select->toString();
 
-
-        $select = App::Db()->createCommand()->select(array(
-                    "timestamp AS datetime",
-                    "memberId AS agentid",
-                    "'incoming'",
-                    "queue AS agentphone",
-                    "callduration",
-                    "ringtime",
-                ))
-                ->from('call_status')
-                ->addWhere("timestamp", array($this->fromdate, $this->todate), 'BETWEEN');
-        if ($this->oper) {
-            $select->addWhere('memberId', $this->oper);
+        if ($this->oaction == 1 && in_array('incoming', App::Config()->operator['calls'])) {
+            $select = App::Db()->createCommand()->select(array(
+                        "timestamp AS datetime",
+                        "memberId AS agentid",
+                        "'incoming'",
+                        "queue AS agentphone",
+                        "callduration",
+                        "ringtime",
+                    ))
+                    ->from('call_status')
+                    ->addWhere("timestamp", array($this->fromdate, $this->todate), 'BETWEEN');
+            if ($this->oper) {
+                $select->addWhere('memberId', $this->oper);
+            }
+            $query .= "\nUNION ALL\n" . $select->toString();
         }
-        $query .= "\nUNION ALL\n" . $select->toString();
 
-
-        $select = App::Db()->createCommand()->select(array(
-                    "calldate AS datetime",
-                    "userfield AS agentid",
-                    "'outcoming'",
-                    "src AS agentphone",
-                    "duration",
-                    "NULL",
-                ))
-                ->from('cdr')
-                ->order('datetime')
-                ->addWhere("calldate", array($this->fromdate, $this->todate), 'BETWEEN')
-                ->addWhere("length(src)", 5, "<");
-        if ($this->oper) {
-            $select->addWhere('userfield', $this->oper);
+        if ($this->oaction == 1 && in_array('outcoming', App::Config()->operator['calls'])) {
+            $select = App::Db()->createCommand()->select(array(
+                        "calldate AS datetime",
+                        "userfield AS agentid",
+                        "'outcoming'",
+                        "src AS agentphone",
+                        "duration",
+                        "NULL",
+                    ))
+                    ->from('cdr')
+                    ->order('datetime')
+                    ->addWhere("calldate", array($this->fromdate, $this->todate), 'BETWEEN')
+                    ->addWhere("length(src)", 5, "<");
+            if ($this->oper) {
+                $select->addWhere('userfield', $this->oper);
+            }
+            $query .= "\nUNION ALL\n" . $select->toString();
         }
-        $query .= "\nUNION ALL\n" . $select->toString();
+
 
         $result = App::Db()->query($query);
         $this->dataResult = array();
@@ -194,6 +214,11 @@ class OperatorController extends Controller {
         }
 
         $members = array_keys($opers);
+        $k = array_search('NONE', $members);
+        if ($k !== false) {
+            unset($members[$k]);
+        }
+
         $result = App::Db()->createCommand()->select('AVG(`ringtime`) AS `avg`')
                 ->select('`memberId` AS `id`')
                 ->from('call_status')
@@ -314,7 +339,7 @@ class OperatorController extends Controller {
             $query = "SELECT DISTINCT memberId FROM call_status WHERE timestamp >= '$from' AND timestamp < '$to' AND memberId = '$_GET[oper]';";
         else
             $query = "SELECT DISTINCT memberId FROM call_status WHERE timestamp >= '$from' AND timestamp < '$to' AND memberId < 2000 AND memberId <> 'NONE';";
-        $res = App::Db()->query($query);// mysql_query($query) or die(mysql_error());
+        $res = App::Db()->query($query); // mysql_query($query) or die(mysql_error());
         while ($row = $res->etch_array()) {
             $action_list = "";
             $total = 0;
@@ -596,7 +621,11 @@ class OperatorController extends Controller {
             );
         }
         $opers_list = array_keys($opers);
-
+        $k = array_search('NONE', $opers_list);
+        Log::dump($k);
+        if ($k !== false) {
+            unset($opers_list[$k]);
+        }
         //
         // Выборга "Входящие"
         //

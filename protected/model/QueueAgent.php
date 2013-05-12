@@ -52,6 +52,11 @@ class QueueAgent extends ACDataObject {
         return $result;
     }
 
+    public static function getQueueAgents() {
+        $QueueAgent = self::_init();
+        return $QueueAgent;
+    }
+
     /**
      * Возвращает имя оператора
      * @param int $id

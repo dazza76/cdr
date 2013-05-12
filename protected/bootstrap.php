@@ -28,18 +28,19 @@ defined('BR') or define('BR', '<br />' . PHP_EOL);
 // ----------------------------------------------------------------------------
 defined('ROOT') or define('ROOT', dirname(dirname(__FILE__)) . DS);
 defined('APPPATH') or define('APPPATH', dirname(__FILE__) . DS);
-defined('WEBROOT') or define('WEBROOT', ROOT . 'webroot' . DS);
 defined('VIEWDIR') or define('VIEWDIR', APPPATH . 'view' . DS);
 // ----------------------------------------------------------------------------
 
-require_once 'ac/base/ACObject.php';
-require_once 'Application.php';
+require_once 'ac/AC.php';
+require_once __DIR__.'/autoload.php';
+
+//require_once 'ac/base/ACObject.php';
+//require_once 'Application.php';
 
 // Установка систкмной конфигурации
 // ---------------------------------------------------------------------------
 $_config_system           = @include_once 'config/system.php';
 App::Config()->mergeRecursive($_config_system);
-App::Config()->supervisor = @include_once 'config/supervisor.php';
 $_config_file             = @$_config_system['config'];
 if (@$config['config']) {
     $_config_file = $config['config'];
@@ -57,7 +58,7 @@ if (is_array($config)) {
 // шапка страниц
 App::Config()->pages = @include_once 'system/pages.php';
 // версия файлов css / js (для кеширования браузером)
-App::Config()->v     = 13;
+App::Config()->v     = 14;
 
 
 defined('DEBUG') or define('DEBUG', (App::Config()->debug) ? 1 : false);
@@ -75,10 +76,10 @@ if (!App::Config()->enable_ie) {
 }
 // ----------------------------------------------------------------------------
 
-require_once 'ac/AC.php';
-require_once 'ac/base/ACLoader.php';
+//require_once 'ac/AC.php';
+//require_once 'ac/base/ACLoader.php';
 
-ACLoader::init();
+//ACLoader::init();
 
 Log::enable(DEBUG);
 Log::trace('bootstrap');

@@ -101,11 +101,11 @@
     <table class="grid">
         <thead>
             <tr>
-                <th style="width: 150px;" <?php echo Utils::sortable("calldate", $this->sort, $this->desc); ?> >Дата</th>
-                <th style="width: 150px;" <?php echo Utils::sortable("src", $this->sort, $this->desc); ?> >Источник</th>
-                <th style="width: 135px;" >Запись</th>
-                <th style="width: 70px;"  <?php echo Utils::sortable("duration", $this->sort, $this->desc); ?> >Время</th>
-                <th style=""              <?php echo Utils::sortable("comment", $this->sort, $this->desc); ?> >Комментарий</th>
+                <td class="head"  style="width: 150px;" <?php echo Utils::sortable("calldate", $this->sort, $this->desc); ?> >Дата</td>
+                <td class="head"  style="width: 150px;" <?php echo Utils::sortable("src", $this->sort, $this->desc); ?> >Источник</td>
+                <td class="head"  style="width: 135px;" >Запись</td>
+                <td class="head"  style="width: 70px;"  <?php echo Utils::sortable("duration", $this->sort, $this->desc); ?> >Время</td>
+                <td class="head"  style=""              <?php echo Utils::sortable("comment", $this->sort, $this->desc); ?> >Комментарий</td>
             </tr>
         </thead>
         <tbody>

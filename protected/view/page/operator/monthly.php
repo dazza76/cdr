@@ -48,16 +48,16 @@
     <table class="grid" >
         <thead>
             <tr >
-                <th style=""             >Оператор</th>
-                <th style="width: 150px;">Входящие, шт.</th>
-                <th style="width: 150px;">Исходящие, шт.</th>
-                <th style="width: 150px;">Всего вызовов, шт.</th>
-                <th style="width: 150px;">Простой, ЧЧ:ММ:СС</th>
-                <th style="width: 150px;">Обработка, ЧЧ:ММ:СС</th>
-                <th style="width: 150px;">Перерыв, ЧЧ:ММ:СС</th>
-                <th style="width: 150px;">Долгое поднятие трубки, шт.</th>
-                <th style="width: 150px;">Ср. вр. разговора, сек.</th>
-                <th style="width: 150px;">Ср. вр. подн. трубки, сек.</th>
+                <td class="head"  style=""             >Оператор</td>
+                <td class="head"  style="width: 150px;">Входящие, шт.</td>
+                <td class="head"  style="width: 150px;">Исходящие, шт.</td>
+                <td class="head"  style="width: 150px;">Всего вызовов, шт.</td>
+                <td class="head"  style="width: 150px;">Простой, ЧЧ:ММ:СС</td>
+                <td class="head"  style="width: 150px;">Обработка, ЧЧ:ММ:СС</td>
+                <td class="head"  style="width: 150px;">Перерыв, ЧЧ:ММ:СС</td>
+                <td class="head"  style="width: 150px;">Долгое поднятие трубки, шт.</td>
+                <td class="head"  style="width: 150px;">Ср. вр. разговора, сек.</td>
+                <td class="head"  style="width: 150px;">Ср. вр. подн. трубки, сек.</td>
             </tr>
         </thead>
         <tbody>

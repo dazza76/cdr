@@ -27,16 +27,23 @@ class SupervisorController extends Controller {
     );
     public $queues;
 
+
+
+    function __construct() {
+        App::Config('supervisor');
+
+        parent::__construct();
+    }
+
     public function init($params = null) {
+
         parent::init($params);
 
-        if (!empty($_COOKIE['supervisor_update'])) {
-            App::Config()->supervisor['dynamic_update'] = $_COOKIE['supervisor_update'];
-        }
-        if (!empty($_COOKIE['supervisor_interval'])) {
-            App::Config()->supervisor['update_interval'] = $_COOKIE['supervisor_interval'];
+        if (!empty($_COOKIE['supervisor_agentid'])) {
+            App::Config()->supervisor['agentid'] = explode(",", $_COOKIE['supervisor_agentid']);
         }
 
+        Log::dump(App::Config()->supervisor, 'supervisor');
 
         if ($this->export && $_GET['export']) {
             $section = "section" . $this->getSection();
@@ -95,6 +102,8 @@ class SupervisorController extends Controller {
         $export->send('supervisor_analogue');
         exit();
     }
+
+    /////////////////////////////////////////////////////////////////////////////////
 
     /**
      * Очереди
@@ -224,6 +233,8 @@ class SupervisorController extends Controller {
         Log::dump($result, "dataAnalogue");
     }
 
+    ////////////////////////////////////////////////////////////////////////////
+
     /**
      * Выполнения shell команды asterisk
      * @param array $params
@@ -271,13 +282,14 @@ class SupervisorController extends Controller {
 
         $shell_arr = explode("\n", $shell_res);
         foreach ($shell_arr as $row) {
+            // TODO: Извлечение ID опертора из шел ответа
             $agentid = substr(trim($row), 0, 4);
-            // Log::trace('calc agentid: ' . $agentid);
-
+            Log::trace('calc agentid: ' . $agentid);
             if (!is_numeric($agentid)) {
-                // Log::trace('---> no numeric > continue');
+                Log::trace('---> no numeric > continue');
                 continue;
             }
+
             if (strpos($row, "paused") !== false) {
                 // Log::trace('---> paused');
                 $result = App::Db()->createCommand()->select('state')

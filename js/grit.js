@@ -10,7 +10,7 @@ $(document).ready(function() {
     $(".grid tr.b-head").each(function() {
         var h = $(this).parents('table').attr('htable');
         var $thead = $('table[htable=' + h + ']');
-        
+
         $thead.width($(this).parents('table').width() + 2);
 
         $(".grid tr.b-head th").each(function() {
@@ -20,6 +20,28 @@ $(document).ready(function() {
             $thead.find("th").eq(index).width(w);
         });
     });
+
+
+
+    $(".grid").each(function() {
+        var DT = 15;
+        var table = this;
+
+        var count = Math.floor( $(table).find("tbody tr").length / DT);
+
+        var htr = $(table).find("thead tr").clone();
+
+        for(var i = 1; i < count; i++) {
+            $(table).find("tbody tr").eq(DT * i + i).after($(htr).clone());
+        }
+
+        $(table).find("tbody tr.thead").each(function(){
+            console.log($(this).index);
+        });
+    });
+
+
+
 
 //    if ($(".grid tr.b-head").length) {
 //        var $thead = $(".grid thead").eq(0);

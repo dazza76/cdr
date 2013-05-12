@@ -21,7 +21,8 @@ class AutoinformController extends Controller {
         'type' => array('controller', 'parseType'),
         'result' => array('controller', 'parseResult'),
         'phone' => 1,
-        'retries' => array('controller', 'parseRetries')
+        'retries' => array('controller', 'parseRetries'),
+        'cutnum' => array('parseId')
     );
 
     /** @var int */
@@ -34,7 +35,7 @@ class AutoinformController extends Controller {
     private $_result;
 
     public function __construct() {
-        App::Config()->autoinform = @include APPPATH . 'config/autoinform.php';
+        App::Config('autoinform');//->autoinform = @include APPPATH . 'config/autoinform.php';
 
         parent::__construct();
 
@@ -54,6 +55,59 @@ class AutoinformController extends Controller {
 
         $section = 'section' . $this->section;
         $this->$section();
+
+//        if ($this->export && $_GET['export']) {
+//            $this->export();
+//        } else {
+//            if ($this->section == 'list') {
+//                $this->viewMain('page/page-autoinform.php');
+//            }
+//        }
+    }
+
+    public function export() {
+        $data = array(
+            array(
+                'Принято',
+                $this->getComplete(0, 15),
+                $this->getComplete(15, 30),
+                $this->getComplete(30, 45),
+                $this->getComplete(45, 60),
+                $this->getComplete(60, 90),
+                $this->getComplete(90, 120),
+                $this->getComplete(120, 180),
+                $this->getComplete(180, 32768),
+                $this->getAvgComplete(),
+            ),
+            array(
+                'Потеряно',
+                $this->getAbandoned(0, 15),
+                $this->getAbandoned(15, 30),
+                $this->getAbandoned(30, 45),
+                $this->getAbandoned(45, 60),
+                $this->getAbandoned(60, 90),
+                $this->getAbandoned(90, 120),
+                $this->getAbandoned(120, 180),
+                $this->getAbandoned(180, 32768),
+                $this->getAvgAbandoned(),
+            )
+        );
+
+        $export = new Export($data);
+        $export->thead = array(
+            'Время ожидания',
+            '0 - 15',
+            '15 - 30',
+            '30 - 45',
+            '45 - 60',
+            '60 - 90',
+            '90 - 120',
+            '120 - 180',
+            '180 - +',
+            'Среднее',
+        );
+        $export->send('timeman');
+        exit();
     }
 
     /**
@@ -85,14 +139,13 @@ class AutoinformController extends Controller {
         }
         $this->_query($query->toString());
 
-//        Log::dump($this->fetchArray(), "result");
-
         $this->viewMain('page/page-autoinform.php');
+
     }
 
     public function iniType() {
         $type = @include APPPATH . 'config/autoinform_callback.php';
-        Log::dump($type , "<font color=\"#cc0000\">парамет \"<i>Тип вызова</i>\" загружен из файла</font>");
+        Log::dump($type, "<font color=\"#cc0000\">парамет \"<i>Тип вызова</i>\" загружен из файла</font>");
         App::Config()->autoinform['type'] = $type;
     }
 

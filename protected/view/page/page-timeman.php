@@ -64,16 +64,16 @@
     <table id="result" class="grid" >
         <thead height="50px">
             <tr>
-                <th align=center width="150px">Время ожидания</th>
-                <th>0 - 15</th>
-                <th>15 - 30</th>
-                <th>30 - 45</th>
-                <th>45 - 60</th>
-                <th>60 - 90</th>
-                <th>90 - 120</th>
-                <th>120 - 180</th>
-                <th>180 - +</th>
-                <th align=center width=100px>Среднее</th>
+                <td class="head"  align=center width="150px">Время ожидания</td>
+                <td class="head" >0 - 15</td>
+                <td class="head" >15 - 30</td>
+                <td class="head" >30 - 45</td>
+                <td class="head" >45 - 60</td>
+                <td class="head" >60 - 90</td>
+                <td class="head" >90 - 120</td>
+                <td class="head" >120 - 180</td>
+                <td class="head" >180 - +</td>
+                <td class="head"  align=center width=100px>Среднее</td>
             </tr>
         </thead>
         <tbody>

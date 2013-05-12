@@ -5,43 +5,6 @@
  * @author     Tyurin D. <fobia3d@gmail.com>
  * @copyright  (c) 2013, AC
  */
-
-
-/*
-  `name` varchar(128) NOT NULL,
-  `musiconhold` varchar(128) DEFAULT NULL,
-  `announce` varchar(128) DEFAULT NULL,
-  `context` varchar(128) DEFAULT NULL,
-  `timeout` int(11) DEFAULT NULL,
-  `monitor_join` tinyint(1) DEFAULT NULL,
-  `monitor_format` varchar(128) DEFAULT NULL,
-  `queue_youarenext` varchar(128) DEFAULT NULL,
-  `queue_thereare` varchar(128) DEFAULT NULL,
-  `queue_callswaiting` varchar(128) DEFAULT NULL,
-  `queue_holdtime` varchar(128) DEFAULT NULL,
-  `queue_minutes` varchar(128) DEFAULT NULL,
-  `queue_seconds` varchar(128) DEFAULT NULL,
-  `queue_lessthan` varchar(128) DEFAULT NULL,
-  `queue_thankyou` varchar(128) DEFAULT NULL,
-  `queue_reporthold` varchar(128) DEFAULT NULL,
-  `announce_frequency` int(11) DEFAULT NULL,
-  `announce_round_seconds` int(11) DEFAULT NULL,
-  `announce_holdtime` varchar(128) DEFAULT NULL,
-  `retry` int(11) DEFAULT NULL,
-  `wrapuptime` int(11) DEFAULT NULL,
-  `maxlen` int(11) DEFAULT NULL,
-  `servicelevel` int(11) DEFAULT NULL,
-  `strategy` varchar(128) DEFAULT NULL,
-  `joinempty` varchar(128) DEFAULT NULL,
-  `leavewhenempty` varchar(128) DEFAULT NULL,
-  `eventmemberstatus` tinyint(1) DEFAULT NULL,
-  `eventwhencalled` tinyint(1) DEFAULT NULL,
-  `reportholdtime` tinyint(1) DEFAULT NULL,
-  `memberdelay` int(11) DEFAULT NULL,
-  `weight` int(11) DEFAULT NULL,
-  `timeoutrestart` tinyint(1) DEFAULT NULL,
-
-*/
 ?>
 <script type="text/javascript">
     $(document).ready(function() {

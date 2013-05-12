@@ -29,6 +29,17 @@
                             </div>
                         </div>
 
+                        <div class="filter fl_l sep">
+                            <div class="label">Действие</div>
+                            <div class="labeled">
+                                <select name="oaction" size="1"  default="<?php echo $this->oaction; ?>">
+                                    <option value="0">все</option>
+                                    <option value="1">вызовы</option>
+                                    <option value="2">действия</option>
+                                </select>
+                            </div>
+                        </div>
+
                         <div class="filter fl_l">
                             <div class="labeled">
                                 <input type="submit" name="search" id="button-search" class="button button-search" class="button" value="Показать" />
@@ -45,11 +56,11 @@
                     <table class="grid" style="width: 900px;">
                         <thead>
                             <tr>
-                                <th style="width: 150px;">Дата - Время</th>
-                                <th style="width: 150px;">Рабочее место</th>
-                                <th style="">Оператор</th>
-                                <th style="width: 200px;">Действие</th>
-                                <th style="width: 150px;"> </th>
+                                <td class="head"  style="width: 150px;">Дата - Время</td>
+                                <td class="head"  style="width: 150px;">Рабочее место</td>
+                                <td class="head"  style="">Оператор</td>
+                                <td class="head"  style="width: 200px;">Действие</td>
+                                <td class="head"  style="width: 150px;"> </td>
                             </tr>
                         </thead>
                         <tbody>

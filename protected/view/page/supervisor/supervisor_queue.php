@@ -7,26 +7,28 @@
  * @author     Tyurin D. <fobia3d@gmail.com>
  */
 
-include 'filters.php';
-
+// include 'filters.php';
 
 ?>
-
-
+<script type="text/javascript">
+    var pageOptions = {
+        section: 'queue'
+    };
+</script>
 <div class="clear clear_fix">
     <table id="queuesData" class="grid" style="width: 1200px;">
         <thead>
             <tr height="30px">
-                <th align="center">Очередь</th>
-                <th align="center" style="width: 100px;">Операторы</th>
-                <th align="center" style="width: 100px;">Ожидают</th>
-                <th align="center" style="width: 100px;">Дольше всего ожидает</th>
-                <th align="center" style="width: 100px;">Обслужено</th>
-                <th align="center" style="width: 100px;">Ср. время разговора</th>
-                <th align="center" style="width: 100px;">Ср. время ожидание</th>
-                <th align="center" style="width: 100px;">Потеряно</th>
-                <th align="center" style="width: 100px;">Ср. ожидание потеряных</th>
-                <th align="center" style="width: 100px;">SERVICE<br>LEVEL (60)</th>
+                <td class="head"  align="center">Очередь</td>
+                <td class="head"  align="center" style="width: 100px;">Операторы</td>
+                <td class="head"  align="center" style="width: 100px;">Ожидают</td>
+                <td class="head"  align="center" style="width: 100px;">Дольше всего ожидает</td>
+                <td class="head"  align="center" style="width: 100px;">Обслужено</td>
+                <td class="head"  align="center" style="width: 100px;">Ср. время разговора</td>
+                <td class="head"  align="center" style="width: 100px;">Ср. время ожидание</td>
+                <td class="head"  align="center" style="width: 100px;">Потеряно</td>
+                <td class="head"  align="center" style="width: 100px;">Ср. ожидание потеряных</td>
+                <td class="head"  align="center" style="width: 100px;">SERVICE<br>LEVEL (60)</td>
             </tr>
         </thead>
         <tbody>

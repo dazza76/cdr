@@ -34,7 +34,7 @@ class SettingsController extends Controller {
         $this->viewMain();
     }
 
-    public function sectionOperator() {
+    public function sectionOperator($id = null) {
         if ($_POST['action'] == 'add') {
             $this->actionOperatorAdd();
             App::refresh();
@@ -51,8 +51,20 @@ class SettingsController extends Controller {
             exit();
         }
 
-        if ($_GET['id']) {
-            return $this->sectionOperatorEdit();
+        if ($id == null) {
+            $id = $_GET['id'];
+        }
+        $id = (int) $id;
+
+        if ($id > 0) {
+            $this->queueAgent = App::Db()->createCommand()
+                    ->select()
+                    ->from(QueueAgent::TABLE)
+                    ->addWhere('agentid', $id)
+                    ->query()
+                    ->getFetchObjects('QueueAgent');
+            $this->view('page/settings/operator_edit.php');
+            return;
         }
 
         $queue = FiltersValue::parseQueue($this->queue);
@@ -84,25 +96,7 @@ class SettingsController extends Controller {
         $this->view('page/settings/operator.php');
     }
 
-    public function sectionOperatorEdit($id = null) {
-        if ($id == null) {
-            $id = $_GET['id'];
-        }
-        $id = (int) $id;
-
-        $this->queueAgent = App::Db()->createCommand()
-                ->select()
-                ->from(QueueAgent::TABLE)
-                ->addWhere('agentid', $id)
-                ->query()
-                ->getFetchObjects('QueueAgent');
-
-        $this->view('page/settings/operator_edit.php');
-    }
-
     public function sectionQueue() {
-        // return;
-
         if (in_array($_POST['action'], array('add', 'delete', 'edit'))) {
             $this->actionQueue($_POST);
             App::location($this->getPage(), array('section' => $this->getSection(), 'r' => rand()));
@@ -122,7 +116,8 @@ class SettingsController extends Controller {
 
         $result = App::Db()->createCommand()->select()
                 ->from('queue_member_table')
-                ->query(); //->getFetchAssocs();
+                ->query();
+                //->getFetchAssocs();
         $this->dataQueues = $result;
 
         $this->view('page/settings/queue.php');
@@ -133,6 +128,57 @@ class SettingsController extends Controller {
     }
 
     public function sectionAnswering() {
+        App::Config('autoinform');//->autoinform = @include APPPATH . 'config/autoinform.php';
+
+        // Log::dump(App::Config());
+
+        $filename = App::Config()->autoinform['file_conf'];
+        if (!file_exists($filename)) {
+            // Log::trace("Конфигурационный файл не найден");
+            die("Конфигурационный файл не найден");
+        }
+
+
+        $this->options = array();
+        foreach (file($filename) as $row) {
+            list($key, $value) = explode("=", $row);
+            $this->options[$key] = trim($value);
+        }
+        Log::dump($this->options, 'File(parse)');
+
+
+        if ($_POST['action'] == 'edit') {
+            // $this->actionOperatorEdit();
+            // App::location($this->getPage(), array('section' => $this->getSection()));
+            // exit();
+            $options = $_POST;
+            unset($options['action']);
+
+            $this->options = array_merge($this->options, $options);
+            Log::dump($this->options, 'merge');
+
+            $context = "";
+            foreach ($this->options as $key => $value) {
+                $context .= $key."=".trim($value).PHP_EOL;
+            }
+
+            if (file_put_contents($filename, $context) === false) {
+                die("Не удалось сохранить");
+            }
+            App::location($this->getPage(), array('section' => $this->getSection()));
+            exit();
+        }
+
+
+
+        $this->view('page/settings/answering.php');
+    }
+
+    public function sectionSchedule() {
+
+    }
+
+    public function sectionPause() {
 
     }
 
@@ -180,14 +226,6 @@ class SettingsController extends Controller {
         }
 
         return 0;
-    }
-
-    public function sectionSchedule() {
-
-    }
-
-    public function sectionPause() {
-
     }
 
     public function actionOperatorEdit($params = null) {

@@ -1,5 +1,5 @@
 <?php
-include 'filters.php';
+include 'dialog-operators.php';
 $max = 1;
 foreach ($this->queueChart as $value) {
     $max += $value;
@@ -7,7 +7,24 @@ foreach ($this->queueChart as $value) {
 if ($max < 10) {
     $max = 10;
 }
+
+
+
+
 ?>
+
+<div class="filters clear_fix">
+    <div class="filter fl_l">
+        <div class="labeled">
+            <span>
+                <input type="hidden" id="export_type" name="export" value="1" />
+                <a id="button-operators" href="#" class="icon icon-group puinter">Операторы</a>
+            </span>
+        </div>
+    </div>
+    <div class="clear clear_fix bigblock"> </div>
+</div>
+
 <script type="text/javascript">
     var chart;
     var chartOptions = {
@@ -59,16 +76,20 @@ if ($max < 10) {
         }
         chart = new Highcharts.Chart(chartOptions);
     });
+
+    var pageOptions = {
+        section: 'operator'
+    };
 </script>
 
 <div class="clear clear_fix fl_l" style="width: 600px">
     <table id="queueAgents" class="grid">
         <thead>
             <tr>
-                <th align="center" style="width: 250px">Операторы</th>
-                <th align="center" style="width: 100px">Статус</th>
-                <th align="center" style="width: 80px">Время</th>
-                <th align="center">Очередь</th>
+                <td class="head"  align="center" style="width: 250px">Операторы</td>
+                <td class="head"  align="center" style="width: 100px">Статус</td>
+                <td class="head"  align="center" style="width: 80px">Время</td>
+                <td class="head"  align="center">Очередь</td>
             </tr>
         </thead>
         <tbody>
@@ -84,11 +105,14 @@ if ($max < 10) {
     </table>
 </div>
 
+
+
 <div class="mediumblock fl_l" style="width: 400px; margin-left: 25px;">
     <div id="highcharts-wrap">
         <div id="queueChart" style="height: 250px;"></div>
     </div>
 
+    <!-- Табличка саммари -->
     <div class="bigblock" >
         <h4>Данные за последние 30 мин</h4>
         <table id="queuesData" class="grid">

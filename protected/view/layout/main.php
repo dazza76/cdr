@@ -16,7 +16,7 @@ $v = (int) App::Config()->v;
         <script src="lib/jq/jquery-1.8.2.js"></script>
         <script src="lib/jq/jquery-ui-1.9.2.js"></script>
         <script src="lib/jq/jquery.ui.datepicker-ru.js"></script>
-        <script src="lib/jq/jquery.ui.timepicker.addon-0.7.3.js"></script>
+        <script src="lib/jq/jquery.ui.timepicker.addon.js"></script>
         <script src="lib/jq/jquery.ui.dropdownchecklist.js"></script>
         <script src="lib/jq/jquery.cookie.js"></script>
 
@@ -42,7 +42,7 @@ $v = (int) App::Config()->v;
 
     <body class="fixed-header">
         <div id="wrapper" >
-            <?php include 'header.php'; ?>
+            <?php include 'header-2.php'; ?>
 
             <div id="middle" class="">
                 <?php echo $this->content; ?>

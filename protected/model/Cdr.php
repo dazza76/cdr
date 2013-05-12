@@ -164,10 +164,12 @@ class Cdr extends ACDataObject {
      * @return string
      */
     public function getFile() {
+        $autoinform = in_array($this->dcontext, array('autoinform', 'outgoing', 'dialout'));
+
         if ($this->file_exists == 2) {
-            return self::monitorFile($this->uniqueid, $this->calldate);
+            return self::audioFile($this->uniqueid, $this->calldate, $autoinform);
         } else {
-            return self::monitorFile($this->uniqueid);
+            return self::audioFile($this->uniqueid, null, $autoinform);
         }
     }
 
@@ -176,8 +178,13 @@ class Cdr extends ACDataObject {
      * @param string $date  искать в папках по датам
      * @return string
      */
-    public static function monitorDir($date = null) {
-        $dir = App::Config()->cdr->monitor_dir . "/";
+    public static function audioDir($date = null, $autoinform = false) {
+        if ($autoinform) {
+            $dir = App::Config()->cdr->autoinform_dir . "/";
+        } else {
+            $dir = App::Config()->cdr->monitor_dir . "/";
+        }
+
         if ($date == null) {
             return $dir;
         }
@@ -191,7 +198,9 @@ class Cdr extends ACDataObject {
      * @param string $date  искать в папках по датам
      * @return string
      */
-    public static function monitorFile($uniqueid, $date = null) {
-        return self::monitorDir($date) . $uniqueid . '.' . App::Config()->cdr->file_format;
+    public static function audioFile($uniqueid, $date = null, $autoinform = false) {
+        return self::audioDir($date, $autoinform) . $uniqueid . '.' . App::Config()->cdr->file_format;
     }
+
+
 }

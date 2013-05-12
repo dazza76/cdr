@@ -43,7 +43,7 @@ include 'dialog-operator.php';
             Всего операторов: <?php echo $this->count; ?>
         </div>
         <?php echo Utils::pagenator($this->count, $this->offset, 20); ?>
-        <div class="fl_r" style="margin-right:15px;"><a onclick="$('#dialog-operator-add').dialog('open');" class="icon icon-add">добавить</a></div>
+        <div class="fl_r" style="margin-right:15px;"><a onclick="$('#dialog-operator-add').dialog('open');" class="icon icon-add abut">добавить</a></div>
         <div class="pg-pages fl_r">  </div>
     </div>
 </div>
@@ -53,10 +53,10 @@ include 'dialog-operator.php';
     <table class="grid" style="width: 660px;">
         <thead>
             <tr >
-                <th> ФИО</th>
-                <th style="width: 100px;"> Телефон</th>
-                <th style="width: 70px;" > Изменить</th>
-                <th style="width: 70px;" > Удалить</th>
+                <td class="head" > ФИО</td>
+                <td class="head"  style="width: 100px;"> Телефон</td>
+                <td class="head"  style="width: 70px;" > Изменить</td>
+                <td class="head"  style="width: 70px;" > Удалить</td>
             </tr>
         </thead>
         <tbody>

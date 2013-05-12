@@ -75,6 +75,8 @@ class CdrController extends Controller {
     // --------------------------------------------------------------
 
     public function __construct() {
+        App::Config('cdr');//->cdr = @include APPPATH . 'config/cdr.php';
+
         parent::__construct();
 
         $from = new ACDateTime();
@@ -164,7 +166,7 @@ class CdrController extends Controller {
         }
 
 
-        $command = $this->_db->createCommand()->select('id, calldate, uniqueid')
+        $command = $this->_db->createCommand()->select('id, calldate, uniqueid, dcontext')
                 ->from(Cdr::TABLE)
                 ->where(' `file_exists` IS NULL ')
                 ->limit($limit_scan);
@@ -178,18 +180,22 @@ class CdrController extends Controller {
 
         $rows = $command->query()->getFetchAssocs();
 
+//        'autoinform', 'outgoing', 'dialout'
+
         // $dir        = Cdr::monitorDir(); // $_SERVER['DOCUMENT_ROOT'] . App::Config()->cdr->monitor_dir . "/";
         $file_yes_1 = array();
         $file_yes_2 = array();
         $file_no = array();
         foreach ($rows as $row) {
-            $file = $_SERVER['DOCUMENT_ROOT'] . Cdr::monitorFile($row['uniqueid']);
+//            $autoinform = $row['dcontext']
+            $autoinform = in_array($row['dcontext'], array('autoinform', 'outgoing', 'dialout'));
+            $file = $_SERVER['DOCUMENT_ROOT'] . Cdr::audioFile($row['uniqueid'], null, $autoinform);
             if (file_exists($file)) {
                 $file_yes_1[] = $row['id'];
                 continue;
             }
 
-            $file = $_SERVER['DOCUMENT_ROOT'] . Cdr::monitorFile($row['uniqueid'], $row['calldate']);
+            $file = $_SERVER['DOCUMENT_ROOT'] . Cdr::audioFile($row['uniqueid'], $row['calldate'], $autoinform);
             if (file_exists($file)) {
                 $file_yes_2[] = $row['id'];
                 continue;

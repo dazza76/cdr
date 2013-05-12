@@ -1,12 +1,12 @@
 $(document).ready(function() {
-    supervisor.section = $('#input-section').val();
+    Supervisor.section = $('#input-section').val();
 
     $('#input-dynamic_update').change(function() {
-        supervisor.init();
+        Supervisor.init();
     });
 
     $("#input-update_interval").change(function() {
-        supervisor.init();
+        Supervisor.init();
     }).spinner({
         spin: function(event, ui) {
             if (ui.value < 0) {
@@ -14,12 +14,12 @@ $(document).ready(function() {
                 return false;
             }
             $(this).spinner("value", ui.value);
-            supervisor.init();
+            Supervisor.init();
             return false;
         }
     });
 
-    supervisor.init();
+    Supervisor.init();
 });
 
 function starttick() {
@@ -56,50 +56,67 @@ function tick() {
     });
 }
 
-var supervisor = {
+
+
+
+var Supervisor = {
     _timeoutId: false,
-    onUpdate: 0,
-    interval: 1,
+    onUpdate: 1,
+    interval: 2,
     section: null,
     init: function() {
-        var self = supervisor;
+        var self = Supervisor;
 
-        self.onUpdate = ($('#input-dynamic_update').attr('checked')) ? 1 : 0;
-        self.interval = $("#input-update_interval").val();
+        if (typeof window.pageOptions !== 'undefined') {
+            $.extend(self, pageOptions);
+        }
+
+        // self.onUpdate = ($('#input-dynamic_update').attr('checked')) ? 1 : 0;
+        // self.interval = $("#input-update_interval").val();
+        // self. = $("#input-update_interval").val();
 
         console.log('init section: ' + self.section + '; on:' + self.onUpdate + '; interval: ' + self.interval);
 
-        $.cookie('supervisor_update', self.onUpdate);
-        $.cookie('supervisor_interval', self.interval);
+        // $.cookie('Supervisor_update', self.onUpdate);
+        // $.cookie('Supervisor_interval', self.interval);
 
         self.startUpdate();
     },
 
+    /**
+     * «апустить механизм автообнавлени€
+     */
     startUpdate: function() {
-        var self = supervisor;
+        var self = Supervisor;
         self.stopUpdate();
 
         if (!self.onUpdate) {
-            return;
+            return ;
         }
 
         var interval = parseInt(self.interval) * 1000;
         if (interval > 0) {
             // console.log('start interval ' + interval);
             self._timeoutId = setTimeout(function() {
-                self.actUpdate();
+                self.onUpdateHandler();
             }, interval);
         }
+
+        // return 'start';
     },
+
+    /**
+     * ќстановить механизм автообнавлени€
+     */
     stopUpdate: function() {
-        var self = supervisor;
+        var self = Supervisor;
         if (self._timeoutId !== false) {
             clearTimeout(self._timeoutId);
         }
         self._timeoutId = false;
     },
-    actUpdate: function() {
-        var self = supervisor;
+    onUpdateHandler: function() {
+        var self = Supervisor;
 
         $.ajax({
             type: "POST",
@@ -108,10 +125,10 @@ var supervisor = {
                 act: 'update'
             }
         }).done(function(result) {
-            //console.log("[API] supervisor::update> " + result);
+            //console.log("[API] Supervisor::update> " + result);
             try {
                 var response = JSON.parse(result).response;
-                console.log(response);
+                // console.log(response);
                 if (self.section == 'queue') {
                     self._updateSectionQueue(response.queuesData);
                 }
@@ -121,12 +138,12 @@ var supervisor = {
             } catch (e) {
                 console.log(e);
             }
+
+            self.startUpdate();
         }).fail(function() {
             console.log("CONNECT ERROR");
             // window.alert('error save comment');
         });
-
-        self.startUpdate();
     },
     _updateSectionQueue: function(queuesData) {
         var $tabel = $('#queuesData tbody');
