@@ -9,8 +9,8 @@
  */
 
 //
-$dir    = App::Config()->cdr->monitor_dir . '/';
-$format = App::Config()->cdr->file_format;
+$dir    = App::Config()->cdr['monitor_dir'] . '/';
+$format = App::Config()->cdr['file_format'];
 ?>
 <script type="text/javascript">
     var rec = {

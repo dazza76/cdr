@@ -2,16 +2,9 @@
 <project name="cdr" default="compile" basedir=".">
     <property file="${basedir}/build/project.properties" />
 
-    <target name="backup" description="Backup project">
-        <exec executable="php.bat">
-            <arg path="${project.bin.dir}/staticfile.php" />
-        </exec>
-    </target>
-
-    <target name="install" description="Install project for backup version">
-        <exec executable="php-test.bat">
-            <arg value="--output" />
-            <arg path="${t}" />
+    <target name="backup">
+        <exec executable="bash.bat">
+            <arg path="${build.bin}/backup" />
         </exec>
     </target>
 
@@ -20,6 +13,10 @@
             <arg value="--output" />
             <arg path="protected/autoload.php" />
             <arg path="protected" />
+        </exec>
+
+        <exec executable="php.bat">
+            <arg path="${build.bin}/staticfile.php" />
         </exec>
     </target>
 

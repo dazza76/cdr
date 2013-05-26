@@ -1,5 +1,4 @@
-<?php
-
+﻿<?php
 /**
  * SettingsController class  - SettingsController.php file
  *
@@ -23,17 +22,25 @@ class SettingsController extends Controller {
      * Формирет страницу
      */
     public function index() {
-        $section = $this->_ensureSection($_GET['section']);
+        $section        = $this->_ensureSection($_GET['section']);
         $this->_section = $section;
 
 
         $action = 'section' . $section;
+
         $this->$action();
 
-
-        $this->viewMain();
+        if ($this->_actType === self::TYPE_PAGE) {
+            $this->viewMain();
+        }
     }
+    // ---------------------------------------------
+    // ACTION
+    // ---------------------------------------------
 
+    /**
+     * Операторы
+     */
     public function sectionOperator($id = null) {
         if ($_POST['action'] == 'add') {
             $this->actionOperatorAdd();
@@ -47,7 +54,8 @@ class SettingsController extends Controller {
         }
         if ($_POST['action'] == 'edit') {
             $this->actionOperatorEdit();
-            App::location($this->getPage(), array('section' => $this->getSection()));
+            App::location($this->getPage(),
+                          array('section' => $this->getSection()));
             exit();
         }
 
@@ -89,51 +97,118 @@ class SettingsController extends Controller {
         }
 
 
-        $result = $command->query();
-        $this->count = $result->foundRows;
-        $this->queueAgent =        $result->getFetchObjects('QueueAgent');
+        $result           = $command->query();
+        $this->count      = $result->foundRows;
+        $this->queueAgent = $result->getFetchObjects('QueueAgent');
 
         $this->view('page/settings/operator.php');
     }
 
+    /**
+     * Очереди
+     */
     public function sectionQueue() {
-        if (in_array($_POST['action'], array('add', 'delete', 'edit'))) {
-            $this->actionQueue($_POST);
-            App::location($this->getPage(), array('section' => $this->getSection(), 'r' => rand()));
+        // Action: create
+        if ($_POST['action'] == 'create') {
+            $fields = $_POST;
+            unset($fields['action']);
+
+            log::dump($fields, 'fields');
+
+            App::Db()->createCommand()->insert()->into('queue_table')->ignore()
+                    ->values($fields)
+                    ->query();
+
+            if (App::Db()->success) {
+                App::location($this->getPage(),
+                              array('section' => $this->getSection()));
+                App::Response()->send();
+                ac_dump(App::Response());
+                exit();
+            }
+            return;
         }
 
-        if ($_GET['uniqueid']) {
-            $uniqueid = $_GET['uniqueid'];
-            $result = App::Db()->createCommand()->select()
-                    ->from('queue_member_table')
-                    ->addWhere('uniqueid', $uniqueid)
-                    ->query();
-            $this->dataQueues = $result; //->getFetchAssocs();
 
+        // View: edit
+        if ($_GET['name']) {
+            $name = (int) $_GET['name'];
             $this->view('page/settings/queue_edit.php');
             return;
         }
 
-        $result = App::Db()->createCommand()->select()
-                ->from('queue_member_table')
-                ->query();
-                //->getFetchAssocs();
-        $this->dataQueues = $result;
+        // View: create
+        if ($_GET['tab'] == 'create') {
+            $this->view('page/settings/queue_edit.php');
+            return;
+        }
 
+        // View: list
+        $result = App::Db()->createCommand()->select()->from('queue_table')
+                ->limit(20)
+                ->query();
+
+        $this->dataQueues = $result;
         $this->view('page/settings/queue.php');
     }
 
+    /**
+     * Расписание
+     */
+    public function sectionSchedule() {
+        if ($this->_actType === self::TYPE_ACTION) {
+            return $this->actionSchedule($_POST);
+        }
+
+        $this->date   = FiltersValue::parseDatetime($_GET['date']);
+        $this->agents = QueueAgent::getQueueAgents();
+
+        $this->schedule = array();
+        $result         = App::Db()->createCommand()->select()->from('timetable')
+                ->where("`agentid_day` LIKE '%" . $this->date->format('Y-m') . "%'")
+                ->order('`agentid_day`')
+                ->query();
+        foreach ($result as $row) {
+            list($id, $day) = explode(" ", $row['agentid_day']);
+            // TODO разделитель в таблице timetable
+            if ( ! $id) {
+                list($id, $day) = explode(".", $row['agentid_day']);
+            }
+            $id  = (int) $id;
+            $day = (int) substr($day, 8);
+            unset($row['agentid_day']);
+
+            $this->schedule[$id][$day] = $row;
+        }
+        Log::dump($this->schedule, 'schedule');
+
+        $this->_addJsSrc('schedule.js');
+        $this->view('page/settings/schedule.php');
+    }
+
+    /**
+     * Режим работы
+     */
     public function sectionMode() {
 
     }
 
-    public function sectionAnswering() {
-        App::Config('autoinform');//->autoinform = @include APPPATH . 'config/autoinform.php';
+    /**
+     * Паузы
+     */
+    public function sectionPause() {
 
+    }
+
+    /**
+     * Автоинформаторы
+     */
+    public function sectionAnswering() {
+        App::Config('autoinform'); //->autoinform = @include APPPATH . 'config/autoinform.php';
         // Log::dump(App::Config());
 
         $filename = App::Config()->autoinform['file_conf'];
-        if (!file_exists($filename)) {
+        if ( ! file_exists($filename)) {
             // Log::trace("Конфигурационный файл не найден");
             die("Конфигурационный файл не найден");
         }
@@ -159,13 +234,14 @@ class SettingsController extends Controller {
 
             $context = "";
             foreach ($this->options as $key => $value) {
-                $context .= $key."=".trim($value).PHP_EOL;
+                $context .= $key . "=" . trim($value) . PHP_EOL;
             }
 
             if (file_put_contents($filename, $context) === false) {
                 die("Не удалось сохранить");
             }
-            App::location($this->getPage(), array('section' => $this->getSection()));
+            App::location($this->getPage(),
+                          array('section' => $this->getSection()));
             exit();
         }
 
@@ -174,59 +250,61 @@ class SettingsController extends Controller {
         $this->view('page/settings/answering.php');
     }
 
-    public function sectionSchedule() {
-
-    }
-
-    public function sectionPause() {
-
-    }
-
-    public function actionQueue($params = null) {
-        if ($params == null) {
-            $params = $_POST;
-        }
-        $action = $params['action'];
-        unset($params['action']);
+    // ---------------------------------------------
+    // ACTION
+    // ---------------------------------------------
 
 
-        if ($action == 'delete') {
-            $uniqueid = trim($params['uniqueid']);
-            App::Db()->createCommand()->delete()->from('queue_member_table')
-                    ->addWhere('uniqueid', $uniqueid)
-                    ->limit(1)
-                    ->query();
-            return 1;
-        }
+    /*
+      public function actionQueue($params = null) {
+      if ($params == null) {
+      $params = $_POST;
+      }
+      $action = $params['action'];
+      unset($params['action']);
 
 
-        if ($action == 'add' || $action == 'edit') {
-            $values = array();
-            $values['queue_name'] = trim($params['queue_name']);
-            $values['interface'] = trim($params['interface_1']) . "(SIP/" . trim($params['interface_1']) . ")";
-            $values['penalty'] = (int) $params['penalty'];
-            $values['uniqueid'] = trim($params['uniqueid']);
-            $values['paused'] = (int) $params['paused'];
+      if ($action == 'delete') {
+      $uniqueid = trim($params['uniqueid']);
+      App::Db()->createCommand()->delete()->from('queue_member_table')
+      ->addWhere('uniqueid', $uniqueid)
+      ->limit(1)
+      ->query();
+      return 1;
+      }
 
-            if ($action == 'add') {
-                App::Db()->createCommand()->insert()->into('queue_member_table')
-                        ->ignore()
-                        ->values($values)
-                        ->query();
-            } else {
-                $uniqueid = $values['uniqueid'];
-                $values['uniqueid'] = trim($params['uniqueid_new']);
-                App::Db()->createCommand()->update('queue_member_table')
-                        ->set($values)
-                        ->addWhere('uniqueid', $uniqueid)
-                        ->ignore()
-                        ->query();
-            }
-            return 1;
-        }
 
-        return 0;
-    }
+      if ($action == 'add' || $action == 'edit') {
+      $values               = array();
+      $values['queue_name'] = trim($params['queue_name']);
+      $values['interface']  = trim($params['interface_1']) . "(SIP/" . trim($params['interface_1']) . ")";
+      $values['penalty']    = (int) $params['penalty'];
+      $values['uniqueid']   = trim($params['uniqueid']);
+      $values['paused']     = (int) $params['paused'];
+
+      if ($action == 'add') {
+      App::Db()->createCommand()->insert()->into('queue_member_table')
+      ->ignore()
+      ->values($values)
+      ->query();
+      } else {
+      $uniqueid           = $values['uniqueid'];
+      $values['uniqueid'] = trim($params['uniqueid_new']);
+      App::Db()->createCommand()->update('queue_member_table')
+      ->set($values)
+      ->addWhere('uniqueid', $uniqueid)
+      ->ignore()
+      ->query();
+      }
+      return 1;
+      }
+
+      return 0;
+      }
+
+
+     */
+
 
     public function actionOperatorEdit($params = null) {
         Log::trace('actionOperatorEdit');
@@ -238,25 +316,28 @@ class SettingsController extends Controller {
 
 
         $agentid = (int) @$params['agentid'];
-        if (!$agentid) {
+        if ( ! $agentid) {
             echo "no agentid";
         }
         $queueAgent = new QueueAgent($_POST);
         Log::dump($queueAgent, 'queueAgent');
 
-        $sets = array();
+        $sets         = array();
         $sets['name'] = trim(@$params['name']);
-        if (!$sets['name']) {
+        if ( ! $sets['name']) {
             echo "no name";
         }
 
-        $sets['queues1'] = implode(',', ACPropertyValue::ensureFields($params['queues1']));
+        $sets['queues1']  = implode(',',
+                                    ACPropertyValue::ensureFields($params['queues1']));
         $sets['penalty1'] = (int) @$params['penalty1'];
 
-        $sets['queues2'] = implode(',', ACPropertyValue::ensureFields($params['queues2']));
+        $sets['queues2']  = implode(',',
+                                    ACPropertyValue::ensureFields($params['queues2']));
         $sets['penalty2'] = (int) @$params['penalty2'];
 
-        $sets['queues3'] = implode(',', ACPropertyValue::ensureFields($params['queues3']));
+        $sets['queues3']  = implode(',',
+                                    ACPropertyValue::ensureFields($params['queues3']));
         $sets['penalty3'] = (int) @$params['penalty3'];
 
         App::Db()->createCommand()->update(QueueAgent::TABLE)
@@ -272,41 +353,44 @@ class SettingsController extends Controller {
         unset($params['action']);
 
         $params['name'] = trim(@$params['name']);
-        if (!$params['name']) {
+        if ( ! $params['name']) {
             echo "no name";
         }
         $params['agentid'] = (int) @$params['agentid'];
-        if (!$params['agentid']) {
+        if ( ! $params['agentid']) {
             echo "no agentid";
         }
 
 
-        $params['queues1'] = implode(',', ACPropertyValue::ensureFields($params['queues1']));
-        if (!$params['queues1']) {
+        $params['queues1'] = implode(',',
+                                     ACPropertyValue::ensureFields($params['queues1']));
+        if ( ! $params['queues1']) {
             unset($params['queues1']);
         }
         $params['penalty1'] = (int) @$params['penalty1'];
-        if (!$params['penalty1']) {
+        if ( ! $params['penalty1']) {
             unset($params['penalty1']);
         }
 
 
-        $params['queues2'] = implode(',', ACPropertyValue::ensureFields($params['queues2']));
-        if (!$params['queues2']) {
+        $params['queues2'] = implode(',',
+                                     ACPropertyValue::ensureFields($params['queues2']));
+        if ( ! $params['queues2']) {
             unset($params['queues2']);
         }
         $params['penalty2'] = (int) @$params['penalty2'];
-        if (!$params['penalty2']) {
+        if ( ! $params['penalty2']) {
             unset($params['penalty2']);
         }
 
 
-        $params['queues3'] = implode(',', ACPropertyValue::ensureFields($params['queues3']));
-        if (!$params['queues3']) {
+        $params['queues3'] = implode(',',
+                                     ACPropertyValue::ensureFields($params['queues3']));
+        if ( ! $params['queues3']) {
             unset($params['queues3']);
         }
         $params['penalty3'] = (int) @$params['penalty3'];
-        if (!$params['penalty3']) {
+        if ( ! $params['penalty3']) {
             unset($params['penalty3']);
         }
 
@@ -329,4 +413,49 @@ class SettingsController extends Controller {
                 ->query();
     }
 
+    public function actionSchedule($params = null) {
+        if ($params == null) {
+            $params = $_POST;
+        }
+
+
+        $aid   = (int) $params['agentid'];
+        $date  = new ACDateTime(ACPropertyValue::ensureDate($params['date']));
+        $event = App::Db()->escapeString($params['event']);
+        $start = ACPropertyValue::ensureTime(App::Db()->escapeString($params['time_h'] . ":" . $params['time_m'] . ":00"));
+
+
+        $duration = App::Db()->escapeString((int) $params['duration']);
+        $days     = (int) $params['days'];
+        if ($days <= 0)
+            $days     = 1;
+        $result   = array();
+        for ($i = 1; $i <= $days; $i ++ ) {
+            $agentid_day = $aid . " " . $date->format('Y-m-d');
+            switch ($event) {
+                case 'off':
+                    $query = "DELETE FROM timetable WHERE agentid_day='{$agentid_day}' LIMIT 1";
+                    break;
+                case 'vac':
+                case 'ill':
+                    $query = "REPLACE INTO timetable (agentid_day, event, start, duration) VALUES ('{$agentid_day}', '{$event}', NULL, 0) ";
+                    break;
+                case 'job':
+                    $query = "REPLACE INTO timetable (agentid_day, event, start, duration) VALUES ('{$agentid_day}', '{$event}', '$start', '$duration') ";
+                    break;
+                default:
+                    $query = null;
+                    break;
+            }
+            $date->add(new DateInterval("P1D"));
+
+            App::Db()->query($query);
+            if (App::Db()->success) {
+                $result[] = $query;
+            }
+        }
+
+
+        $this->content = ACJSON::encode(array("response" => $result));
+    }
 }

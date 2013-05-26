@@ -5,50 +5,21 @@ include 'dialog-queue.php';
 ?>
 
 <div class="filters clear_fix">
-    <div class="clear_fix bigblock of_h" style="width: 800px">
+    <div class="clear_fix bigblock of_h">
         <div class="fl_l" style="padding-right: 15px;">
             Всего: <?php echo @count($this->dataQueues); ?>
         </div>
-        <div class="fl_r"><a onclick="$('#dialog-queue-add').dialog('open');" class="icon icon-add">добавить</a></div>
+        <div class="fl_r"><a href="?section=queue&tab=create" class="icon icon-add pointer">добавить</a></div>
         <div class="pg-pages fl_r">  </div>
     </div>
 </div>
 
 
-
-<div id="operator_list" class="clear clear_fix">
-    <table class="grid" style="width: 800px;">
-        <thead>
-            <tr>
-                <td class="head"  style="width: 150px;">Имя очереди</td>
-                <td class="head"  style="width: 150px;">Интерфейс</td>
-                <td class="head"  style="width: 70px;" >Пенальти</td>
-                <td class="head"  >uniqueid</td>
-                <td class="head"  style="width: 70px;" >Paused</td>
-                <td class="head"  style="width: 70px;">Изменить</td>
-                <td class="head"  style="width: 70px;">Удалить</td>
-            </tr>
-        </thead>
-        <tbody>
-            <?php foreach($this->dataQueues as $queue) { ?>
-            <tr>
-                <td><?php echo html($queue['queue_name']); ?></td>
-                <td><?php echo html($queue['interface']); ?></td>
-                <td align="center"><?php echo html($queue['penalty']); ?></td>
-                <td ><?php echo html($queue['uniqueid']); ?></td>
-                <td align="center"><?php echo $queue['paused']; ?></td>
-                <td class="image-link"><a href="?section=queue&uniqueid=<?php echo html($queue['uniqueid']); ?>" class="icon icon-edit"></a></td>
-                <td class="image-link"><a  onclick="showQueueDelete('<?php echo html($queue['uniqueid']); ?>');" class="icon icon-delete"></a></td>
-            </tr>
-            <?php } ?>
-        </tbody>
-    </table>
-</div>
-
 <div id="operator_list" class="clear clear_fix">
     <table class="grid" >
         <thead>
             <tr>
+                <td class="head" ><div style="width: 52px;">-</div></td>
                 <td class="head" >name</td>
                 <td class="head" >musiconhold</td>
                 <td class="head" >announce</td>
@@ -83,7 +54,48 @@ include 'dialog-queue.php';
                 <td class="head" >timeoutrestart</td>
             </tr>
         </thead>
+
         <tbody>
+            <?php foreach($this->dataQueues as $queue) { ?>
+            <tr>
+                <td>
+                    <a href="?section=queue&name=<?php echo html($queue['name']); ?>" class="icon icon-edit pointer" style="margin-right: 5px;"></a>
+                    <a onclick="showQueueDelete('<?php echo html($queue['name']); ?>');" class="icon icon-delete pointer"></a>
+                </td>
+                <td>name</td>
+                <td>musiconhold</td>
+                <td>announce</td>
+                <td>context</td>
+                <td>timeout</td>
+                <td>monitor_join</td>
+                <td>monitor_format</td>
+                <td>queue_youarenext</td>
+                <td>queue_thereare</td>
+                <td>queue_callswaiting</td>
+                <td>queue_holdtime</td>
+                <td>queue_minutes</td>
+                <td>queue_seconds</td>
+                <td>queue_lessthan</td>
+                <td>queue_thankyou</td>
+                <td>queue_reporthold</td>
+                <td>announce_frequency</td>
+                <td>announce_round_seconds</td>
+                <td>announce_holdtime</td>
+                <td>retry</td>
+                <td>wrapuptime</td>
+                <td>maxlen</td>
+                <td>servicelevel</td>
+                <td>strategy</td>
+                <td>joinempty</td>
+                <td>leavewhenempty</td>
+                <td>eventmemberstatus</td>
+                <td>eventwhencalled</td>
+                <td>reportholdtime</td>
+                <td>memberdelay</td>
+                <td>weight</td>
+                <td>timeoutrestart</td>
+            </tr>
+            <?php } ?>
         </tbody>
     </table>
 </div>

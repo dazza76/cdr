@@ -81,6 +81,7 @@ class SupervisorController extends Controller {
             return;
         }
 
+        $this->dataPage['links'] .= '<script src="' . Utils::linkUrl('lib/highcharts/highcharts.js') . "\"></script>\n";
         $this->_addJsSrc('supervisor.js');
         $this->viewMain('page/supervisor/supervisor_' . $this->getSection() . '.php');
     }
@@ -178,7 +179,7 @@ class SupervisorController extends Controller {
         }
         Log::dump($this->queueChart, 'queueChart');
 
-
+        // операторы
         $this->queueAgents = array();
 
         $result = App::Db()->createCommand()->select()
@@ -201,12 +202,15 @@ class SupervisorController extends Controller {
 
         $this->queuesData = $this->getStatisticOperator($date);
 
-        $this->dataPage['links'] .= '<script src="' . Utils::linkUrl('lib/highcharts/highcharts.js') . "\"></script>\n";
+
 
         // header('Refresh: 1; url='.$_SERVER['PHP_SELF'].'?section=operator');
         // connect, complete%
     }
 
+    /**
+     * Распределение
+     */
     public function sectionAnalogue() {
         // $date           = new ACDateTime();
         // $this->fromdate = FiltersValue::parseDatetime($_GET['fromdate'], $date);

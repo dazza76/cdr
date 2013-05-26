@@ -110,13 +110,13 @@
         <thead>
             <tr>
                 <td class="head"  style="width: 60px;"  >Напр.</td>
-                <td class="head"  style="width: 150px;" <?php echo Utils::sortable("calldate", $this->sort, $this->desc); ?> >Дата</td>
-                <td class="head"  style="width: 150px;" <?php echo Utils::sortable("src", $this->sort, $this->desc); ?> >Источник</td>
-                <td class="head"  style="width: 150px;" <?php echo Utils::sortable("dst", $this->sort, $this->desc); ?> >Назначение</td>
-                <td class="head"  style="width: 150px;" >Оператор</td>
-                <td class="head"  style="width: 135px;" >Запись</td>
-                <td class="head"  style="width: 70px;" <?php echo Utils::sortable("duration", $this->sort, $this->desc); ?> >Время</td>
-                <td class="head"  style="" <?php echo Utils::sortable("comment", $this->sort, $this->desc); ?> >Комментарий</td>
+                <td class="head sortable"  style="width: 150px;" <?php echo Utils::sortable("calldate", $this->sort, $this->desc); ?> >Дата</td>
+                <td class="head sortable"  style="width: 150px;" <?php echo Utils::sortable("src", $this->sort, $this->desc); ?> >Источник</td>
+                <td class="head sortable"  style="width: 150px;" <?php echo Utils::sortable("dst", $this->sort, $this->desc); ?> >Назначение</td>
+                <td class="head "  style="width: 150px;" >Оператор</td>
+                <td class="head "  style="width: 135px;" >Запись</td>
+                <td class="head sortable"  style="width: 70px;" <?php echo Utils::sortable("duration", $this->sort, $this->desc); ?> >Время</td>
+                <td class="head sortable"  style="" <?php echo Utils::sortable("comment", $this->sort, $this->desc); ?> >Комментарий</td>
             </tr>
         </thead>
         <tbody>

@@ -194,3 +194,4 @@ if ( ! isset($_GET["id"])) {
 
     </body>
 </html>
+<?php Log::render(); ?>

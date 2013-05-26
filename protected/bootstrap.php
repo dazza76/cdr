@@ -57,8 +57,6 @@ if (is_array($config)) {
 }
 // шапка страниц
 App::Config()->pages = @include_once 'system/pages.php';
-// версия файлов css / js (для кеширования браузером)
-App::Config()->v     = 14;
 
 
 defined('DEBUG') or define('DEBUG', (App::Config()->debug) ? 1 : false);
@@ -83,3 +81,6 @@ if (!App::Config()->enable_ie) {
 
 Log::enable(DEBUG);
 Log::trace('bootstrap');
+
+// CASHE STATIC FILE
+App::Config()->v  = 16;

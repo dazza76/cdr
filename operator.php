@@ -1,9 +1,5 @@
 <?php
-//  $config = array(
-//      'config'=>'localhost'
-//  );
 require_once 'protected/bootstrap.php';
-
 $app             = new Application();
 $app->controller = new OperatorController();
 $app->controller->init();

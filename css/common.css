@@ -170,13 +170,17 @@ ul.menu li.right {float:right; }
 ----------------------------------- */
 table.grid { border-collapse: collapse; margin-left: -1px; border-spacing: 0px; empty-cells: show; border: 1px solid #EEE; font-size: 12px; width: 100%; }
 table.grid tr { display: table-row; vertical-align: inherit; border-color: inherit; }
+
 table.grid td,
 table.grid th { border: 1px solid #EEE; padding: 0 4px; height: 26px; -moz-box-sizing: border-box; -ms-box-sizing: border-box; box-sizing: border-box; }
 
 table.grid tr.head td,
 table.grid td.head { font-size: 90%; height: 26px; color: #FFF; background-color: #8A8A8A; font-weight: bold; }
+table.grid tr.sortable td,
+table.grid td.sortable { cursor: pointer; }
 
-table.grid th.sortable { cursor: pointer; }
+table.grid td.sel { background-color: rgb(255, 255, 142); }
+
 table.grid thead > .b-head th { height: 1px; }
 table.grid tbody tr:hover { background-color: #C6C6C6; }
 
@@ -217,6 +221,40 @@ td.coming-img div.coming_2 { background-position: -50px 0px; }
 /* ------------------------------------------------------------------------- */
 
 
+
+
+
+/* Page: settings
+------------------------------------------ */
+.schedule { border-collapse: collapse; margin-left: -1px; border-spacing: 0px; empty-cells: show; border: 1px solid #EEE; font-size: 12px; width: 100%; }
+.schedule tr { display: table-row; vertical-align: inherit; border-color: inherit; }
+.schedule td,
+.schedule th { border: 1px solid #EEE; padding: 0 4px; height: 26px; -moz-box-sizing: border-box; -ms-box-sizing: border-box; box-sizing: border-box; }
+.schedule tr.head td,
+.schedule td.head { font-size: 90%; height: 26px; color: #FFF; background-color: #8A8A8A; font-weight: bold; }
+
+.schedule td { text-align: center; }
+.schedule td:first-child { text-align: left; }
+
+
+.schedule tbody td+td  { background-color: #99FF99; }
+.schedule tbody td:last-child,
+.schedule tbody td:nth-last-child(2) { background-color: #FFFF99; }
+
+.schedule tbody td[event=off] { background-color: #99FF99; }
+.schedule tbody td[event=ill] { background-color: #FF99FF; }
+.schedule tbody td[event=job] { background-color: #FF9999; }
+.schedule tbody td[event=vac] { background-color: #FFFF99; }
+.schedule tbody td[event=err] { background-color: #FF0000; }
+
+.schedule tbody td[event].edit { background-color: #CCCCCC; }
+
+.schedule tbody td:hover,
+.schedule tbody td[event]:hover { background-color: #C6C6C6; }
+
+.schedule input[type="text"] { width: 30px; }
+
+
 /* edit-content
 ------------------------------------------ */
 
@@ -230,6 +268,11 @@ td.coming-img div.coming_2 { background-position: -50px 0px; }
 
 #dialog-queue-add .label { width: 170px; }
 #dialog-queue-add .labeled { width: 250px; }
+
+
+
+
+
 
 
 

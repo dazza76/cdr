@@ -75,7 +75,7 @@ class CdrController extends Controller {
     // --------------------------------------------------------------
 
     public function __construct() {
-        App::Config('cdr');//->cdr = @include APPPATH . 'config/cdr.php';
+        App::Config('cdr');
 
         parent::__construct();
 
@@ -84,9 +84,9 @@ class CdrController extends Controller {
 
         $this->_filters['fromdate'][1] = $from;
 
-        if (App::Config()->cdr->another_base) {
-            $cfg = App::Config()->cdr->database;
-            $this->_db = new ACDbConnection($cfg->host, $cfg->user, $cfg->pass, $cfg->dbname, App::Config()->database->params);
+        if (App::Config()->cdr['another_base']) {
+            $cfg = App::Config()->cdr['database'];
+            $this->_db = new ACDbConnection($cfg['host'], $cfg['user'], $cfg['pass'], $cfg['dbname'], App::Config()->database['params']);
         } else {
             $this->_db = App::Db();
         }
@@ -179,22 +179,30 @@ class CdrController extends Controller {
         }
 
         $rows = $command->query()->getFetchAssocs();
-
-//        'autoinform', 'outgoing', 'dialout'
-
-        // $dir        = Cdr::monitorDir(); // $_SERVER['DOCUMENT_ROOT'] . App::Config()->cdr->monitor_dir . "/";
         $file_yes_1 = array();
         $file_yes_2 = array();
         $file_no = array();
+
+        Log::dump(App::Config()->cdr);
         foreach ($rows as $row) {
-//            $autoinform = $row['dcontext']
+            // Автоинформатор
             $autoinform = in_array($row['dcontext'], array('autoinform', 'outgoing', 'dialout'));
+
+            if($row['uniqueid'] == "1353063786.4733") {
+                Log::dump($row);
+                Log::dump($_SERVER['DOCUMENT_ROOT'] . Cdr::audioFile($row['uniqueid'], null, $autoinform));
+                Log::dump($_SERVER['DOCUMENT_ROOT'] . Cdr::audioFile($row['uniqueid'], $row['calldate'], $autoinform));
+                Log::dump(Cdr::audioDir(), 'dir');
+            }
+
+            // Поиск в общей директории
             $file = $_SERVER['DOCUMENT_ROOT'] . Cdr::audioFile($row['uniqueid'], null, $autoinform);
             if (file_exists($file)) {
                 $file_yes_1[] = $row['id'];
                 continue;
             }
 
+            // Поиск в подпапках в зависимости от даты
             $file = $_SERVER['DOCUMENT_ROOT'] . Cdr::audioFile($row['uniqueid'], $row['calldate'], $autoinform);
             if (file_exists($file)) {
                 $file_yes_2[] = $row['id'];

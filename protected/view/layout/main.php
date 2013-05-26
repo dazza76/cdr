@@ -47,7 +47,9 @@ $v = (int) App::Config()->v;
             <div id="middle" class="">
                 <?php echo $this->content; ?>
 
-                <div class="clear" style="padding-top: 50px;"><hr /></div>
+                <div class="clear" style="padding-top: 50px;">
+
+                </div>
             </div>
         </div>
     </body>

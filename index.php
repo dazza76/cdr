@@ -216,7 +216,7 @@ md5 вклинивать, главное, чтобы был уникален. Pa
 // TODO Задача 7.1: Время
 //                  SELECT MIN(NOW()-datetime) FROM ((SELECT datetime,action FROM `agent_log`  WHERE agentid = 1024 AND action IN ('Login','unpause','unaftercal') ORDER BY `agent_log`.`datetime` DESC LIMIT 1) UNION ALL (SELECT timestamp as datetime,status AS action FROM call_status WHERE memberId=1024 AND status LIKE 'COMPLETE%' ORDER BY timestamp DESC LIMIT 1)) AS temp;
 // + Проверить индексирование записей (одновременно сличать и автоифнорматор, и записи разговоров)
-// TODO Задача 7.2 Включить автообновление и сортировки где возможно.
+// + Включить автообновление и сортировки где возможно.
 // TODO Задача 7.3 Расписание (Вместо ставки делаем факт, считаем суммарную длительность как в месячном отчете) + экспорт в xls.
 // TODO Задача 7.4 Спиздить отчет по рабочему времени из лайна + выделение строк по клику другим цветом.
 // TODO Задача 7.5 Настрйока очередей.

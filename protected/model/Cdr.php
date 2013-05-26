@@ -180,14 +180,15 @@ class Cdr extends ACDataObject {
      */
     public static function audioDir($date = null, $autoinform = false) {
         if ($autoinform) {
-            $dir = App::Config()->cdr->autoinform_dir . "/";
+            $dir = App::Config()->cdr['autoinform_dir'] . "/";
         } else {
-            $dir = App::Config()->cdr->monitor_dir . "/";
+            $dir = App::Config()->cdr['monitor_dir'] . "/";
         }
 
         if ($date == null) {
             return $dir;
         }
+
         $date = ACPropertyValue::ensureDate($date, false);
         return $dir . implode('/', $date) . '/';
     }
@@ -199,7 +200,7 @@ class Cdr extends ACDataObject {
      * @return string
      */
     public static function audioFile($uniqueid, $date = null, $autoinform = false) {
-        return self::audioDir($date, $autoinform) . $uniqueid . '.' . App::Config()->cdr->file_format;
+        return self::audioDir($date, $autoinform) . $uniqueid . '.' . App::Config()->cdr['file_format'];
     }
 
 

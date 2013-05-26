@@ -22,7 +22,7 @@ $(document).ready(function() {
     });
 
 
-
+    /* Дублирование шапок */
     $(".grid").each(function() {
         var DT = 15;
         var table = this;
@@ -41,56 +41,13 @@ $(document).ready(function() {
     });
 
 
-
-
-//    if ($(".grid tr.b-head").length) {
-//        var $thead = $(".grid thead").eq(0);
-//
-//        $thead.parents('table').width($(".grid tr.b-head").parents('table').width() + 2);
-//
-//        $(".grid tr.b-head th").each(function() {
-//            var index = $(this).index();
-//            var w = $(this).width();
-//            $(this).text(' ');
-//            $thead.find("th").eq(index).width(w);
-//        });
-//    }
-
-
-//    $(".grid tr.b-head").each(function() {
-//        var $tb = $(this).parents('table');
-//
-//        var $thead = $("<div class=\"filters clear_fix mediumblock of_h\">"
-//                + "<table class=\"grid\"><thead><tr>"
-//                + "</tr></thead></table>"
-//                + "</div>");
-//
-//        $thead.find('table').width($tb.width() + 2);
-//
-//        $(this).find("th").each(function() {
-//            // var index = $(this).index();
-//            var txt = $(this).text();
-//            var w = $(this).width();
-//
-//            $thead.find("thead tr").append("<th style\"width:" + w + "px;\">" + txt + "</th>");
-//        });
-//
-//        $("#header").append($thead);
-//
-//    });
-
-
-
-
-
-
-    $table.find("thead th.sortable[data-sort]").each(function() {
+    /* Сортировка таблиц */
+    $table.find("td.sortable[data-sort]").each(function() {
         var txt = ($(this).attr("data-sort") == "desc") ? "&nbsp;▼" : "&nbsp;▲";
         txt = $(this).html() + txt;
         $(this).html(txt);
     });
-
-    $table.find("thead th.sortable").click(function() {
+    $table.find("td.sortable").click(function() {
         var sort = $(this).attr("data-column");
         var desc = $(this).attr("data-sort"); //.toString();
         $(".filters form input[name=offset]").val(0);
@@ -101,6 +58,19 @@ $(document).ready(function() {
         $(".filters form").submit();
     });
 
+    /* select row */
+    $table.find("tr").click(function() {
+        if ($(this).hasClass('head')) {
+            return;
+        }
+        $table.find("tr, td").removeClass('sel');
+        $(this).find("td").each(function() {
+            if ($(this).hasClass('head')) {
+                return;
+            }
+            $(this).addClass('sel');
+        });
+    });
 
 
     /**

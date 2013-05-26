@@ -14,7 +14,7 @@ function $ajax(data, callback) {
     }).fail(function() {
         errorBox.Connect();
     }).done(function(result) {
-        console.log("[API] " + app.page + "::" + data.act + " > " + result);
+        console.log("[API] "  + data.act + " > " + result);
         if (Object.prototype.toString.call(callback) !== '[object Function]') {
             return;
         }
@@ -35,6 +35,8 @@ function $ajax(data, callback) {
         }
     });
 }
+
+
 
 /**
  * UI component
@@ -61,6 +63,15 @@ $(document).ready(function() {
                 $(this).spinner("value", 10);
                 return false;
             }
+        }
+    });
+
+
+    $("input[type='text'].number").keypress(function(e) {
+        if (e.which >= 48 && e.which <= 57) {
+            return true;
+        } else {
+            return false;
         }
     });
 });

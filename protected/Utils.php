@@ -42,7 +42,7 @@ class Utils {
      * @return string
      */
     public static function sortable($name, $sort, $desc = false) {
-        $attr = "data-column=\"{$name}\"   class=\"sortable\" ";
+        $attr = "data-column=\"{$name}\" ";
         if ($sort == $name) {
             $attr .= ($desc) ? 'data-sort="desc"' : 'data-sort="asc"';
         }

@@ -1,7 +1,4 @@
 <?php
-//  $config = array(
-//      'config'=>'localhost'
-//  );
 require_once 'protected/bootstrap.php';
 
 $app             = new Application();
