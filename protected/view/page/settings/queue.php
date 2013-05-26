@@ -62,38 +62,38 @@ include 'dialog-queue.php';
                     <a href="?section=queue&name=<?php echo html($queue['name']); ?>" class="icon icon-edit pointer" style="margin-right: 5px;"></a>
                     <a onclick="showQueueDelete('<?php echo html($queue['name']); ?>');" class="icon icon-delete pointer"></a>
                 </td>
-                <td>name</td>
-                <td>musiconhold</td>
-                <td>announce</td>
-                <td>context</td>
-                <td>timeout</td>
-                <td>monitor_join</td>
-                <td>monitor_format</td>
-                <td>queue_youarenext</td>
-                <td>queue_thereare</td>
-                <td>queue_callswaiting</td>
-                <td>queue_holdtime</td>
-                <td>queue_minutes</td>
-                <td>queue_seconds</td>
-                <td>queue_lessthan</td>
-                <td>queue_thankyou</td>
-                <td>queue_reporthold</td>
-                <td>announce_frequency</td>
-                <td>announce_round_seconds</td>
-                <td>announce_holdtime</td>
-                <td>retry</td>
-                <td>wrapuptime</td>
-                <td>maxlen</td>
-                <td>servicelevel</td>
-                <td>strategy</td>
-                <td>joinempty</td>
-                <td>leavewhenempty</td>
-                <td>eventmemberstatus</td>
-                <td>eventwhencalled</td>
-                <td>reportholdtime</td>
-                <td>memberdelay</td>
-                <td>weight</td>
-                <td>timeoutrestart</td>
+                <td><?php echo html($queue['name']); ?></td>
+                <td><?php echo html($queue['musiconhold']); ?></td>
+                <td><?php echo html($queue['announce']); ?></td>
+                <td><?php echo html($queue['context']); ?></td>
+                <td><?php echo html($queue['timeout']); ?></td>
+                <td><?php echo html($queue['monitor_join']); ?></td>
+                <td><?php echo html($queue['monitor_format']); ?></td>
+                <td><?php echo html($queue['queue_youarenext']); ?></td>
+                <td><?php echo html($queue['queue_thereare']); ?></td>
+                <td><?php echo html($queue['queue_callswaiting']); ?></td>
+                <td><?php echo html($queue['queue_holdtime']); ?></td>
+                <td><?php echo html($queue['queue_minutes']); ?></td>
+                <td><?php echo html($queue['queue_seconds']); ?></td>
+                <td><?php echo html($queue['queue_lessthan']); ?></td>
+                <td><?php echo html($queue['queue_thankyou']); ?></td>
+                <td><?php echo html($queue['queue_reporthold']); ?></td>
+                <td><?php echo html($queue['announce_frequency']); ?></td>
+                <td><?php echo html($queue['announce_round_seconds']); ?></td>
+                <td><?php echo html($queue['announce_holdtime']); ?></td>
+                <td><?php echo html($queue['retry']); ?></td>
+                <td><?php echo html($queue['wrapuptime']); ?></td>
+                <td><?php echo html($queue['maxlen']); ?></td>
+                <td><?php echo html($queue['servicelevel']); ?></td>
+                <td><?php echo html($queue['strategy']); ?></td>
+                <td><?php echo html($queue['joinempty']); ?></td>
+                <td><?php echo html($queue['leavewhenempty']); ?></td>
+                <td><?php echo html($queue['eventmemberstatus']); ?></td>
+                <td><?php echo html($queue['eventwhencalled']); ?></td>
+                <td><?php echo html($queue['reportholdtime']); ?></td>
+                <td><?php echo html($queue['memberdelay']); ?></td>
+                <td><?php echo html($queue['weight']); ?></td>
+                <td><?php echo html($queue['timeoutrestart']); ?></td>
             </tr>
             <?php } ?>
         </tbody>

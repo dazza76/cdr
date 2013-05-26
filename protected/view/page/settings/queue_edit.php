@@ -60,14 +60,28 @@ $fields = array(
     });
 </script>
 
+
+<?php
+if ($_GET['tab'] == 'create') {
+    $this->dataQueues = array();
+    $action = 'create';
+}
+elseif ($this->dataQueues) {
+    $action = 'edit';
+}
+else {
+    echo "действие не определено";
+    return;
+}
+?>
 <div class="ui-widget-content edit-content" style="margin-top: 10px; width: 550px;" >
     <div class="ui-widget-header" style="padding: 4px 0; text-align: center;">Изменить очередь</div>
     <form method="post" id="form-queue-edit">
-        <input type="hidden" name="action" value="create" />
+        <input type="hidden" name="action" value="<?php echo $action; ?>" />
 
         <div class="clear clear_fix miniblock">
             <div class="label fl_l ta_r"><span class="field-required">*</span>name:</div>
-            <div class="labeled fl_l"><input type="text" style="width: 200px;" name="name" value="" maxlength="128" /></div>
+            <div class="labeled fl_l"><input type="text" style="width: 200px;" name="name" value="<?php echo html($this->dataQueues['name']); ?>" <?php echo ($action == 'edit') ? ' disabled="disabled"' : ''; ?> maxlength="128" /></div>
         </div>
 
 <?php
@@ -77,7 +91,7 @@ foreach($fields as $name=>$param) {
     ?>
         <div class="clear clear_fix miniblock">
             <div class="label fl_l ta_r"><span style="color: rgb(141, 153, 185);"><?php echo $type."($length) "; ?></span><?php echo $name; ?>:</div>
-            <div class="labeled fl_l"><input type="text" class="<?php echo $cl; ?>" style="width: 200px;" name="<?php echo $name; ?>" value="" maxlength="<?php echo $length; ?>" /></div>
+            <div class="labeled fl_l"><input type="text" class="<?php echo $cl; ?>" style="width: 200px;" name="<?php echo $name; ?>" maxlength="<?php echo $length; ?>" value="<?php echo html($this->dataQueues[$name]); ?>" /></div>
         </div>
 <?php } ?>
         <div class="clear clear_fix bigblock">

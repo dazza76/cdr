@@ -142,7 +142,7 @@
 <script type="text/javascript">
     function showQueueDelete(uniqueid) {
         var $dialog = $('#dialog-queue-delete');
-        $dialog.find('input[name=uniqueid]').val(uniqueid);
+        $dialog.find('input[name=name]').val(uniqueid);
         $dialog.dialog('open');
     }
 
@@ -169,7 +169,7 @@
 <div id="dialog-queue-delete" class="dialog hidden edit-content" title="Удалить очередь">
     <form method="post">
         <input type="hidden" name="action" value="delete" />
-        <input type="hidden" name="uniqueid" value="" />
+        <input type="hidden" name="name" value="" />
         <div> Удалить очередь? </div>
     </form>
 </div>

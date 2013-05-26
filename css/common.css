@@ -179,7 +179,7 @@ table.grid td.head { font-size: 90%; height: 26px; color: #FFF; background-color
 table.grid tr.sortable td,
 table.grid td.sortable { cursor: pointer; }
 
-table.grid td.sel { background-color: rgb(255, 255, 142); }
+table.grid td.sel { background-color: #fa5; }
 
 table.grid thead > .b-head th { height: 1px; }
 table.grid tbody tr:hover { background-color: #C6C6C6; }

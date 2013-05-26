@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 /**
  * SettingsController class  - SettingsController.php file
  *
@@ -25,8 +25,9 @@ class SettingsController extends Controller {
         $section        = $this->_ensureSection($_GET['section']);
         $this->_section = $section;
 
-
         $action = 'section' . $section;
+
+        // if ( headers_sent()) Log::error("Header> headers was sent", 'Controller'); // <<<<<<< lg
 
         $this->$action();
 
@@ -45,18 +46,18 @@ class SettingsController extends Controller {
         if ($_POST['action'] == 'add') {
             $this->actionOperatorAdd();
             App::refresh();
-            exit();
+            //exit();
         }
         if ($_POST['action'] == 'delete') {
             $this->actionOperatorDelete();
             App::refresh();
-            exit();
+            //exit();
         }
         if ($_POST['action'] == 'edit') {
             $this->actionOperatorEdit();
             App::location($this->getPage(),
                           array('section' => $this->getSection()));
-            exit();
+            //exit();
         }
 
         if ($id == null) {
@@ -123,8 +124,42 @@ class SettingsController extends Controller {
                 App::location($this->getPage(),
                               array('section' => $this->getSection()));
                 App::Response()->send();
-                ac_dump(App::Response());
                 exit();
+            }
+            return;
+        }
+
+        // Action: delete
+        if ($_POST['action'] == 'delete') {
+            $name = (string) @$_POST['name'];
+
+            App::Db()->createCommand()->delete()
+                    ->from('queue_table')
+                    ->addWhere('name', $name)
+                    ->limit(1)
+                    ->query();
+            App::refresh();
+            exit();
+        }
+
+        if ($_POST['action'] == 'edit') {
+            $fields = $_POST;
+            $name = $fields['name'];
+            unset($fields['action'], $fields['name']);
+
+
+            log::dump($fields, 'fields');
+
+            App::Db()->createCommand()->update('queue_table')
+                    ->set($fields)
+                    ->addWhere('name', $name)
+                    ->query();
+
+            if (App::Db()->success) {
+                App::refresh();
+                exit();
+            } else {
+                echo "Update error";
             }
             return;
         }
@@ -132,7 +167,12 @@ class SettingsController extends Controller {
 
         // View: edit
         if ($_GET['name']) {
-            $name = (int) $_GET['name'];
+            $name             = (string) $_GET['name'];
+            $this->dataQueues = App::Db()->createCommand()->select()->from('queue_table')
+                    ->addWhere('name', $name)
+                    ->query()
+                    ->fetch();
+
             $this->view('page/settings/queue_edit.php');
             return;
         }
@@ -240,9 +280,9 @@ class SettingsController extends Controller {
             if (file_put_contents($filename, $context) === false) {
                 die("Не удалось сохранить");
             }
-            App::location($this->getPage(),
-                          array('section' => $this->getSection()));
-            exit();
+            // App::location($this->getPage(), array('section' => $this->getSection()));
+            App::refresh();
+            // exit();
         }
 
 

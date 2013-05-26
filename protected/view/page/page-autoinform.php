@@ -132,7 +132,11 @@
                     $type_name = $row[3];
                 }
                 echo "<td>{$type_name}</td>";
-                echo "<td>+7" . substr($row[1], 1) . "</td>";
+                // echo "<td>+7" . substr($row[1], 1) . "</td>";
+                $phone = "+7" . substr($row[1], 1);
+                $phone = substr($phone, (int) $this->cutnum);
+
+                echo "<td>{$phone}</td>";
                 $_result_arr_test[$row[7]] = 1;
                 if (App::Config()->autoinform['result'][$row[7]]) {
 

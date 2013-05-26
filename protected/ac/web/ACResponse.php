@@ -344,7 +344,7 @@ class ACResponse {
 
         $this->_sendContent($this->_body);
 
-        Log::trace('Response::send()', 'Header');
+        Log::trace('Response::send() [end]', 'Header');
     }
 
     /**
@@ -382,7 +382,10 @@ class ACResponse {
             header($header);
             Log::trace($header, 'Header');
             // Log::trace("Header> header:: " . $header);
+        } else {
+            Log::error("Header> headers was sent", 'Header');
         }
+
     }
 
     /**

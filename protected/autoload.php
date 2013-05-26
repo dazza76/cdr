@@ -56,6 +56,7 @@ spl_autoload_register(
                 'queue' => '/model/Queue.php',
                 'queueagent' => '/model/QueueAgent.php',
                 'queuecontroller' => '/controller/QueueController.php',
+                'schedulesettingscontroller' => '/controller/settings/ScheduleSettingsController.php',
                 'settingscontroller' => '/controller/SettingsController.php',
                 'sippeer' => '/model/Sippeer.php',
                 'supervisorcontroller' => '/controller/SupervisorController.php',
