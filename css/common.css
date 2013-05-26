@@ -263,6 +263,8 @@ td.coming-img div.coming_2 { background-position: -50px 0px; }
 .field-success { background: #C4FFC4; border-color: #090; }
 .field-sucfail { background: #FBC4C4; border-color: #D20000; }
 
+.field-inf { color: rgb(141, 153, 185); font-size: 9px; }
+
 .edit-content .label { padding-top: 5px; width: 250px; }
 .edit-content .labeled { margin-left: 5px; width: 220px; }
 
