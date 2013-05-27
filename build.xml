@@ -3,8 +3,11 @@
     <property file="${basedir}/build/project.properties" />
 
     <target name="backup">
+        <antcall target="compile" />
+
         <exec executable="bash.bat">
-            <arg path="${build.bin}/backup" />
+            <arg value="--login" />
+            <arg path="${build.bin}/build" />
         </exec>
     </target>
 

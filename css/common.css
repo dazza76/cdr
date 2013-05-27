@@ -166,6 +166,8 @@ ul.menu li.right {float:right; }
 
 #highcharts-wrap > tspan:last-of-type { display: none; }
 
+tr.gray, td.gray, .gray { color: #999; }
+
 /* table result
 ----------------------------------- */
 table.grid { border-collapse: collapse; margin-left: -1px; border-spacing: 0px; empty-cells: show; border: 1px solid #EEE; font-size: 12px; width: 100%; }
@@ -179,11 +181,23 @@ table.grid td.head { font-size: 90%; height: 26px; color: #FFF; background-color
 table.grid tr.sortable td,
 table.grid td.sortable { cursor: pointer; }
 
-table.grid td.sel { background-color: #fa5; }
+table.grid tr.sel td { background-color: #fa5; }
 
 table.grid thead > .b-head th { height: 1px; }
-table.grid tbody tr:hover { background-color: #C6C6C6; }
+table.grid.tr-hover tbody tr:hover { background-color: #C6C6C6; }
+/* ------------------------------------------ */
 
+ /* Page: operlog
+------------------------------------------ */
+table.grid tr.subreport td { padding: 1px; }
+table.grid tbody tr.subreport:hover { background-color: #FFF; }
+table.grid tr.subreport table.grid { margin-left: 0px; }
+table.grid tr.subreport table.grid td { background-color: #f0f0f0; border: 1px solid #fff; }
+table.grid tr.subreport table.grid .head td {background-color: #ddd; color: #333; border: 1px solid #fff; }
+
+ /* Page: cdr
+------------------------------------------ */
+/* activ edit */
 td.edit-box { padding: 0; }
 td.image-link { text-align: center; }
 td.coming-img { padding: 0px;}
@@ -206,7 +220,6 @@ td.coming-img div.coming_2 { background-position: -50px 0px; }
 
 /* Page: cdr
 ------------------------------------------ */
-
 /* comment edit */
 #comment_edit { margin: 0; padding: 0; position: absolute; }
 #comment_edit .edit-box { font-family: monospace; overflow: hidden; padding: 3px 4px 0px 4px; width: 100%; height: 100%; }

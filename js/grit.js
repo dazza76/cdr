@@ -21,7 +21,6 @@ $(document).ready(function() {
         });
     });
 
-
     /* Дублирование шапок */
     $(".grid[repeat]").each(function() {
         var DT = 15;
@@ -41,6 +40,29 @@ $(document).ready(function() {
     });
 
 
+    /* select row */
+    $(".tr-select").data('tr', $("tr:first"));
+    $(".tr-select tbody tr").click(function() {
+        $(this).parents('.tr-select').data('tr').removeClass('sel');
+        $(this).parents('table').data('tr', $(this).addClass('sel'));
+
+        if ($(this).hasClass('head')) {
+            return;
+        }
+    });
+
+
+    // $table.find("tr").click(function() {
+
+    //     $table.find("tr, td").removeClass('sel');
+    //     $(this).find("td").each(function() {
+    //         if ($(this).hasClass('head')) {
+    //             return;
+    //         }
+    //         $(this).addClass('sel');
+    //     });
+    // });
+
     /* Сортировка таблиц */
     $table.find("td.sortable[data-sort]").each(function() {
         var txt = ($(this).attr("data-sort") == "desc") ? "&nbsp;▼" : "&nbsp;▲";
@@ -57,21 +79,6 @@ $(document).ready(function() {
         $(".filters form input[name=desc]").val(desc);
         $(".filters form").submit();
     });
-
-    /* select row */
-    $table.find("tr").click(function() {
-        if ($(this).hasClass('head')) {
-            return;
-        }
-        $table.find("tr, td").removeClass('sel');
-        $(this).find("td").each(function() {
-            if ($(this).hasClass('head')) {
-                return;
-            }
-            $(this).addClass('sel');
-        });
-    });
-
 
     /**
      * edit comment control
@@ -165,17 +172,21 @@ $(document).ready(function() {
 
 
 
-
-
-
-
-    /*()
-     *
+    /*
+     * subreport
      */
     $("a.subreport").click(function() {
-        $(this).parents("tr").next("tr").children("td").toggleClass("hidden");
+        $(this).toggleClass("sr_visible")
+            .parents("tr")
+            .next("tr")
+            .children("td")
+            .toggleClass("hidden");
+
+        if ($(this).hasClass('sr_visible')) {
+            $(this).children("sp").html("–");
+        }else{
+            $(this).children("sp").html('+');
+        }
     });
 
 });
-
-

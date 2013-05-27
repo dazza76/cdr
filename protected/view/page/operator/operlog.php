@@ -54,7 +54,7 @@
 </div>
 
 <div class="clear clear_fix">
-    <table class="grid" style="width: 900px;">
+    <table class="grid tr-hover" style="width: 900px;">
         <thead>
             <tr>
                 <td class="head"  style="width: 150px;">Дата</td>
@@ -71,7 +71,8 @@
                 $c = @count($dayLog);
                 $dname = $day. " (".$day_names[date("w", strtotime($day))].")";
                 if ( ! $c) {
-                    echo "<tr><td> $dname </td>"
+                    // dateday weekend
+                    echo "<tr class=\"gray\"><td> $dname </td>"
                       . "<td colspan=\"4\">Не работал</td></tr>";
                     continue;
                 }
@@ -81,18 +82,18 @@
                         <td>  </td>
                         <td>  </td>
                         <td>  </td>
-                        <td><a onclick=\"return false;\" class=\"subreport\">[+{$c}]</a></td>
+                        <td><a onclick=\"return false;\" class=\"subreport\">[<sp>+</sp>{$c}]</a></td>
                     </tr>";
                 ?>
-                <tr>
+                <tr class="subreport">
                     <td colspan="5" class="hidden">
                         <table class="grid">
-                            <tr>
-                                <td class="head">Время</td>
-                                <td class="head">Событие</td>
-                                <td class="head">Инициатор</td>
-                                <td class="head">Длительность</td>
-                                <td class="head">Причина</td>
+                            <tr class="head">
+                                <td>Время</td>
+                                <td>Событие</td>
+                                <td>Инициатор</td>
+                                <td>Длительность</td>
+                                <td>Причина</td>
                             </tr>
                             <?php foreach ($dayLog as $agentLog) { ?>
                                 <tr>
