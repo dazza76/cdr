@@ -83,4 +83,4 @@ Log::enable(DEBUG);
 Log::trace('bootstrap');
 
 // CASHE STATIC FILE
-App::Config()->v  = 18;
+App::Config()->v  = 19;

@@ -88,11 +88,12 @@ class OperatorController extends Controller {
 
         /* @var $day_step ACDateTime */
         $day_step = clone $this->fromdate;
-        $interval = new DateInterval('P10D');
         $this->dataResult = array();
+
         while($day_step <= $this->todate) {
-            $this->dataResult[$day_step->format('d.m.Y')] = array(   );
-            $day_step->add($interval);
+            $d = $day_step->format('d.m.Y');
+            $this->dataResult[$d] = array(   );
+            $day_step->modify('+1 day');
         }
 
         while ($alog = $result->fetchObject(AgentLog)) {
@@ -100,9 +101,9 @@ class OperatorController extends Controller {
             $this->dataResult[$alog->datetime->format('d.m.Y')][] = $alog;
         }
 
-        
+
         // $this->dataResult = $select->query()->getFetchObjects(AgentLog);
-        Log::dump($this->dataResult);
+        Log::dump($this->dataResult, "AgentLog");
     }
 
     public function sectionLoad() {

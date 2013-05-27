@@ -66,18 +66,23 @@
         </thead>
         <tbody>
             <?php
+            $day_names = array('Вск', 'Пнд', 'Втр', 'Срд', 'Чтв', 'Птн', 'Сбт');
             foreach ($this->dataResult as $day => $dayLog) {
                 $c = @count($dayLog);
+                $dname = $day. " (".$day_names[date("w", strtotime($day))].")";
+                if ( ! $c) {
+                    echo "<tr><td> $dname </td>"
+                      . "<td colspan=\"4\">Не работал</td></tr>";
+                    continue;
+                }
+
                 echo "<tr>
-                        <td> $day </td>
+                        <td> $dname </td>
                         <td>  </td>
                         <td>  </td>
                         <td>  </td>
                         <td><a onclick=\"return false;\" class=\"subreport\">[+{$c}]</a></td>
                     </tr>";
-                if ( ! is_array($dayLog)) {
-                    continue;
-                }
                 ?>
                 <tr>
                     <td colspan="5" class="hidden">
@@ -89,7 +94,7 @@
                                 <td class="head">Длительность</td>
                                 <td class="head">Причина</td>
                             </tr>
-    <?php foreach ($dayLog as $agentLog) { ?>
+                            <?php foreach ($dayLog as $agentLog) { ?>
                                 <tr>
                                     <td><?php echo $agentLog->datetime->format('H:i:s'); ?></td>
                                     <td><?php echo $agentLog->action; ?></td>
@@ -97,18 +102,16 @@
                                     <td><?php echo $agentLog->action2; ?></td>
                                     <td><?php echo $agentLog->action1; ?></td>
                                 </tr>
-    <?php } ?>
+                            <?php } ?>
                         </table>
                     </td>
                 </tr>
-<?php } ?>
+            <?php } ?>
         </tbody>
     </table>
 </div>
 
 <?php return; ?>
-
-
 
 
 
@@ -124,7 +127,7 @@
             </tr>
         </thead>
         <tbody>
-<?php foreach ($this->dataResult as $agentLog) { ?>
+            <?php foreach ($this->dataResult as $agentLog) { ?>
                 <tr>
                     <td><?php echo $agentLog->datetime; ?></td>
                     <td><?php echo $agentLog->agentphone; ?></td>
@@ -132,7 +135,7 @@
                     <td><?php echo $agentLog->action1; ?></td>
                     <td><?php echo $agentLog->action2; ?></td>
                 </tr>
-<?php } ?>
+            <?php } ?>
         </tbody>
     </table>
 </div>
