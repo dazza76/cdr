@@ -98,7 +98,7 @@
 <div class="clear clear_fix">
     <!-- <table class="grid" htable="1"> -->
     <!-- <tr class="b-head"> -->
-    <table class="grid" style="width: 1100px;">
+    <table class="grid" style="width: 1100px;" repeat="1">
         <thead>
             <tr>
                 <td class="head sortable"  style="width: 150px;" <?php echo Utils::sortable("calldate", $this->sort, $this->desc); ?> >Дата</td>

@@ -106,7 +106,7 @@
 
 
 <div class="clear clear_fix">
-    <table class="grid" style="width: 1100px;">
+    <table class="grid" style="width: 1100px;" repeat="1">
         <thead>
             <tr>
                 <td class="head"  style="width: 60px;"  >Напр.</td>

@@ -26,6 +26,11 @@ class OperatorController extends Controller {
     /** @var mixed */
     public $dataResult;
 
+    /** @var array логи действий по агента */
+    public $agentLogs;
+    /** @var array статистика агента */
+    public $operLogs;
+
     // --------------------------------------------------------------
 
     function __construct() {
@@ -79,9 +84,24 @@ class OperatorController extends Controller {
                 $select->addWhere('action', App::Config()->operator['calls'], 'NOT IN');
             }
         }
+        $result = $select->query();
 
+        /* @var $day_step ACDateTime */
+        $day_step = clone $this->fromdate;
+        $interval = new DateInterval('P10D');
         $this->dataResult = array();
-        $this->dataResult = $select->query()->getFetchObjects(AgentLog);
+        while($day_step <= $this->todate) {
+            $this->dataResult[$day_step->format('d.m.Y')] = array(   );
+            $day_step->add($interval);
+        }
+
+        while ($alog = $result->fetchObject(AgentLog)) {
+            /* @var $alog AgentLog */
+            $this->dataResult[$alog->datetime->format('d.m.Y')][] = $alog;
+        }
+
+        
+        // $this->dataResult = $select->query()->getFetchObjects(AgentLog);
         Log::dump($this->dataResult);
     }
 

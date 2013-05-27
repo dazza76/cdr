@@ -10,13 +10,13 @@
  * AgentLog class
  *
  *
- * @property string $datetime    - имя канала (не используется в отчете, служебная информация)
+ * @property ACDateTime $datetime    - имя канала (не используется в отчете, служебная информация)
  * @property string $agentid     - то же самое.
  * @property string $agentphone  - на какой команде закончился вызов, нам не интересно.
  * @property string $action      - параметры, переданные последней команде.
  * @property string $name        - длительность вызова.
  * @property string $duration    - сколько времени вызов был отвечен
- * @property string $ringtime    - сколько времени вызов был отвечен
+ * @property string $ringtime    - 
  * @property string $action2     - параметры, переданные последней команде.
  */
 class AgentLog extends ACDataObject {

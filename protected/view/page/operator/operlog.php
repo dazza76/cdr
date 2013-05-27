@@ -5,7 +5,6 @@
  * @copyright  (c) 2013, AC
  */
 /* @var $this OperatorController */
-
 ?>
 
 <div class="filters clear_fix">
@@ -66,45 +65,48 @@
             </tr>
         </thead>
         <tbody>
-            <?php foreach ($this->dataResult as $agentLog) { ?>
-            <tr>
-                <td><?php echo $agentLog->datetime; ?></td>
-                <td><?php echo $agentLog->agentphone; ?></td>
-                <td><?php echo html(QueueAgent::getOper($agentLog->agentid) ); ?></td>
-                <td><?php echo $agentLog->action1; ?></td>
-                <td><a onclick="return false;" class="subreport">[+11]</a></td>
-            </tr>
-            <?php } ?>
+            <?php
+            foreach ($this->dataResult as $day => $dayLog) {
+                $c = @count($dayLog);
+                echo "<tr>
+                        <td> $day </td>
+                        <td>  </td>
+                        <td>  </td>
+                        <td>  </td>
+                        <td><a onclick=\"return false;\" class=\"subreport\">[+{$c}]</a></td>
+                    </tr>";
+                if ( ! is_array($dayLog)) {
+                    continue;
+                }
+                ?>
+                <tr>
+                    <td colspan="5" class="hidden">
+                        <table class="grid">
+                            <tr>
+                                <td class="head">Время</td>
+                                <td class="head">Событие</td>
+                                <td class="head">Инициатор</td>
+                                <td class="head">Длительность</td>
+                                <td class="head">Причина</td>
+                            </tr>
+    <?php foreach ($dayLog as $agentLog) { ?>
+                                <tr>
+                                    <td><?php echo $agentLog->datetime->format('H:i:s'); ?></td>
+                                    <td><?php echo $agentLog->action; ?></td>
+                                    <td> </td>
+                                    <td><?php echo $agentLog->action2; ?></td>
+                                    <td><?php echo $agentLog->action1; ?></td>
+                                </tr>
+    <?php } ?>
+                        </table>
+                    </td>
+                </tr>
+<?php } ?>
         </tbody>
     </table>
 </div>
 
 <?php return; ?>
-
-    <table class="grid" style="width: 900px;">
-        <thead>
-            <tr>
-                <td class="head">Время</td>
-                <td class="head">Событие</td>
-                <td class="head">Инициатор</td>
-                <td class="head">Длительность</td>
-                <td class="head">Причина</td>
-            </tr>
-        </thead>
-        <tbody>
-            <?php foreach ($this->dataResult as $agentLog) { ?>
-            <tr>
-                <td><?php echo $agentLog->datetime; ?></td>
-                <td><?php echo $agentLog->agentphone; ?></td>
-                <td><?php echo html(QueueAgent::getOper($agentLog->agentid) ); ?></td>
-                <td><?php echo $agentLog->action1; ?></td>
-                <td><a onclick="return false;" class="subreport">[+11]</a></td>
-            </tr>
-            <?php } ?>
-        </tbody>
-    </table>
-
-
 
 
 
@@ -122,15 +124,15 @@
             </tr>
         </thead>
         <tbody>
-            <?php foreach ($this->dataResult as $agentLog) { ?>
-            <tr>
-                <td><?php echo $agentLog->datetime; ?></td>
-                <td><?php echo $agentLog->agentphone; ?></td>
-                <td><?php echo html(QueueAgent::getOper($agentLog->agentid) ); ?></td>
-                <td><?php echo $agentLog->action1; ?></td>
-                <td><?php echo $agentLog->action2; ?></td>
-            </tr>
-            <?php } ?>
+<?php foreach ($this->dataResult as $agentLog) { ?>
+                <tr>
+                    <td><?php echo $agentLog->datetime; ?></td>
+                    <td><?php echo $agentLog->agentphone; ?></td>
+                    <td><?php echo html(QueueAgent::getOper($agentLog->agentid)); ?></td>
+                    <td><?php echo $agentLog->action1; ?></td>
+                    <td><?php echo $agentLog->action2; ?></td>
+                </tr>
+<?php } ?>
         </tbody>
     </table>
 </div>

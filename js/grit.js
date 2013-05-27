@@ -23,19 +23,19 @@ $(document).ready(function() {
 
 
     /* Дублирование шапок */
-    $(".grid").each(function() {
+    $(".grid[repeat]").each(function() {
         var DT = 15;
         var table = this;
 
-        var count = Math.floor( $(table).find("tbody tr").length / DT);
+        var count = Math.floor($(table).find("tbody tr").length / DT);
 
         var htr = $(table).find("thead tr").clone();
 
-        for(var i = 1; i < count; i++) {
+        for (var i = 1; i < count; i++) {
             $(table).find("tbody tr").eq(DT * i + i).after($(htr).clone());
         }
 
-        $(table).find("tbody tr.thead").each(function(){
+        $(table).find("tbody tr.thead").each(function() {
             console.log($(this).index);
         });
     });
@@ -163,4 +163,19 @@ $(document).ready(function() {
         $editBox.focus();
     });
 
+
+
+
+
+
+
+    /*()
+     *
+     */
+    $("a.subreport").click(function() {
+        $(this).parents("tr").next("tr").children("td").toggleClass("hidden");
+    });
+
 });
+
+
