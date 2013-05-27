@@ -16,9 +16,9 @@ html { height: 100% }
 body { font: 12px Tahoma, Geneva, sans-serif; min-width: 600px; height: 100%; }
 /*a { text-decoration: underline; cursor: pointer; color: #069; border-style: none;}*/
 /*a:hover { text-decoration: none; cursor: pointer; color: #E80005;}*/
-a, a:hover {text-decoration: none; outline-style: none; }
-a:link, a:visited {color: #0088cc; }
-a:hover {color: #E68C3B; }
+a, a:hover { text-decoration: none; outline-style: none; cursor: pointer; }
+a, a:link, a:visited { color: #0088cc; }
+a:hover { color: #E68C3B; }
 
 
 div { border: solid #000 0px; }

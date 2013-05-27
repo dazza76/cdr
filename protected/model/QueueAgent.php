@@ -41,8 +41,11 @@ class QueueAgent extends ACDataObject {
      * Формирует теги для поля выбора
      * @return string
      */
-    public static function showOperslist() {
-        $result = "<option value=\"\" selected=\"selected\">все</option>";
+    public static function showOperslist($all = true) {
+        $result = "";
+        if($all) {
+            $result = "<option value=\"\" selected=\"selected\">все</option>";
+        }
         $QueueAgent = self::_init();
         foreach ($QueueAgent as $key => $value) {
             $key = html($key);

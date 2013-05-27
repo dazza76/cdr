@@ -65,9 +65,12 @@ class OperatorController extends Controller {
                     "NULL AS `ringtime`",
                 ))
                 ->from('agent_log')
+                ->order('datetime')
                 ->addWhere("datetime", array($this->fromdate, $this->todate), 'BETWEEN');
         if ($this->oper) {
             $select->addWhere('agentid', $this->oper);
+        } else {
+            $select->addWhere('agentid', 'NULL', false);
         }
         if ($this->oaction) {
             if ($this->oaction == 1) {
@@ -77,117 +80,9 @@ class OperatorController extends Controller {
             }
         }
 
-        $query = $select->toString();
-
-        if ($this->oaction == 1 && in_array('incoming', App::Config()->operator['calls'])) {
-            $select = App::Db()->createCommand()->select(array(
-                        "timestamp AS datetime",
-                        "memberId AS agentid",
-                        "'incoming'",
-                        "queue AS agentphone",
-                        "callduration",
-                        "ringtime",
-                    ))
-                    ->from('call_status')
-                    ->addWhere("timestamp", array($this->fromdate, $this->todate), 'BETWEEN');
-            if ($this->oper) {
-                $select->addWhere('memberId', $this->oper);
-            }
-            $query .= "\nUNION ALL\n" . $select->toString();
-        }
-
-        if ($this->oaction == 1 && in_array('outcoming', App::Config()->operator['calls'])) {
-            $select = App::Db()->createCommand()->select(array(
-                        "calldate AS datetime",
-                        "userfield AS agentid",
-                        "'outcoming'",
-                        "src AS agentphone",
-                        "duration",
-                        "NULL",
-                    ))
-                    ->from('cdr')
-                    ->order('datetime')
-                    ->addWhere("calldate", array($this->fromdate, $this->todate), 'BETWEEN')
-                    ->addWhere("length(src)", 5, "<");
-            if ($this->oper) {
-                $select->addWhere('userfield', $this->oper);
-            }
-            $query .= "\nUNION ALL\n" . $select->toString();
-        }
-
-
-        $result = App::Db()->query($query);
         $this->dataResult = array();
-
-        while ($row = $result->fetchAssoc()) {
-            $row['action1'] = '';
-            $row['action2'] = '';
-
-            if (($row['agentphone'] < '3000') || ($row['agentphone'] > '10000')) {
-                // $row['agentphone'] = $row['agentphone'];
-            } else {
-                $row['agentphone'] = 'Оч. ' . $row['agentphone'];
-            }
-
-            switch ($row['action']) {
-                case 'pausecall':
-                    $row['action1'] = 'Поствызывная обработка';
-                    if ($pausecall_begin[$row['agentid']] == 0)
-                        $pausecall_begin[$row['agentid']] = strtotime($row['datetime']);
-                    break;
-                case 'unpausecal':
-                    $row['action1'] = "Обработка завершена.";
-                    $row['action2'] = "Время: " . (strtotime($row['datetime']) - $pausecall_begin[$row['agentid']]) . " сек.";
-                    $pausecall_length[$row['agentid']] += strtotime($row['datetime']) - $pausecall_begin[$row['agentid']];
-                    $pausecall_begin[$row['agentid']] = 0;
-                    break;
-                case 'incoming':
-                    $row['action1'] = 'Принят входящий (' . $row['agentphone'] . ')';
-                    $row['action2'] = 'Зв.: ' . $row['ringtime'] . ' с/Разг.: ' . $row['duration'] . ' с';
-                    break;
-                case 'outcoming':
-                    $row['action1'] = 'Совершен исходящий';
-                    $row['action2'] = 'Длит.: ' . $row['duration'] . ' с';
-                    break;
-                case 'ready':
-                    $row['action1'] = 'Готов к работе';
-                    break;
-                case 'pause':
-                    $row['action1'] = 'Ушел на перерыв';
-                    if ($pause_begin[$row['agentid']] == 0)
-                        $pause_begin[$row['agentid']] = strtotime($row['datetime']);
-                    break;
-                case 'unpause':
-                    $row['action1'] = "Вернулся с перерыва.";
-                    $row['action2'] = "Время: " . (strtotime($row['datetime']) - $pause_begin[$row['agentid']]) . " сек.";
-                    $pause_length[$row['agentid']] += strtotime($row['datetime']) - $pause_begin[$row['agentid']];
-                    $pause_begin[$row['agentid']] = 0;
-                    break;
-                case 'Login':
-                    $row['action1'] = 'Вошел в очередь';
-                    if ($day_begin[$row['agentid']] == 0)
-                        $day_begin[$row['agentid']] = strtotime($row['datetime']);
-                    break;
-                case 'Logout':
-                    $row['action1'] = 'Вышел из очереди';
-                    if ($day_begin != 0) {
-                        $day_length[$row['agentid']] = strtotime($row['datetime']) - $day_begin[$row['agentid']];
-                        $day_begin[$row['agentid']] = 0;
-                    };
-                    break;
-                case 'Change':
-                    $row['action1'] = 'Смена рабочего места';
-                    break;
-                case 'lost':
-                    $row['action1'] = 'Потеря вызова';
-                    break;
-                case 'lostcall':
-                    $row['action1'] = 'Потеря вызова';
-                    break;
-            }
-
-            $this->dataResult[] = $row;
-        }
+        $this->dataResult = $select->query()->getFetchObjects(AgentLog);
+        Log::dump($this->dataResult);
     }
 
     public function sectionLoad() {

@@ -41,6 +41,7 @@ spl_autoload_register(
                 'acvalidation' => '/ac/utils/ACValidation.php',
                 'acvardumper' => '/ac/utils/ACVarDumper.php',
                 'acxml' => '/ac/web/helper/ACXML.php',
+                'agentlog' => '/model/AgentLog.php',
                 'app' => '/Application.php',
                 'application' => '/Application.php',
                 'autodialout' => '/model/Autodialout.php',
