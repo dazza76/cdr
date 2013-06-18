@@ -58,7 +58,6 @@ function tick() {
 
 
 
-
 var Supervisor = {
     _timeoutId: false,
     onUpdate: 1,
@@ -80,18 +79,20 @@ var Supervisor = {
         // $.cookie('Supervisor_update', self.onUpdate);
         // $.cookie('Supervisor_interval', self.interval);
 
+        $('#queueAgents').parent().append("<div id=\"ajaxlog\"></div>");
+
         self.startUpdate();
     },
 
     /**
-     * Запустить механизм автообнавления
+     * Р—Р°РїСѓСЃС‚РёС‚СЊ РјРµС…Р°РЅРёР·Рј Р°РІС‚РѕРѕР±РЅР°РІР»РµРЅРёСЏ
      */
     startUpdate: function() {
         var self = Supervisor;
         self.stopUpdate();
 
         if (!self.onUpdate) {
-            return ;
+            return;
         }
 
         var interval = parseInt(self.interval) * 1000;
@@ -106,7 +107,7 @@ var Supervisor = {
     },
 
     /**
-     * Остановить механизм автообнавления
+     * РћСЃС‚Р°РЅРѕРІРёС‚СЊ РјРµС…Р°РЅРёР·Рј Р°РІС‚РѕРѕР±РЅР°РІР»РµРЅРёСЏ
      */
     stopUpdate: function() {
         var self = Supervisor;
@@ -156,6 +157,16 @@ var Supervisor = {
         }
     },
     _updateSectionOperator: function(data) {
+
+        var da = data.queueAgents;
+        var lg = [];
+        for (var i in da) {
+            lg[i] = da[i] = da[i].agentid + "; " + da[i].member + "; " + da[i].phone + "; " /* + da[i].queues.replace(/<br \/>/g, ',') + "; " */ + da[i].state_phone + "; ";
+        }
+        $("#ajaxlog").html(lg.join("<br />"));
+
+
+
         var $tableAgent = $('#queueAgents tbody');
         for (var i in data.queueAgents) {
             var qAgent = data.queueAgents[i];
