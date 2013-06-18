@@ -16,19 +16,20 @@
  * @property string $action      - параметры, переданные последней команде.
  * @property string $name        - длительность вызова.
  * @property string $duration    - сколько времени вызов был отвечен
- * @property string $ringtime    - 
+ * @property string $ringtime    -
  * @property string $action2     - параметры, переданные последней команде.
  */
 class AgentLog extends ACDataObject {
+        public $action1;
+        public $action2;
 
     public function __construct(array $row = null) {
-        if ( $row !== null ) {
+        if ($row !== null) {
             foreach ($row as $key => $value) {
                 $this->$key = $value;
             }
         }
-
-        $this->_initAction();
+        // $this->_initAction();
     }
 
     public function __set($name, $value) {
@@ -54,6 +55,13 @@ class AgentLog extends ACDataObject {
     }
 
     private function _initAction() {
+        // $pausecall_begin;
+        // $pausecall_length;
+        // $pause_begin;
+        // $pause_length;
+        // $day_begin;
+        // $day_length;
+
         $this->action1 = '';
         $this->action2 = '';
 

@@ -13,6 +13,11 @@ return array(
     // Unix:        /var/www/autoinform.conf
     'file_conf' => APPPATH. 'config/autoinform.conf',
 
+    // Кол. обрз. символов
+    'ordernum'=>'addnum,cutnum', // порядок действий
+    'cutnum' => 1, // отрезать
+    'addnum' => '+7', // добавить
+
 
 
     // название столбца в "дата обзвона" в таблицы "autodialout"

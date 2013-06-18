@@ -1,0 +1,9 @@
+*.sublime-project
+*.sublime-workspace
+tmp/*
+nbproject/*
+build/*
+INF/*
+monitor/*
+tests/*
+*test-*

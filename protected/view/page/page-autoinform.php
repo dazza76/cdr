@@ -58,13 +58,6 @@
         </div>
 
         <div class="filter fl_l sep">
-            <div class="label">Кол. обрз. символов</div>
-            <div class="labeled">
-                <input class="spinner" name="cutnum" type="text" placeholder="0" autocomplete="off" style="width: 8em;" value="<?php echo html($this->cutnum); ?>">
-            </div>
-        </div>
-
-        <div class="filter fl_l sep">
             <div class="label">Кол-во попыток</div>
             <div class="labeled">
                 <div class="labeled">
@@ -133,8 +126,15 @@
                 }
                 echo "<td>{$type_name}</td>";
                 // echo "<td>+7" . substr($row[1], 1) . "</td>";
-                $phone = "+7" . substr($row[1], 1);
-                $phone = substr($phone, (int) $this->cutnum);
+
+                // $addnum = App::Config()->autoinform['addnum'];
+                $cutnum = (int)App::Config()->autoinform['cutnum'];
+
+                $phone = $row[1];
+                // TODO: отрез и добавление символов автоинформатора
+                //$phone = "+7" . substr($phone, 1);
+                $phone = substr($phone, (int) $cutnum);
+
 
                 echo "<td>{$phone}</td>";
                 $_result_arr_test[$row[7]] = 1;

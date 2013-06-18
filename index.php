@@ -225,6 +225,9 @@ md5 вклинивать, главное, чтобы был уникален. Pa
 
 
 
+
+// Ср. время поднятия трубки, сек
+
 require_once 'protected/bootstrap.php';
 $app = new Application();
 

@@ -67,7 +67,8 @@
         <tbody>
             <?php
             $day_names = array('Вск', 'Пнд', 'Втр', 'Срд', 'Чтв', 'Птн', 'Сбт');
-            foreach ($this->dataResult as $day => $dayLog) {
+            foreach ($this->dataResult as $day => $dayLogArr) {
+                $dayLog = $dayLogArr['logs'];
                 $c = @count($dayLog);
                 $dname = $day. " (".$day_names[date("w", strtotime($day))].")";
                 if ( ! $c) {
@@ -79,8 +80,8 @@
 
                 echo "<tr>
                         <td> $dname </td>
-                        <td>  </td>
-                        <td>  </td>
+                        <td> ".date('H:i:s', $dayLogArr['day_begin'])." </td>
+                        <td>  ".date('H:i:s', $dayLogArr['day_begin'] + $dayLogArr['dey_length'])." </td>
                         <td>  </td>
                         <td><a onclick=\"return false;\" class=\"subreport\">[<sp>+</sp>{$c}]</a></td>
                     </tr>";
@@ -98,10 +99,10 @@
                             <?php foreach ($dayLog as $agentLog) { ?>
                                 <tr>
                                     <td><?php echo $agentLog->datetime->format('H:i:s'); ?></td>
-                                    <td><?php echo $agentLog->action; ?></td>
-                                    <td> </td>
+                                    <td> <?php echo $agentLog->action1; ?> <tt class="field-inf"><?php echo $agentLog->action; ?></tt></td>
+                                    <td> Оператор </td>
                                     <td><?php echo $agentLog->action2; ?></td>
-                                    <td><?php echo $agentLog->action1; ?></td>
+                                    <td> </td>
                                 </tr>
                             <?php } ?>
                         </table>
