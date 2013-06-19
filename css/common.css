@@ -1,0 +1,293 @@
+/* Base
+------------------------------------- */
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, font, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td
+{ padding: 0; margin: 0; }
+
+img { border: 0; }
+html { height: 100% }
+body { font: 12px Tahoma, Geneva, sans-serif; min-width: 600px; height: 100%; }
+/*a { text-decoration: underline; cursor: pointer; color: #069; border-style: none;}*/
+/*a:hover { text-decoration: none; cursor: pointer; color: #E80005;}*/
+a, a:hover { text-decoration: none; outline-style: none; cursor: pointer; }
+a, a:link, a:visited { color: #0088cc; }
+a:hover { color: #E68C3B; }
+
+
+div { border: solid #000 0px; }
+
+/*input, select { border: 1px solid #abadb3; 	height: 22px; margin: 0px; }*/
+.edit-content input[type="text"],
+.edit-content select {
+    border: 1px solid #abadb3;
+    height: 22px; margin: 0px;
+}
+
+.ui-widget { font-size: 12px; }
+
+
+/* Layout helpers
+----------------------------------*/
+.clear { clear: both; }
+.clear_fix { display: block; }
+.clear_fix::after { /*visibility: hidden;*/ display: block; font-size: 0; content: "."; clear: both; height: 0; }
+.fixed { position: fixed; }
+.absolute { position:absolute; }
+.fl_l { float: left; }
+.fl_r { float: right; }
+.ta_r { text-align: right; }
+.ta_l { text-align: left; }
+.ta_c { text-align: center; }
+.ta_j { text-align: justify; }
+.bold { font-weight: bold; }
+.hidden { display: none; }
+.pointer { cursor: pointer; }
+.of_h { overflow: hidden; }
+.of_ys { overflow-y: scroll; }
+.of_a { overflow: auto; }
+.m_center { margin: 0px auto; }
+.miniblock { padding-top: 3px; }
+.mediumblock { padding-top: 7px; }
+.bigblock { padding-top: 15px; }
+.hrblock { margin: 10px 0px; }
+
+
+/* Layout
+----------------------------------*/
+#wrapper { margin: 0 auto; min-height: 100%; height: auto !important; height: 100%; }
+#header { padding: 10px 10px 10px 10px; background: white; z-index: 10; }
+#middle { padding: 0px 10px 40px 10px; /* height: 1%; */  }
+#footer { margin: -30px 0 0; padding: 0 10px; height: 30px; line-height: 26px; text-align: right; }
+
+#header.fixed { position: fixed; width: 100%; box-sizing: border-box; -moz-box-sizing: border-box; }
+#header.fixed .filters,
+#header.fixed .control-bar { top: 10px; position: relative; }
+#header.fixed-now { box-shadow: 0 0 4px 2px #999; border-bottom: 1px solid #999; }
+
+/* Icons
+-------------------------------------*/
+a.icon { padding: 1px 0 1px 22px; line-height: 18px; }
+a.abut { cursor: pointer; }
+a.puinter { cursor: pointer; }
+a.icon-add { background: url(../images/add.png) 2px 70% no-repeat; }
+a.icon-edit { background: url(../images/edit.png) 2px 70% no-repeat; }
+a.icon-delete { background: url(../images/delete.png) 2px 70% no-repeat; }
+a.icon-group { background: url(../images/group.png) 2px 70% no-repeat; }
+a.icon_excel {    background: url(../images/page_white_excel.png) 2px 70% no-repeat;    }
+
+/* big icon */
+a.header-icon { padding: 12px 0 12px 38px; line-height: 36px; }
+a.icon-cdr-big { background: url(../images/blackberry_white.png) 2px 70% no-repeat; }
+a.icon-timeman-big { background: url(../images/database_table.png) 2px 70% no-repeat; }
+a.icon-queue-big { background: url(../images/chart_bar.png) 2px 70% no-repeat; }
+a.icon-settings-big{ background: url(../images/interface_preferences.png) 2px 70% no-repeat; }
+a.icon-supervisor-big { background: url(../images/monitor_lightning.png) 2px 70% no-repeat; }
+a.icon-autoinform-big { background: url(../images/atm.png) 2px 70% no-repeat; }
+a.icon-operator-big { background: url(../images/premium_support.png) 2px 70% no-repeat; }
+
+
+/* Menu
+-------------------------------------*/
+ul.menu { background-color: #F0F0F0; border: solid #C6C6C6 1px; padding: 10px 6px; -moz-border-radius: 6px; -webkit-border-radius: 6px; margin: 0; border-radius: 6px; }
+ul.menu > li  {border-right:  1px solid #C6C6C6; height: 38px; }
+ul.menu ul,
+ul.menu li,
+ul.menu .submenu-title { display: block; float: left; }
+ul.menu li.submenu { padding-left:0; padding-right:0; overflow: hidden; }
+ul.menu li,
+ul.menu .submenu-title { padding: 0px 10px;  }
+ul.menu li.submenu li {padding-left: 0; line-height: 36px;}
+ul.menu .submenu-title { font-weight: bold; }
+ul.menu .submenu-title a { color: #333; }
+ul.menu li.submenu li.current a { color: #777; text-decoration: none; font-weight:bold; }
+ul.menu li.submenu li a { text-decoration: underline; }
+ul.menu li.current a { font-weight:bold; color: #333 }
+ul.menu a {color:#666666; text-decoration: none; /*line-height: 28px;*/}
+ul.menu li.right {float:right; }
+
+/* filters
+---------------------------------- */
+.filters { padding-bottom: 5px; }
+.filters .filter {    margin-right: 7px; }
+.filters .label { padding-top: 3px; color: #666666; height: 14px; }
+.filters .labeled {margin-top: 6px; }
+.filters .sep { border-left: solid #C6C6C6 1px; padding-left: 5px; }
+.filters select,
+.filters input[type="text"] {
+	height: 22px;
+	margin: 0px;
+}
+.filters input[type="text"].ui-spinner-input {height: 19px;}
+.filters input[type="text"].datetimepicker { width: 150px; }
+.filters input.button-search { margin-left: 10px; margin-top: 17px; }
+
+/* Control-bar
+---------------------------------- */
+/* pg-pages */
+.pg-pages { font: 11px Tahoma, Geneva, sans-serif; }
+.pg-in { padding: 2px 5px; }
+.pg-lnk { color: #069; text-decoration: none;}
+.pg-lnk:hover { text-decoration: none; border-bottom: 1px solid #98ACC0; color: #069;}
+.pg-lnk:hover .pg-in { border-bottom: 2px solid #98ACC0; }
+.pg-lnk .pg-in { padding: 2px 6px; }
+.pg-lnk-sel { color: #069; border-bottom: 1px solid #003; text-decoration: none;}
+.pg-lnk-sel:hover { color: #069; text-decoration: none;}
+.pg-lnk-sel .pg-in { border-bottom: 2px solid #069; font-weight: bold;}
+/* ------------------------------------------------------------------------- */
+
+/* UI
+---------------------------------- */
+/* css for timepicker */
+#ui-datepicker-div{ display: none; }
+.ui-datepicker-trigger { margin-left: -19px; margin-right: 5px; margin-top: -5px; width: 18px; height: 18px; background: url("../images/date.png") no-repeat 0 100%; border: none; vertical-align: middle; }
+.ui-timepicker-div .ui-widget-header{ margin-bottom: 8px; }
+.ui-timepicker-div dl{ text-align: left; }
+/*.ui-timepicker-div dl dt{ height: 25px; }
+.ui-timepicker-div dl dd{ margin: -25px 0 10px 65px; }*/
+.ui-timepicker-div dl dt { height: 25px; margin-bottom: -25px; }
+.ui-timepicker-div dl dd { margin: 0 10px 10px 65px; }
+.ui-timepicker-div .ui_tpicker_hour div { padding-right: 2px; }
+.ui-timepicker-div .ui_tpicker_minute div { padding-right: 6px; }
+.ui-timepicker-div .ui_tpicker_second div { padding-right: 6px; }
+.ui-timepicker-div td, .ui-timepicker-div, .ui-datepicker-buttonpane { font-size: 90%; }
+.ui-timepicker-div { padding: 0 2px; }
+
+
+.ui-timepicker-rtl{ direction: rtl; }
+.ui-timepicker-rtl dl { text-align: right; }
+.ui-timepicker-rtl dl dd { margin: 0 65px 10px 10px; }
+
+#highcharts-wrap > tspan:last-of-type { display: none; }
+
+tr.gray, td.gray, .gray { color: #999; }
+
+/* table result
+----------------------------------- */
+table.grid { border-collapse: collapse; margin-left: -1px; border-spacing: 0px; empty-cells: show; border: 1px solid #EEE; font-size: 12px; width: 100%; }
+table.grid tr { display: table-row; vertical-align: inherit; border-color: inherit; }
+
+table.grid td,
+table.grid th { border: 1px solid #EEE; padding: 0 4px; height: 26px; -moz-box-sizing: border-box; -ms-box-sizing: border-box; box-sizing: border-box; }
+
+table.grid tr.head td,
+table.grid td.head { font-size: 90%; height: 26px; color: #FFF; background-color: #8A8A8A; font-weight: bold; }
+table.grid tr.sortable td,
+table.grid td.sortable { cursor: pointer; }
+
+table.grid tr.sel td { background-color: #fa5; }
+
+table.grid thead > .b-head th { height: 1px; }
+table.grid.tr-hover tbody tr:hover { background-color: #C6C6C6; }
+/* ------------------------------------------ */
+
+ /* Page: operlog
+------------------------------------------ */
+table.grid tr.subreport td { padding: 1px; }
+table.grid tbody tr.subreport:hover { background-color: #FFF; }
+table.grid tr.subreport table.grid { margin-left: 0px; }
+table.grid tr.subreport table.grid td { background-color: #f0f0f0; border: 1px solid #fff; }
+table.grid tr.subreport table.grid .head td {background-color: #ddd; color: #333; border: 1px solid #fff; }
+
+ /* Page: cdr
+------------------------------------------ */
+/* activ edit */
+td.edit-box { padding: 0; }
+td.image-link { text-align: center; }
+td.coming-img { padding: 0px;}
+td.coming-img div { margin-left: 8px; width: 25px; height: 25px; background: url("../images/coming.png") no-repeat 0 100%;}
+td.coming-img div.coming_0 { background-position: 0px 0px; }
+td.coming-img div.coming_1 { background-position: -25px 0px; }
+td.coming-img div.coming_2 { background-position: -50px 0px; }
+
+
+
+ /* Page: supervisor
+------------------------------------------ */
+
+/* section: operator, table */
+#queueAgents tr td { padding-top: 5px; }
+#queueAgents td[agent="queues"] {
+ font-family: "Lucida Grande", "Lucida Sans Unicode", Verdana, Arial, Helvetica, sans-serif;
+ font-size: 12px;
+}
+
+/* Page: cdr
+------------------------------------------ */
+/* comment edit */
+#comment_edit { margin: 0; padding: 0; position: absolute; }
+#comment_edit .edit-box { font-family: monospace; overflow: hidden; padding: 3px 4px 0px 4px; width: 100%; height: 100%; }
+#comment_edit input { font: 12px Tahoma, Geneva, sans-serif; font-family: monospace; overflow: hidden; width: 100%; }
+
+/* jplayer */
+#comment_player {margin: 0; padding: 0; position: absolute; top: 0px; left: 0px; }
+.player-button{ width: 16px; height: 16px; cursor: pointer; }
+.icon-play { background: url("../images/play.png") no-repeat 0 100%; }
+.icon-pause { background: url("../images/pause.png") no-repeat 0 100%; }
+.player-slider { margin-top: 8px; margin-left: 7px; text-align: right; width: 78px; border:1px solid #009be3; background-color:#eee; height: 5px; }
+/* ------------------------------------------------------------------------- */
+
+
+
+
+
+/* Page: settings
+------------------------------------------ */
+.schedule { border-collapse: collapse; margin-left: -1px; border-spacing: 0px; empty-cells: show; border: 1px solid #EEE; font-size: 12px; width: 100%; }
+.schedule tr { display: table-row; vertical-align: inherit; border-color: inherit; }
+.schedule td,
+.schedule th { border: 1px solid #EEE; padding: 0 4px; height: 26px; -moz-box-sizing: border-box; -ms-box-sizing: border-box; box-sizing: border-box; }
+.schedule tr.head td,
+.schedule td.head { font-size: 90%; height: 26px; color: #FFF; background-color: #8A8A8A; font-weight: bold; }
+
+.schedule td { text-align: center; }
+.schedule td:first-child { text-align: left; }
+
+
+.schedule tbody td+td  { background-color: #99FF99; }
+.schedule tbody td:last-child,
+.schedule tbody td:nth-last-child(2) { background-color: #FFFF99; }
+
+.schedule tbody td[event=off] { background-color: #99FF99; }
+.schedule tbody td[event=ill] { background-color: #FF99FF; }
+.schedule tbody td[event=job] { background-color: #FF9999; }
+.schedule tbody td[event=vac] { background-color: #FFFF99; }
+.schedule tbody td[event=err] { background-color: #FF0000; }
+
+.schedule tbody td[event].edit { background-color: #CCCCCC; }
+
+.schedule tbody td:hover,
+.schedule tbody td[event]:hover { background-color: #C6C6C6; }
+
+.schedule input[type="text"] { width: 30px; }
+
+
+/* edit-content
+------------------------------------------ */
+
+/* field */
+.field-required { color: #FF7058; font-weight: bold; padding-left: 3px;}
+.field-success { background: #C4FFC4; border-color: #090; }
+.field-sucfail { background: #FBC4C4; border-color: #D20000; }
+
+.field-inf { color: rgb(141, 153, 185); font-size: 9px; }
+
+.edit-content .label { padding-top: 5px; width: 250px; }
+.edit-content .labeled { margin-left: 5px; width: 220px; }
+
+#dialog-queue-add .label { width: 170px; }
+#dialog-queue-add .labeled { width: 250px; }
+
+
+
+
+
+
+
+

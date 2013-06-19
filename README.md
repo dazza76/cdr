@@ -1,4 +1,3 @@
 cdr
 ===
-
-cdr (asterisk)
+yes

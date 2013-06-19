@@ -1,0 +1,34 @@
+###############################################################################
+#  Apache mod rewrite                                                         #
+###############################################################################
+# <IfModule mod_rewrite.c>
+#     RewriteEngine  on
+#     RewriteRule    ^[a-z\-_]+$  auto_page.php  [L,QSA]
+# </IfModule>
+
+# Отключает Magic quotes для входящих данных из массивов GET/POST/Cookie
+php_flag magic_quotes_gpc Off
+php_flag magic_quotes_runtime Off
+
+# Приоритетность глобальных переменных
+php_value variables_order GPCS
+
+# Отключаем супер глобальные переменные
+php_value register_globals Off
+
+# Запрет на отображение содержимого каталога
+Options -Indexes
+
+# Задание кодировки файлов
+AddDefaultCharset utf-8
+
+
+###############################################################################
+#   Настройки отображения                                                     #
+###############################################################################
+# php_value highlight.string   #DD0000
+# php_value highlight.comment  #FF9900
+# php_value highlight.keyword  #007700
+# php_value highlight.bg       #FFFFFF
+# php_value highlight.default  #0000BB
+# php_value highlight.html     #000000

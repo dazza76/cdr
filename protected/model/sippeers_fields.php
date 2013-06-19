@@ -1,0 +1,86 @@
+<?php
+/**
+ * sippeers_fields.php file
+ *
+ * @author     Tyurin D. <fobia3d@gmail.com>
+ * @copyright  (c) 2013, AC
+ */
+/*
+  [ ]*[\d]+[ ]*([a-z1-9]+)[ ]*([a-z]+)\((.*)\) [ ]+(.*)[ ]+(.*)[ ]+(.*)\n
+  [ ]*[\d]+[ ]*([a-z1-9]+)[ ]*([a-z]+)\((.*)\)[ ]+([a-z_1-9]*)?(.*)
+  [ ]*[\d]+[ ]*([a-z0-9\-_]+)[ ]*([a-z]+)\((.*)\)[ ]+(Да|Нет)[ ]+([a-z0-9.;]*|Нет)[ ]+Изменить(.*)\n
+ */
+
+$sippeers = array(
+//	name                => array(type, lenght, NULL, default)
+    "id"                => array("int", "11", 0, "Нет"),
+    "accountcode"       => array("varchar", "20", 1, "NULL"),
+    "disallow"          => array("varchar", "100", 1, "all"),
+    "allow"             => array("varchar", "100", 1, "g729;ilbc;gsm;ulaw;alaw"),
+    "allowoverlap"      => array("enum", "yes, no", 1, "yes"),
+    "allowsubscribe"    => array("enum", "yes, no", 1, "yes"),
+    "allowtransfer"     => array("varchar", "3", 1, "NULL"),
+    "amaflags"          => array("varchar", "13", 1, "NULL"),
+    "autoframing"       => array("varchar", "3", 1, "NULL"),
+    "auth"              => array("varchar", "40", 1, "NULL"),
+    "busylevel"         => array("int", "2", 0, "Нет"),
+    "buggymwi"          => array("enum", "yes, no", 1, "no"),
+    "callgroup"         => array("varchar", "10", 1, "NULL"),
+    "callerid"          => array("varchar", "80", 1, "NULL"),
+    "cid_number"        => array("varchar", "40", 1, "NULL"),
+    "fullname"          => array("varchar", "40", 1, "NULL"),
+    "call-limit"        => array("int", "8", 1, "0"),
+    "callingpres"       => array("varchar", "80", 1, "NULL"),
+    "canreinvite"       => array("char", "6", 1, "yes"),
+    "context"           => array("varchar", "80", 1, "NULL"),
+    "defaultip"         => array("varchar", "15", 1, "0.0.0.0"),
+    "dtmfmode"          => array("varchar", "7", 1, "NULL"),
+    "fromuser"          => array("varchar", "80", 1, "NULL"),
+    "fromdomain"        => array("varchar", "80", 1, "NULL"),
+    "fullcontact"       => array("varchar", "80", 1, "NULL"),
+    "g726nonstandard"   => array("enum", "yes, no", 1, "no"),
+    "host"              => array("varchar", "31", 0, ""),
+    "insecure"          => array("varchar", "20", 1, "NULL"),
+    "ipaddr"            => array("varchar", "15", 0, ""),
+    "language"          => array("char", "2", 1, "NULL"),
+    "lastms"            => array("varchar", "20", 1, "NULL"),
+    "limitonpeer"       => array("varchar", "3", 0, "Нет"),
+    "mailbox"           => array("varchar", "50", 1, "NULL"),
+    "maxcallbitrate"    => array("int", "8", 1, "384"),
+    "mohsuggest"        => array("varchar", "80", 1, "NULL"),
+    "md5secret"         => array("varchar", "80", 1, "NULL"),
+    "musiconhold"       => array("varchar", "100", 1, "NULL"),
+    "name"              => array("varchar", "80", 0, ""),
+    "nat"               => array("varchar", "5", 0, "no"),
+    "notifyhold"        => array("varchar", "3", 0, "Нет"),
+    "notifyringing"     => array("varchar", "3", 0, "Нет"),
+    "outboundproxy"     => array("varchar", "80", 1, "NULL"),
+    "deny"              => array("varchar", "95", 1, "NULL"),
+    "permit"            => array("varchar", "95", 1, "NULL"),
+    "pickupgroup"       => array("varchar", "10", 1, "NULL"),
+    "port"              => array("varchar", "5", 0, ""),
+    "progressinband"    => array("enum", "yes, no, never", 1, "no"),
+    "promiscredir"      => array("enum", "yes, no", 1, "no"),
+    "qualify"           => array("char", "3", 1, "NULL"),
+    "regexten"          => array("varchar", "80", 0, ""),
+    "regseconds"        => array("int", "11", 0, "0"),
+    "regserver"         => array("varchar", "255", 0, "Нет"),
+    "rfc2833compensate" => array("enum", "yes, no", 1, "no"),
+    "rtptimeout"        => array("char", "3", 1, "NULL"),
+    "rtpholdtimeout"    => array("char", "3", 1, "NULL"),
+    "secret"            => array("varchar", "80", 1, "NULL"),
+    "sendrpid"          => array("enum", "yes, no", 1, "yes"),
+    "setvar"            => array("varchar", "100", 0, ""),
+    "subscribecontext"  => array("varchar", "80", 1, "NULL"),
+    "subscribemwi"      => array("varchar", "3", 1, "NULL"),
+    "t38pt_udptl"       => array("enum", "yes, no", 1, "no"),
+    "trustrpid"         => array("enum", "yes, no", 1, "no"),
+    "type"              => array("varchar", "6", 0, "friend"),
+    "useclientcode"     => array("enum", "yes, no", 1, "no"),
+    "user"              => array("varchar", "255", 0, "Нет"),
+    "useragent"         => array("varchar", "255", 0, "Нет"),
+    "username"          => array("varchar", "80", 0, ""),
+    "usereqphone"       => array("varchar", "3", 0, "no"),
+    "videosupport"      => array("enum", "yes, no", 1, "yes"),
+    "vmexten"           => array("varchar", "80", 1, "NULL"),
+);
