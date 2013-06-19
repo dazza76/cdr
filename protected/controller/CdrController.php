@@ -98,7 +98,7 @@ class CdrController extends Controller {
      */
     public function init($params = null) {
         parent::init($params);
-
+        $this->offset = FiltersValue::parseOffset($_GET['offset'], $this->limit);
         if ($this->_actType === self::TYPE_ACTION) {
             $action = "action" . $this->_atcion;
             if (!method_exists($this, $action)) {
@@ -244,6 +244,7 @@ class CdrController extends Controller {
         if ($this->desc) {
             $sort .= " DESC ";
         }
+
         $command = $this->_db->createCommand()->select()
                 ->from(Cdr::TABLE)
                 ->calc()

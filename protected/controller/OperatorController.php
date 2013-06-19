@@ -107,8 +107,14 @@ class OperatorController extends Controller {
             /* @var $agentLog AgentLog */
             $date                              = $agentLog->datetime->format('d.m.Y');
             $this->dataResult[$date]['logs'][] = $agentLog;
-
-            switch ($agentLog->action) {
+            $str = strtolower($agentLog->action);
+            switch ($str) {
+                case 'aftercall':
+                    $agentLog->action1                    = 'Обработка звонка';
+                    break;
+                    case 'unaftercal':
+                        $agentLog->action1                    = 'Обработка завершина';
+                        break;
                 case 'pausecall':
                     $agentLog->action1                    = 'Поствызывная обработка';
                     if ($pausecall_begin[$agentLog->agentid] == 0)
@@ -126,7 +132,7 @@ class OperatorController extends Controller {
                     break;
                 case 'outcoming':
                     $agentLog->action1                    = 'Совершен исходящий';
-                    $agentLog->action2                    = 'Длит.: ' . $agentLog->duration . ' с';
+                    $agentLog->action2                    =  Utils::time($agentLog->duration) ;
                     break;
                 case 'ready':
                     $agentLog->action1                    = 'Готов к работе';
@@ -138,7 +144,7 @@ class OperatorController extends Controller {
                     break;
                 case 'unpause':
                     $agentLog->action1                    = "Вернулся с перерыва";
-                    $agentLog->action2                    = "Время: " . (strtotime($agentLog->datetime) - $pause_begin[$agentLog->agentid]) . " сек.";
+                    $agentLog->action2                    =  Utils::time( (strtotime($agentLog->datetime) - $pause_begin[$agentLog->agentid])) /* . " сек." */;
                     $pause_length[$agentLog->agentid] += strtotime($agentLog->datetime) - $pause_begin[$agentLog->agentid];
                     $pause_begin[$agentLog->agentid]      = 0;
                     break;
@@ -165,7 +171,6 @@ class OperatorController extends Controller {
                     break;
             }
         }
-
 
         // $this->dataResult = $select->query()->getFetchObjects(AgentLog);
         Log::dump($this->dataResult, "AgentLog");

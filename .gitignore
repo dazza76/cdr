@@ -4,6 +4,8 @@ tmp/*
 nbproject/*
 build/*
 INF/*
+data/*
 monitor/*
 tests/*
 *test-*
+TASKS.todo

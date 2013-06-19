@@ -40,7 +40,7 @@
                 <td class="head"  style="width: 150px;">Количество вызовов</td>
                 <td class="head"  style="width: 150px;">Время разговоров, мин</td>
                 <td class="head"  style="width: 150px;">Ср. время разг., сек</td>
-                <td class="head"  style="width: 150px;">Ср. время разг., сек</td>
+                <td class="head"  style="width: 150px;">Ср. время поднятия трубки, сек</td>
                 <td class="head"  style="width: 150px;">Исходящих</td>
             </tr>
         </thead>

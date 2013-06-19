@@ -58,6 +58,7 @@ function tick() {
 
 
 
+
 var Supervisor = {
     _timeoutId: false,
     onUpdate: 1,
@@ -92,7 +93,7 @@ var Supervisor = {
         self.stopUpdate();
 
         if (!self.onUpdate) {
-            return;
+            return ;
         }
 
         var interval = parseInt(self.interval) * 1000;
@@ -157,15 +158,12 @@ var Supervisor = {
         }
     },
     _updateSectionOperator: function(data) {
-
         var da = data.queueAgents;
         var lg = [];
         for (var i in da) {
-            lg[i] = da[i] = da[i].agentid + "; " + da[i].member + "; " + da[i].phone + "; " /* + da[i].queues.replace(/<br \/>/g, ',') + "; " */ + da[i].state_phone + "; ";
+            lg[i] =  da[i].agentid + "; " + da[i].member + "; " + da[i].phone + "; " /* + da[i].queues.replace(/<br \/>/g, ',') + "; " */ + da[i].state_phone + "; ";
         }
         $("#ajaxlog").html(lg.join("<br />"));
-
-
 
         var $tableAgent = $('#queueAgents tbody');
         for (var i in data.queueAgents) {

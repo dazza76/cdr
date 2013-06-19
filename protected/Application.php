@@ -51,7 +51,6 @@ class Application {
         if (is_array($config)) {
             App::Config()->mergeRecursive($config);
         }
-
         $this->db       = ACDbConnection::create(App::Config()->database);
         $this->request  = new ACRequest(App::Config()->webpath);
         $this->response = new ACResponse(array('charset' => App::Config()->charset));

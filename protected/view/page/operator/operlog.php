@@ -99,7 +99,7 @@
                             <?php foreach ($dayLog as $agentLog) { ?>
                                 <tr>
                                     <td><?php echo $agentLog->datetime->format('H:i:s'); ?></td>
-                                    <td> <?php echo $agentLog->action1; ?> <tt class="field-inf"><?php echo $agentLog->action; ?></tt></td>
+                                    <td> <?php echo $agentLog->action1; ?> <!-- <tt class="field-inf"><?php echo $agentLog->action; ?></tt> --></td>
                                     <td> Оператор </td>
                                     <td><?php echo $agentLog->action2; ?></td>
                                     <td> </td>

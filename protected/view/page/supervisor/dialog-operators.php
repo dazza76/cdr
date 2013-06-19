@@ -40,16 +40,15 @@ $agents = QueueAgent::getQueueAgents();
         var agentsScan = <?php echo ACJavaScript::encode(App::Config()->supervisor['agentid']); ?>;
         // agentsScan = agentsScan.split(',');
 
-        $('#dialog-operators input').change(function(){
-            for(var i in agentsScan) {
-                if (agentsScan[i] == $(this).val() ) {
-                        if (! $(this).attr("checked") ) {
-
-                        }
+        $('#dialog-operators input').change(function() {
+            var nvar = [];
+            $('#dialog-operators input').each(function() {
+                if ($(this).attr("checked")) {
+                    nvar.push($(this).val());
                 }
-            }
-
-            console.log(this);
+            });
+            $.cookie('supervisor_agentid', nvar.join(','));
+            console.log(nvar, this);
         });
 
     });
