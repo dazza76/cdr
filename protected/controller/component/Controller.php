@@ -84,6 +84,12 @@ abstract class Controller {
     public $error;
 
     public function __construct() {
+        if ( !App::auth()->isAuth() ) {
+            App::location('login');
+            // log::dump(App::Auth(), 'controller');
+        }
+
+
         if ( ! empty($_POST['act'])) {
             $this->_atcion  = $_POST['act'];
             $this->_actType = self::TYPE_ACTION;

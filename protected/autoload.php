@@ -35,6 +35,7 @@ spl_autoload_register(
                 'acpropertyvalue' => '/ac/utils/ACPropertyValue.php',
                 'acrequest' => '/ac/web/ACRequest.php',
                 'acresponse' => '/ac/web/ACResponse.php',
+                'acsession' => '/ac/web/ACSession.php',
                 'acsingletonexception' => '/ac/base/ACException.php',
                 'activecall' => '/model/ActiveCall.php',
                 'acutils' => '/ac/utils/ACUtils.php',
@@ -44,6 +45,7 @@ spl_autoload_register(
                 'agentlog' => '/model/AgentLog.php',
                 'app' => '/Application.php',
                 'application' => '/Application.php',
+                'auth' => '/model/Auth.php',
                 'autodialout' => '/model/Autodialout.php',
                 'autoinformcontroller' => '/controller/AutoinformController.php',
                 'callstatus' => '/model/CallStatus.php',
@@ -53,6 +55,7 @@ spl_autoload_register(
                 'export' => '/controller/component/Export.php',
                 'filtersvalue' => '/controller/component/FiltersValue.php',
                 'log' => '/ac/logger/Log.php',
+                'model' => '/model/Model.php',
                 'operatorcontroller' => '/controller/OperatorController.php',
                 'queue' => '/model/Queue.php',
                 'queueagent' => '/model/QueueAgent.php',
@@ -62,6 +65,7 @@ spl_autoload_register(
                 'sippeer' => '/model/Sippeer.php',
                 'supervisorcontroller' => '/controller/SupervisorController.php',
                 'timemancontroller' => '/controller/TimemanController.php',
+                'user' => '/model/User.php',
                 'utils' => '/Utils.php'
             );
         }

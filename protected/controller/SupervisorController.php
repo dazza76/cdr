@@ -68,10 +68,11 @@ class SupervisorController extends Controller {
                 foreach ($this->queueAgents as $obj) {
                     $queueAgents[] = array(
                         'agentid' => $obj->agentid,
-                        //'state' => $obj->state,//sgetStatePhone(),
+                        // 'state' => $obj->state, //sgetStatePhone(),
                         'state_phone' => $obj->getStatePhone(),
                         'phone' => $obj->phone,
                         'member' => $obj->member,
+                        'time' => $obj->time,
                         'queues' => implode("<br />", $obj->getQueuesFull(true))
                     );
                 }
@@ -147,14 +148,16 @@ class SupervisorController extends Controller {
     public function sectionOperator() {
         // статусы
         $states = $this->getStates();
-        $this->queueChart = array(
-            'ringing' => 0,
-            'free' => 0,
-            'used' => 0,
-            'paused' => 0,
-            'aftercall' => 0
-        );
+        $agentids = App::Config()->supervisor['agentid'];
+
         // диограма
+        $this->queueChart = array(
+            'ringing' => 0,  // звонит
+            'free' => 0,      // свободе
+            'used' => 0,     // пиздит
+            'paused' => 0,   // пауза
+            'aftercall' => 0, // зв. завершен
+        );
         foreach ($states as $value) {
             switch ($value['phone']) {
                 case 'ringing':
@@ -181,18 +184,77 @@ class SupervisorController extends Controller {
 
         // операторы
         $this->queueAgents = array();
+        $used = array();
+        $free = array();
 
         $result = App::Db()->createCommand()->select()
                 ->from(QueueAgent::TABLE)
                 ->addWhere('state', 'out', '<>')
+                ->addWhere('agentid', $agentids, 'IN')
                 ->order('name')
                 ->query();
 
+
         while ($queueAgent = $result->fetchObject('QueueAgent')) {
             /* @var $queueAgent QueueAgent */
+            $queueAgent->time = 'default';
             $queueAgent->phone = $states[$queueAgent->agentid]['phone'];
             $queueAgent->member = $states[$queueAgent->agentid]['member'];
-            $this->queueAgents[] = $queueAgent;
+            $this->queueAgents[$queueAgent->agentid] = $queueAgent;
+
+            // TODO: Нужна комбинированная прверка
+            if($queueAgent->phone == "used") {
+                $used[] = $queueAgent->agentid;
+            } else {
+                $free[] = $queueAgent->agentid;
+            }
+
+        }
+
+		log::trace("used:".implode(',', $used)."; free:".implode(',',$free));
+
+
+        if (count($used)) {
+            foreach ($used as $id) {
+                $result = App::Db()->createCommand()->select('`datetime`, agentid')->from('agent_log')
+                    //->addWhere('agentid', $used, 'IN')
+    				->addWhere('agentid', $id)
+                    // TODO: ->addWhere('datetime', '24 часа')
+                    // ->group('agentid', $id)
+                    ->order('`datetime` DESC')
+                    ->limit(1)
+                    ->query()->getFetchAssocs();
+                $queueAgent = $this->queueAgents[$result['agentid']];
+                $queueAgent->time = $result['datetime'] . " - " . date('H:i:s', time() - $result['datetime']);
+        //         foreach ($result as $value) {
+        //             $queueAgent = $this->queueAgents[$value['agentid']];
+
+    				// // $queueAgent->rtime = strtotime($value['datetime']);
+        //             $queueAgent->time = $value['datetime'];
+        //                 // Utils::time( time() - strtotime($value['datetime'])) ;
+        //         }
+            }
+        }
+        if(count($free)) {
+            foreach ($free as $id) {
+                $id = (int) $id;
+                $query = "SELECT *, MIN(NOW()-`datetime`) AS tm FROM
+                    ((SELECT `datetime`, `action`
+                        FROM `agent_log`
+                        WHERE `agentid` = $id
+                        AND action IN ('Login', 'unpause', 'unaftercal')
+                        ORDER BY `datetime` DESC LIMIT 1)
+                    UNION ALL
+                    (SELECT `timestamp` as `datetime`, `status` AS action
+                        FROM `call_status` WHERE `memberId`= '$id'
+                        AND `status` LIKE 'COMPLETE%'
+                        ORDER BY timestamp DESC LIMIT 1)) AS temp";
+                $result = App::Db()->query($query)->fetch();
+                $queueAgent = $this->queueAgents[$id];
+                $queueAgent->time = $result['datetime']. " - " . date('H:i:s', time() - $result['datetime']);
+                    // Utils::time($tm);
+				log::dump($result, "free: $id");
+            }
         }
         Log::dump($this->queueAgents, 'queueAgents');
 
@@ -201,7 +263,6 @@ class SupervisorController extends Controller {
         $date = new DateTime($date); // '2011-03-11 00:00:00'
 
         $this->queuesData = $this->getStatisticOperator($date);
-
 
 
         // header('Refresh: 1; url='.$_SERVER['PHP_SELF'].'?section=operator');
@@ -288,9 +349,9 @@ class SupervisorController extends Controller {
         foreach ($shell_arr as $row) {
             // TODO: Извлечение ID опертора из шел ответа
             $agentid = substr(trim($row), 0, 4);
-            Log::trace('calc agentid: ' . $agentid);
+            // Log::trace('calc agentid: ' . $agentid);
             if (!is_numeric($agentid)) {
-                Log::trace('---> no numeric > continue');
+                // Log::trace('---> no numeric > continue');
                 continue;
             }
 

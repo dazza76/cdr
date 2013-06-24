@@ -21,17 +21,21 @@ class Utils {
      * Форматированное время H:I:S
      * @param int $seconds
      * @return string
+     *
+     * @todo доработать
      */
     public static function time($seconds) {
         $seconds = (int) $seconds;
-        $di      = new DateInterval('PT' . $seconds . 'S');
-        $di->h   = floor($seconds / 60 / 60);
-        $seconds -= $di->h * 3600;
-        $di->i   = floor($seconds / 60);
-        $seconds -= $di->i * 60;
-        $di->s   = $seconds;
+        return $seconds;
 
-        return $di->format('%H:%I:%S');
+        $h = $seconds % 3600;// / 60);
+        $seconds = $second - $h * 3600;
+
+        $m = $seconds % 60;
+        $seconds = $seconds - ($m * 60);
+
+
+        return "$h:$m:$seconds";
     }
 
     /**

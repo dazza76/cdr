@@ -160,6 +160,7 @@ var Supervisor = {
     _updateSectionOperator: function(data) {
         var da = data.queueAgents;
         var lg = [];
+        console.log(da);
         for (var i in da) {
             lg[i] =  da[i].agentid + "; " + da[i].member + "; " + da[i].phone + "; " /* + da[i].queues.replace(/<br \/>/g, ',') + "; " */ + da[i].state_phone + "; ";
         }
@@ -171,6 +172,7 @@ var Supervisor = {
             var $tr = $tableAgent.find('tr[agentid=' + qAgent.agentid + ']');
             $tr.find('td[agent=state_phone]').text(qAgent.state_phone);
             $tr.find('td[agent=queues]').html(qAgent.queues);
+            $tr.find('td[agent=time]').html(qAgent.time);
         }
 
         var $tableData = $('#queuesData tbody');

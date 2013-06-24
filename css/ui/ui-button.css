@@ -1,0 +1,53 @@
+/* Button
+----------------------------------*/
+.button { border: 1px solid #B3B3B3; }
+.button:hover { border: 1px solid #999999; }
+.button.ui-corner-all {-moz-border-radius: 4px; -webkit-border-radius: 4px; -khtml-border-radius: 4px; border-radius: 4px; }
+
+.button-gray,
+.button-orange,
+.button-blue {
+    text-align: center;
+    display: inline-block;
+    position: relative;
+    zoom: 1;
+    margin: 2px 5px;
+    background-image: url(../../images/button-bg.png);
+    background-repeat: repeat-x;
+}
+.button > .ui-button-text {
+    background: none;
+    margin: 0px;
+    cursor: pointer;
+    font-size: 11px;
+    white-space: nowrap;
+    outline: none;
+    padding: .4em 1em;
+    overflow: visible;
+}
+/* orange */
+.button-orange {
+    color: #444;
+    background-color: #FFEEA6;
+    background-position: 0px -8px;
+}
+.button-orange:hover { background-position: 0px -3px; color: #212121; }
+.button-orange:active { background: #FFCA61;  }
+/* gray */
+.button-gray {
+    color: #444;
+    background-color: #DDDDDD;
+    background-position: 0px -54px;
+}
+.button-gray:hover { background-position: 0px -46px; color: #212121; }
+.button-gray:active { background: #dcdcdc;  }
+/* blue */
+.button-blue {
+    border: 1px solid #999999;
+    color: #FFF;
+    /*text-shadow: 0 -1px 0 #333;*/
+    background-color: #0066cc;
+    background-position: 0px -92px;
+}
+.button-blue:hover { background-position: 0px -98px; }
+.button-blue:active { background: #41A0E7; }

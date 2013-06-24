@@ -30,7 +30,7 @@ return array(
         ),
     ),
     'settings' => array(
-        'page' => 'настройки',
+        'page' => 'Настройки',
         'section' => array(
             'operator' => 'Операторы ',
             'queue' => 'Очереди ',

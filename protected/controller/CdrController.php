@@ -245,6 +245,7 @@ class CdrController extends Controller {
             $sort .= " DESC ";
         }
 
+log::dump($this->_db);
         $command = $this->_db->createCommand()->select()
                 ->from(Cdr::TABLE)
                 ->calc()

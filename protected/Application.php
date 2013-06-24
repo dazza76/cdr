@@ -38,6 +38,9 @@ class Application {
      */
     public $controller;
 
+
+    public $auth;
+
     /**
      * Конструктор
      * @param ACConfig $config
@@ -55,9 +58,14 @@ class Application {
         $this->request  = new ACRequest(App::Config()->webpath);
         $this->response = new ACResponse(array('charset' => App::Config()->charset));
 
-        session_start();
+        ACSession::start();
+
+        $this->auth = new Auth(App::Config()->secret);
+        $this->auth->authorization();
+        // log::dump($this->auth, 'auth');
 
         self::$_instanse = $this;
+
     }
 }
 
@@ -174,6 +182,14 @@ class App extends Application {
 
     public static function Controller() {
         return parent::$_instanse->controller;
+    }
+
+    /**
+     * @return Auth
+     */
+    public static function Auth()
+    {
+        return parent::$_instanse->auth;
     }
     // -----------------------------------------------------------------------
 }

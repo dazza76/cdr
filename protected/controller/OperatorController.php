@@ -106,7 +106,10 @@ class OperatorController extends Controller {
         while ($agentLog = $result->fetchObject(AgentLog)) {
             /* @var $agentLog AgentLog */
             $date                              = $agentLog->datetime->format('d.m.Y');
+
             $this->dataResult[$date]['logs'][] = $agentLog;
+
+            $str = "";
             $str = strtolower($agentLog->action);
             switch ($str) {
                 case 'aftercall':
@@ -144,23 +147,25 @@ class OperatorController extends Controller {
                     break;
                 case 'unpause':
                     $agentLog->action1                    = "Вернулся с перерыва";
-                    $agentLog->action2                    =  Utils::time( (strtotime($agentLog->datetime) - $pause_begin[$agentLog->agentid])) /* . " сек." */;
+                    $agentLog->action2                    =  Utils::time(
+                                                             strtotime($agentLog->datetime, true) - $pause_begin[$agentLog->agentid]
+                                                             ); /* . " сек." */;
                     $pause_length[$agentLog->agentid] += strtotime($agentLog->datetime) - $pause_begin[$agentLog->agentid];
                     $pause_begin[$agentLog->agentid]      = 0;
                     break;
-                case 'Login':
+                case 'login':
                     $agentLog->action1                    = 'Вошел в очередь';
                     if ($this->dataResult[$date]['day_begin'] == 0)
                         $this->dataResult[$date]['day_begin'] = strtotime($agentLog->datetime);
                     break;
-                case 'Logout':
-                case 'Logoff':
+                case 'logout':
+                case 'logoff':
                     $agentLog->action1                    = 'Вышел из очереди';
                     if ($this->dataResult[$date]['day_begin']) {
                         $this->dataResult[$date]['dey_length'] = strtotime($agentLog->datetime) - $this->dataResult[$date]['day_begin'];
                     };
                     break;
-                case 'Change':
+                case 'change':
                     $agentLog->action1 = 'Смена рабочего места';
                     break;
                 case 'lost':
