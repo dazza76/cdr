@@ -87,7 +87,7 @@ if ($max < 10) {
         <thead>
             <tr>
                 <td class="head"  align="center" style="width: 250px">Операторы</td>
-                <td class="head"  align="center" style="width: 100px">Статус</td>
+                <td class="head"  align="center" style="width: 100px" colspan="2">Статус</td>
                 <td class="head"  align="center" style="width: 80px">Время</td>
                 <td class="head"  align="center">Очередь</td>
             </tr>
@@ -97,6 +97,7 @@ if ($max < 10) {
                 <tr agentid="<?php echo $queueAgent->agentid; ?>">
                     <td align="left" valign="top" agent="name"><?php echo html($queueAgent->name); ?></td>
                     <td align="left" valign="top" agent="state_phone"><?php echo html($queueAgent->getStatePhone()); ?></td>
+                    <td align="left" valign="top" agent="state_oper"><?php echo html($queueAgent->getStateOper()); ?></td>
                     <td align="right" valign="top" agent="time"><span tick="time">00:00:00</span></td>
                     <td align="right" valign="top" agent="queues"><?php echo implode("<br />", $queueAgent->getQueuesFull(true)); ?></td>
                 </tr>

@@ -25,6 +25,8 @@ class Utils {
      * @todo доработать
      */
     public static function time($seconds) {
+        return date('H:i:s', $seconds - 10800);
+
         $seconds = (int) $seconds;
         return $seconds;
 

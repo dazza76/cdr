@@ -80,9 +80,11 @@
 
                 echo "<tr>
                         <td> $dname </td>
-                        <td> ".date('H:i:s', $dayLogArr['day_begin'])." </td>
-                        <td>  ".date('H:i:s', $dayLogArr['day_begin'] + $dayLogArr['dey_length'])." </td>
-                        <td>  </td>
+                        <td> ".date('H:i:s', $dayLogArr['day_begin'])." </td> "
+                        // <td>  ".date('H:i:s', $dayLogArr['day_begin'] + $dayLogArr['dey_length'])." </td>
+                        . "<td>  ".$dayLogArr['day_end']." </td> "
+
+                        . "<td>  </td>
                         <td><a onclick=\"return false;\" class=\"subreport\">[<sp>+</sp>{$c}]</a></td>
                     </tr>";
                 ?>

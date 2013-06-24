@@ -53,16 +53,16 @@ $chart_title = "сравнение {$from_title} и {$to_title}";
                     <?php echo Queue::showMultiple("queue[]", $this->queue); ?>
             </div>
         </div>
-        
+
         <div class="filter fl_l sep">
             <div class="label">мобильные</div>
             <div class="labeled" style="padding: 3px 0px 4px 0px;">
                 <input name="mob" type="checkbox" value="1" <?php if ($this->mob) echo "default=\"1\""; ?> />
             </div>
-        </div>   
-        
-        
-        
+        </div>
+
+
+
         <div class="filter fl_l">
             <div class="labeled">
                 <input type="submit" name="search" id="button-search" class="button button-search" value="Показать" />
@@ -115,10 +115,12 @@ $chart_title = "сравнение {$from_title} и {$to_title}";
             tooltip: {
                 // crosshairs: true,
                 // shared: true
-                formatter: function() {
-                    return '<b>' + this.x + '</b><br/>' +
-                            this.series.name + ': ' + this.y + '<br/>';
-                }
+                // formatter: function() {
+                //     return '<b>' + this.x + '</b><br/>' +
+                //             this.series.name + ': ' + this.y + '<br/>';
+                // }
+                crosshairs: true,
+                shared: true
             },
             plotOptions: {
                 spline: {

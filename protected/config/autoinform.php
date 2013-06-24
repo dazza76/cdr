@@ -11,7 +11,7 @@ return array(
     // Путь являеться абсолютным, и должен начинаться с корня системы.
     // Windows:     Z:/var/www/autoinform.conf
     // Unix:        /var/www/autoinform.conf
-    'file_conf' => APPPATH. 'config/autoinform.conf',
+    'file_conf' => '/srv/scripts/autoinformer/DaemonConfig.ini',
 
     // Кол. обрз. символов
     'ordernum'=>'addnum,cutnum', // порядок действий

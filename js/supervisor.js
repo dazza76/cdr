@@ -62,7 +62,7 @@ function tick() {
 var Supervisor = {
     _timeoutId: false,
     onUpdate: 1,
-    interval: 2,
+    interval: 1,
     section: null,
     init: function() {
         var self = Supervisor;
@@ -164,13 +164,14 @@ var Supervisor = {
         for (var i in da) {
             lg[i] =  da[i].agentid + "; " + da[i].member + "; " + da[i].phone + "; " /* + da[i].queues.replace(/<br \/>/g, ',') + "; " */ + da[i].state_phone + "; ";
         }
-        $("#ajaxlog").html(lg.join("<br />"));
+        $("#ajaxlog").html(lg.join("<br />") + "<br />" + "time: " + data.time);
 
         var $tableAgent = $('#queueAgents tbody');
         for (var i in data.queueAgents) {
             var qAgent = data.queueAgents[i];
             var $tr = $tableAgent.find('tr[agentid=' + qAgent.agentid + ']');
             $tr.find('td[agent=state_phone]').text(qAgent.state_phone);
+            $tr.find('td[agent=state_oper]').text(qAgent.state_oper);
             $tr.find('td[agent=queues]').html(qAgent.queues);
             $tr.find('td[agent=time]').html(qAgent.time);
         }

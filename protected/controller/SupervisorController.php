@@ -55,6 +55,8 @@ class SupervisorController extends Controller {
     }
 
     public function index() {
+        $generatetime = microtime(true);
+
         $section = "section" . $this->getSection();
         $this->$section();
 
@@ -70,6 +72,7 @@ class SupervisorController extends Controller {
                         'agentid' => $obj->agentid,
                         // 'state' => $obj->state, //sgetStatePhone(),
                         'state_phone' => $obj->getStatePhone(),
+                        'state_oper' => $obj->getStateOper(),
                         'phone' => $obj->phone,
                         'member' => $obj->member,
                         'time' => $obj->time,
@@ -78,6 +81,9 @@ class SupervisorController extends Controller {
                 }
                 $response['queueAgents'] = $queueAgents;
             }
+
+            $response['time'] = substr( microtime(true) - $generatetime, 0 , 6);
+
             $this->content = ACJavaScript::encode(array('response' => $response));
             return;
         }
@@ -213,32 +219,25 @@ class SupervisorController extends Controller {
 
 		log::trace("used:".implode(',', $used)."; free:".implode(',',$free));
 
-
+        // Занят
         if (count($used)) {
             foreach ($used as $id) {
-                $result = App::Db()->createCommand()->select('`datetime`, agentid')->from('agent_log')
-                    //->addWhere('agentid', $used, 'IN')
-    				->addWhere('agentid', $id)
-                    // TODO: ->addWhere('datetime', '24 часа')
-                    // ->group('agentid', $id)
-                    ->order('`datetime` DESC')
+                $result = App::Db()->createCommand()->select('(NOW() - `timestamp`) AS `timestamp`, memberId')->from('ActiveCall')
+    				->addWhere('memberId', $id)
+                    ->order('`timestamp` DESC')
                     ->limit(1)
-                    ->query()->getFetchAssocs();
-                $queueAgent = $this->queueAgents[$result['agentid']];
-                $queueAgent->time = $result['datetime'] . " - " . date('H:i:s', time() - $result['datetime']);
-        //         foreach ($result as $value) {
-        //             $queueAgent = $this->queueAgents[$value['agentid']];
-
-    				// // $queueAgent->rtime = strtotime($value['datetime']);
-        //             $queueAgent->time = $value['datetime'];
-        //                 // Utils::time( time() - strtotime($value['datetime'])) ;
-        //         }
+                    ->query()->fetch();
+                $queueAgent = $this->queueAgents[$id];
+                $queueAgent->time = // $result['timestamp'] . " - " .
+                                    date('H:i:s',  $result['timestamp'] - 10800 );
             }
         }
+
+        // Свободен
         if(count($free)) {
             foreach ($free as $id) {
                 $id = (int) $id;
-                $query = "SELECT *, MIN(NOW()-`datetime`) AS tm FROM
+                $query = "SELECT MIN(NOW()-`datetime`) AS tm FROM
                     ((SELECT `datetime`, `action`
                         FROM `agent_log`
                         WHERE `agentid` = $id
@@ -251,12 +250,17 @@ class SupervisorController extends Controller {
                         ORDER BY timestamp DESC LIMIT 1)) AS temp";
                 $result = App::Db()->query($query)->fetch();
                 $queueAgent = $this->queueAgents[$id];
-                $queueAgent->time = $result['datetime']. " - " . date('H:i:s', time() - $result['datetime']);
+                $queueAgent->time = // $result['tm']. " - <br />" .
+                date('H:i:s',  $result['tm'] - 10800 );
                     // Utils::time($tm);
-				log::dump($result, "free: $id");
+				// log::dump($result, "free: $id");
             }
         }
+
+
         Log::dump($this->queueAgents, 'queueAgents');
+
+
 
         // минитабличка
         $date = date('Y-m-d H:i:s', time() - 1800); //2012-07-28+03
@@ -324,7 +328,7 @@ class SupervisorController extends Controller {
                 $vars = array('queue' => $queue);
                 $shell[] = ACUtils::parseTemplateString($shell_string, $vars);
             }
-            $shell = implode(' && ', $shell);
+            $shell = implode(' || ', $shell);
             Log::trace($shell);
             if ($shell) {
                 $result = shell_exec($shell);

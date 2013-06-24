@@ -61,6 +61,7 @@ class OperatorController extends Controller {
     }
 
     public function sectionOperlog() {
+        $this->todate->add(new DateInterval('PT23H59M59S'));
         $select = App::Db()->createCommand()->select(array(
                     "datetime",
                     "agentid",
@@ -114,10 +115,14 @@ class OperatorController extends Controller {
             switch ($str) {
                 case 'aftercall':
                     $agentLog->action1                    = 'Обработка звонка';
+                    $call_begin[$agentLog->agentid]       = strtotime($agentLog->datetime);
                     break;
-                    case 'unaftercal':
-                        $agentLog->action1                    = 'Обработка завершина';
+                case 'unaftercal':
+                        $agentLog->action1                = 'Обработка завершена';
+                        $agentLog->action2 = Utils::time(strtotime($agentLog->datetime) - $call_begin[$agentLog->agentid]);
+                        $call_begin[$agentLog->agentid]       = 0;
                         break;
+                // pause
                 case 'pausecall':
                     $agentLog->action1                    = 'Поствызывная обработка';
                     if ($pausecall_begin[$agentLog->agentid] == 0)
@@ -129,6 +134,7 @@ class OperatorController extends Controller {
                     $pausecall_length[$agentLog->agentid] += strtotime($agentLog->datetime) - $pausecall_begin[$agentLog->agentid];
                     $pausecall_begin[$agentLog->agentid]  = 0;
                     break;
+
                 case 'incoming':
                     $agentLog->action1                    = 'Принят входящий (' . $agentLog->agentphone . ')';
                     $agentLog->action2                    = 'Зв.: ' . $agentLog->ringtime . ' с/Разг.: ' . $agentLog->duration . ' с';
@@ -155,14 +161,17 @@ class OperatorController extends Controller {
                     break;
                 case 'login':
                     $agentLog->action1                    = 'Вошел в очередь';
-                    if ($this->dataResult[$date]['day_begin'] == 0)
+                    if ($this->dataResult[$date]['day_begin'] == 0) {
                         $this->dataResult[$date]['day_begin'] = strtotime($agentLog->datetime);
+                        $this->dataResult[$date]['day_end']  = "";//strtotime($agentLog->datetime->format('Y-m-d'). ' 23:59:59');
+                    }
                     break;
                 case 'logout':
                 case 'logoff':
                     $agentLog->action1                    = 'Вышел из очереди';
                     if ($this->dataResult[$date]['day_begin']) {
                         $this->dataResult[$date]['dey_length'] = strtotime($agentLog->datetime) - $this->dataResult[$date]['day_begin'];
+                        $this->dataResult[$date]['day_end'] = $agentLog->datetime->format('H:i:s');
                     };
                     break;
                 case 'change':
@@ -192,7 +201,7 @@ class OperatorController extends Controller {
         $opers = array();
         /* @var $cs CallStatus */
         foreach ($dataStatus as $cs) {
-            if ( ! $opers[$cs->memberId]) {
+            if ( ! $opers[$cs->memberId] ) {
                 $opers[$cs->memberId] = array(
                     'oper'   => $cs->getOper(), // Оператор
                     'total'  => 0, // Количество вызовов
@@ -205,12 +214,13 @@ class OperatorController extends Controller {
             $opers[$cs->memberId]['time'] += $cs->callduration;
         }
 
-        $members = array_keys($opers);
-        $k       = array_search('NONE', $members);
-        if ($k !== false) {
-            unset($members[$k]);
-        }
+        // $members = array_keys($opers);
 
+        // $k       = array_search('NONE', $members);
+        // if ($k !== false) {
+        //     unset($opers[$k]);
+        // }
+        unset($opers['NONE']);
         $result = App::Db()->createCommand()->select('AVG(`ringtime`) AS `avg`')
                 ->select('`memberId` AS `id`')
                 ->from('call_status')

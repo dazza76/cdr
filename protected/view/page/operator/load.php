@@ -45,8 +45,8 @@
             </tr>
         </thead>
         <tbody>
-            <?php foreach ($this->dataResult as $oper) { ?>
-                <tr>
+            <?php foreach ($this->dataResult as $k=> $oper) { ?>
+                <tr k="<?php echo $k; ?>">
                     <td><?php echo $oper['oper']; ?></td>
                     <td><?php echo $oper['total']; ?></td>
                     <td><?php echo round($oper['time'] / 60, 2); ?></td>
