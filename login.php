@@ -31,9 +31,10 @@ $app = new Application();
         log::dump(ACSession::get('user'), 'session')
 
 ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<html>
     <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+
         <script src="lib/jq/jquery-1.8.2.js"></script>
         <script src="lib/jq/jquery-ui-1.9.2.js"></script>
         <script src="lib/jq/jquery.ui.datepicker-ru.js"></script>
@@ -41,10 +42,10 @@ $app = new Application();
         <script src="lib/jq/jquery.ui.dropdownchecklist.js"></script>
         <script src="lib/jq/jquery.cookie.js"></script>
 
-        <link rel="stylesheet" href="/empbase/css/style.css" type="text/css" />
-        <link rel="stylesheet" href="/empbase/css/ui/ui.css" type="text/css" />
-        <link rel="stylesheet" href="/empbase/css/ui/ui-button.css" type="text/css" />
-        <link rel="stylesheet" href="/empbase/css/ui/ui-icon.css" type="text/css" />
+        <link rel="stylesheet" href="css/style.css" type="text/css" />
+        <link rel="stylesheet" href="css/ui/ui.css" type="text/css" />
+        <link rel="stylesheet" href="css/ui/ui-button.css" type="text/css" />
+        <link rel="stylesheet" href="css/ui/ui-icon.css" type="text/css" />
 
 
 
@@ -59,7 +60,8 @@ $app = new Application();
                     autoOpen: true,
                     minHeight: 180,
                     width: 500,
-                    modal: false,
+                    modal: true,
+                    draggable: false,
                     dialogClass: "login",
                     buttons: {
                         "Войти": function() {

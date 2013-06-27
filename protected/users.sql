@@ -7,8 +7,8 @@
 -- Версия сервера: 5.5.25
 -- Версия PHP: 5.3.13
 
-SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
-SET time_zone = "+00:00";
+-- SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
+-- SET time_zone = "+00:00";
 
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
@@ -37,14 +37,14 @@ CREATE TABLE IF NOT EXISTS `users` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `login` (`login`),
   KEY `exist` (`exist`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COMMENT='Пользователи' AUTO_INCREMENT=101003 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COMMENT='Пользователи' AUTO_INCREMENT=1 ;
 
 --
 -- Дамп данных таблицы `users`
 --
 
 INSERT INTO `users` (`id`, `exist`, `sid`, `online`, `login`, `pass`, `data`) VALUES
-(101002, 1, NULL, '2013-06-20 17:44:40', 'root', '63a9f0ea7bb98050796b649e85481845', '{}');
+(1, 1, NULL, '2013-06-20 17:44:40', 'root', '63a9f0ea7bb98050796b649e85481845', '{}');
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;

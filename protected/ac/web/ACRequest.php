@@ -70,7 +70,7 @@ class ACRequest {
         $this->method  = $_SERVER["REQUEST_METHOD"];
         $this->time    = $_SERVER["REQUEST_TIME"];
         $this->referer = $_SERVER["HTTP_REFERER"];
-        $this->host    = $_SERVER["SERVER_NAME"];
+        $this->host    = $_SERVER["HTTP_HOST"];
         $this->query   = $_SERVER["QUERY_STRING"];
         $this->url     = $_SERVER["REQUEST_URI"];
 
