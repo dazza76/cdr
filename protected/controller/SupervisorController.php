@@ -263,12 +263,12 @@ class SupervisorController extends Controller {
 
 
         // минитабличка
-        $date = date('Y-m-d H:i:s', time() - 1800); //2012-07-28+03
-        $date = new DateTime($date); // '2011-03-11 00:00:00'
+        $date = date('Y-m-d H:i:s', time() - 1800); // 2012-07-28+03
+        $date = new DateTime($date);                // '2011-03-11 00:00:00'
 
         $this->queuesData = $this->getStatisticOperator($date);
 
-
+        Log::dump($this->queuesData, 'queuesData');
         // header('Refresh: 1; url='.$_SERVER['PHP_SELF'].'?section=operator');
         // connect, complete%
     }

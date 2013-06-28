@@ -74,6 +74,12 @@ if (!App::Config()->enable_ie) {
 }
 // ----------------------------------------------------------------------------
 
+function __s($str) {
+   return  '<font color="#f57900">'.$str.'</font>';
+}
+
+
+
 //require_once 'ac/AC.php';
 //require_once 'ac/base/ACLoader.php';
 

@@ -179,7 +179,7 @@ var Supervisor = {
         var $tableData = $('#queuesData tbody');
         for (var i in data.queuesData) {
             var qData = data.queuesData[i];
-            $tableData.find('td[queue=' + i + '] span').text(qData);
+            $tableData.find("td[queue='" + i + "'] span").text(qData);
         }
 
         var n = 0;

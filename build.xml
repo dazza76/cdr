@@ -1,13 +1,10 @@
 <?xml version="1.0" encoding="utf8" ?>
 <project name="cdr" default="compile" basedir=".">
-    <property file="${basedir}/build/project.properties" />
-
     <target name="backup">
         <antcall target="compile" />
-
-        <exec executable="bash.bat">
-            <arg value="--login" />
-            <arg path="${build.bin}/build" />
+        
+        <exec executable="bash.cmd">
+            <arg path="${basedir}/build/backup.sh" />
         </exec>
     </target>
 
@@ -16,10 +13,6 @@
             <arg value="--output" />
             <arg path="protected/autoload.php" />
             <arg path="protected" />
-        </exec>
-
-        <exec executable="php.bat">
-            <arg path="${build.bin}/staticfile.php" />
         </exec>
     </target>
 
