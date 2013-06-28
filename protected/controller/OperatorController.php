@@ -220,12 +220,13 @@ class OperatorController extends Controller
             $opers[$cs->memberId]['time'] += $cs->callduration;
         }
 
-        // $members = array_keys($opers);
-        // $k       = array_search('NONE', $members);
-        // if ($k !== false) {
-        //     unset($opers[$k]);
-        // }
+        $members = array_keys($opers);
+        $k       = array_search('NONE', $members);
+        if ($k !== false) {
+            unset($opers[$k], $members[$k]);
+        }
         unset($opers['NONE']);
+
         $result = App::Db()->createCommand()->select('AVG(`ringtime`) AS `avg`')
                 ->select('`memberId` AS `id`')
                 ->from('call_status')
