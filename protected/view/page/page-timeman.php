@@ -80,25 +80,25 @@
             <tr>
                 <td>Принято</td>
                 <td><?php echo $this->getComplete(0, 15); ?></td>
-                <td><?php echo $this->getComplete(15, 30); ?></td>
-                <td><?php echo $this->getComplete(30, 45); ?></td>
-                <td><?php echo $this->getComplete(45, 60); ?></td>
-                <td><?php echo $this->getComplete(60, 90); ?></td>
-                <td><?php echo $this->getComplete(90, 120); ?></td>
-                <td><?php echo $this->getComplete(120, 180); ?></td>
-                <td><?php echo $this->getComplete(180, 32768); ?></td>
+                <td><?php echo $this->getComplete(15 + 1, 30); ?></td>
+                <td><?php echo $this->getComplete(30 + 1, 45); ?></td>
+                <td><?php echo $this->getComplete(45 + 1, 60); ?></td>
+                <td><?php echo $this->getComplete(60 + 1, 90); ?></td>
+                <td><?php echo $this->getComplete(90 + 1, 120); ?></td>
+                <td><?php echo $this->getComplete(120+ 1, 180); ?></td>
+                <td><?php echo $this->getComplete(180+ 1, 32768); ?></td>
                 <td><?php echo $this->getAvgComplete(); ?></td>
             </tr>
             <tr>
                 <td>Потеряно</td>
                 <td><?php echo $this->getAbandoned(0, 15); ?></td>
-                <td><?php echo $this->getAbandoned(15, 30); ?></td>
-                <td><?php echo $this->getAbandoned(30, 45); ?></td>
-                <td><?php echo $this->getAbandoned(45, 60); ?></td>
-                <td><?php echo $this->getAbandoned(60, 90); ?></td>
-                <td><?php echo $this->getAbandoned(90, 120); ?></td>
-                <td><?php echo $this->getAbandoned(120, 180); ?></td>
-                <td><?php echo $this->getAbandoned(180, 32768); ?></td>
+                <td><?php echo $this->getAbandoned(15 + 1, 30); ?></td>
+                <td><?php echo $this->getAbandoned(30 + 1, 45); ?></td>
+                <td><?php echo $this->getAbandoned(45 + 1, 60); ?></td>
+                <td><?php echo $this->getAbandoned(60 + 1, 90); ?></td>
+                <td><?php echo $this->getAbandoned(90 + 1, 120); ?></td>
+                <td><?php echo $this->getAbandoned(120+ 1, 180); ?></td>
+                <td><?php echo $this->getAbandoned(180+ 1, 32768); ?></td>
                 <td><?php echo $this->getAvgAbandoned(); ?></td>
             </tr>
         </tbody>

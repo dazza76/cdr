@@ -66,6 +66,11 @@ class OperatorController extends Controller
 
     public function sectionOperlog()
     {
+        $this->dataResult = array();
+        if ( ! $this->oper) {
+            return;
+        }
+
         $this->todate->add(new DateInterval('PT23H59M59S'));
         $select = App::Db()->createCommand()->select(array(
                     "datetime",
@@ -82,7 +87,7 @@ class OperatorController extends Controller
         if ($this->oper) {
             $select->addWhere('agentid', $this->oper);
         } else {
-            $select->addWhere('agentid', 'NULL', false);
+            $select->addWhere('agentid', 'NULL', 'IS', false);
         }
         if ($this->oaction) {
             if ($this->oaction == 1) {
@@ -96,9 +101,7 @@ class OperatorController extends Controller
         $result = $select->query();
 
         /* @var $day_step ACDateTime */
-        $day_step         = clone $this->fromdate;
-        $this->dataResult = array();
-
+        $day_step = clone $this->fromdate;
         while ($day_step <= $this->todate) {
             $d                    = $day_step->format('d.m.Y');
             $this->dataResult[$d] = array(
@@ -221,11 +224,17 @@ class OperatorController extends Controller
         }
 
         $members = array_keys($opers);
+        LOG::dump($opers, "opers (original)"); // LOG::trace
+        LOG::dump($members, 'members (original)'); // LOG::dump
+
         $k       = array_search('NONE', $members);
         if ($k !== false) {
             unset($opers[$k], $members[$k]);
         }
         unset($opers['NONE']);
+        LOG::dump($opers, "opers (trim)"); // LOG::trace
+        LOG::dump($members, 'members (trim)'); // LOG::dump
+
 
         $result = App::Db()->createCommand()->select('AVG(`ringtime`) AS `avg`')
                 ->select('`memberId` AS `id`')
@@ -373,9 +382,14 @@ class OperatorController extends Controller
                            array('Login', 'Logout', 'pause', 'unpause', 'pausecall',
                     'unpausecal'), 'IN')
                 ->query();
-        while (list($datetime, $id, $action) = $result->fetchAssoc()) {
-            $action   = strtolower($action);
-            $datetime = strtotime($datetime);
+        LOG::trace(__s('Result# count:').$result->count()); // LOG::trace
+        LOG::dump($result->fetch(), 'Первоя строка'); // LOG::dump
+        $result->data_seek(0);
+        while ($row = $result->fetchAssoc()) {
+            $action   = strtolower($row['action']);
+            $datetime = strtotime($row['datetime']);
+            $id = $row['agentid'];
+            $_test = null;
             switch ($action) {
                 case 'login':
                     $opers[$id]['prost'] -= $datetime;

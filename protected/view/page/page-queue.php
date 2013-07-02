@@ -62,9 +62,29 @@
             </div>
         </div>
 
+        <div class="filter fl_l sep">
+            <div class="label">Показать</div>
+            <div class="labeled">
+                <select name="limit" size="1"  default="<?php echo $this->limit; ?>">
+                    <option value="" selected="selected">30</option>
+                    <option value="100">100</option>
+                    <option value="500">500</option>
+                </select>
+            </div>
+        </div>
+
         <div class="filter fl_l">
             <div class="labeled">
                 <input type="submit" name="search" id="button-search" class="button button-search" value="Показать" />
+            </div>
+        </div>
+
+        <div class="filter fl_r">
+            <div class="labeled" style="margin-top: 24px;">
+                <span>
+                    <input type="hidden" id="export_type" name="export" value="1" />
+                    <a id="button-export" href="" class="icon icon_excel">Экспорт</a>
+                </span>
             </div>
         </div>
 

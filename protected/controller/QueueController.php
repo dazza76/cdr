@@ -112,12 +112,100 @@ class QueueController extends Controller {
         $this->$chart();
     }
 
+    public function export() {
+        $data = array(
+            array(
+                'Принято',
+                $this->getComplete(0, 15),
+                $this->getComplete(15 + 1, 30),
+                $this->getComplete(30 + 1, 45),
+                $this->getComplete(45 + 1, 60),
+                $this->getComplete(60 + 1, 90),
+                $this->getComplete(90 + 1, 120),
+                $this->getComplete(120+ 1, 180),
+                $this->getComplete(180+ 1, 32768),
+                $this->getAvgComplete(),
+            ),
+            array(
+                'Потеряно',
+                $this->getAbandoned(0, 15),
+                $this->getAbandoned(15 + 1, 30),
+                $this->getAbandoned(30 + 1, 45),
+                $this->getAbandoned(45 + 1, 60),
+                $this->getAbandoned(60 + 1, 90),
+                $this->getAbandoned(90 + 1, 120),
+                $this->getAbandoned(120+ 1, 180),
+                $this->getAbandoned(180+ 1, 32768),
+                $this->getAvgAbandoned(),
+            )
+        );
+
+        $export = new Export($data);
+        $export->thead = array(
+                'Время ожидания',
+                '0 - 15',
+                '15 - 30',
+                '30 - 45',
+                '45 - 60',
+                '60 - 90',
+                '90 - 120',
+                '120 - 180',
+                '180 - +',
+                'Среднее',
+            );
+        $export->send('timeman');
+        exit();
+    }
+
+
     /**
      * Очередь произвольного выбора
      */
     public function chartArbit() {
+        $this->offset = FiltersValue::parseOffset($_GET['offset'], $this->limit);
         $this->search();
         $this->getTotalResult();
+
+        if ($this->export && $_GET['export']) {
+            foreach ($this->rows as $row) {
+                /* @var $row CallStatus */
+                if ($this->vip && ( ! $row->priorityId)) {
+                    continue;
+                }
+                $data[] = array(
+                    $row->timestamp->format('d.m.Y H:i:s'),
+                    $row->getCaller(),
+                    $row->getOper(),
+                    $row->callId,
+                    $row->getStatus(),
+                    Utils::time($row->holdtime),
+                    $row->ringtime,
+                    Utils::time($row->callduration),
+                    $row->originalPosition,
+                    $row->position,
+                    Queue::getQueue($row->queue),
+                );
+
+            }
+
+            $export = new Export($data);
+            $export->thead = array(
+                'Дата - Время',
+                'Входящий номер',
+                'Оператор',
+                'ID звонка',
+                'Действие',
+                'Ожидание в очереди',
+                'Поднятие трубки',
+                'Длительность',
+                'Вошел',
+                'Вышел',
+                'Очередь',
+                );
+            $export->send('queue');
+            exit();
+        }
+
         $this->viewMain('page/page-queue.php');
     }
 

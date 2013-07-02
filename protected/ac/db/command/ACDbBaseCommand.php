@@ -169,7 +169,9 @@ abstract class ACDbWhereCommand extends ACDbBaseCommand {
      *
      * @param string $column        - поле
      * @param string $value         - значенние
-     * @param string $partialMatch  - условие "<>", "<=", ">=", "<", ">", "=", "IN", "ALL", "ANY", "LIKE", "NOT LIKE"
+     * @param string $partialMatch  - условие "<>", "<=", ">=", "<", ">", "=",
+     *                          "IN", "NOT IN", "ALL", "ANY", "LIKE", "NOT LIKE",
+     *                          "BETWEEN", "NOT BETWEEN"
      * @param string $operator      - оператор объединения "AND", "OR", "XOR"
      * @param boolean $escape       - флаг, надо ли экранровать значение. по умолчанию true
      * @return self
