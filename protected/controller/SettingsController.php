@@ -201,7 +201,16 @@ class SettingsController extends Controller {
         }
 
         $this->date   = FiltersValue::parseDatetime($_GET['date']);
-        $this->agents = QueueAgent::getQueueAgents();
+        // $this->agents = QueueAgent::getQueueAgents();
+
+
+        if (!empty($_COOKIE['schedule_agentid'])) {
+            App::Config()->setting_schedule['agentid'] = explode(",", $_COOKIE['schedule_agentid']);
+        } else {
+            App::Config()->setting_schedule['agentid'] = array_keys( QueueAgent::getQueueAgents() );
+        }
+        LOG::dump(App::Config()->setting_schedule, 'App::Config()->setting_schedule'); // LOG::dump
+
 
         $this->schedule = array();
         $result         = App::Db()->createCommand()->select()->from('timetable')

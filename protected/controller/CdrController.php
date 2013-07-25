@@ -45,7 +45,7 @@ class CdrController extends Controller {
                 "dst",
                 "audio_duration",
                 "comment",
-                // "queue"
+                "queue"
             )),
         'mob' => array('parseCheck'),
         'vip' => 1,
@@ -329,7 +329,15 @@ class CdrController extends Controller {
                     ->having('callerid IS NOT NULL');
         }
 
-        // $command->leftJoinOn('call_status', '(LEFT(`call_status`.`callId`', '`cdr`.`uniqueid`');
+        // uniqueid: 1353062433.4492
+        // callId:   1342707947.325200
+
+        // Очереди
+        $command->leftJoinOn('call_status', 'uniqueid', "callId" );
+        if (is_array($this->queue)) {
+            $command->addWhere('queue', $this->queue, 'IN');
+        }
+
 
         $result = $command->query();
         $this->offset = $result->calc['offset'];
@@ -388,6 +396,12 @@ class CdrController extends Controller {
                     . "(LEFT(`src`, 1)='9' AND CHAR_LENGTH(`src`)=10)"
                     . "OR (LEFT(`dst`, 3)='989' AND CHAR_LENGTH(`dst`)=12)"
                     . ")");
+        }
+
+        // Очереди
+        $command->leftJoinOn('call_status', 'uniqueid', "callId" );
+        if (is_array($this->queue)) {
+            $command->addWhere('queue', $this->queue, 'IN');
         }
 
         $result = $command->query();

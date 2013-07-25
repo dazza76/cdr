@@ -175,8 +175,8 @@ class QueueController extends Controller {
                 $data[] = array(
                     $row->timestamp->format('d.m.Y H:i:s'),
                     $row->getCaller(),
+                    $row->dst,
                     $row->getOper(),
-                    $row->callId,
                     $row->getStatus(),
                     Utils::time($row->holdtime),
                     $row->ringtime,
@@ -192,8 +192,8 @@ class QueueController extends Controller {
             $export->thead = array(
                 'Дата - Время',
                 'Входящий номер',
+                'Назначение',
                 'Оператор',
-                'ID звонка',
                 'Действие',
                 'Ожидание в очереди',
                 'Поднятие трубки',
@@ -205,6 +205,7 @@ class QueueController extends Controller {
             $export->send('queue');
             exit();
         }
+        // LOG::dump($this->rows, 'this->rows'); // LOG::dump
 
         $this->viewMain('page/page-queue.php');
     }
@@ -278,12 +279,13 @@ class QueueController extends Controller {
             $sort .= " DESC ";
         }
 
-        $command = App::Db()->createCommand()->select(CallStatus::TABLE . '.*')
+        $command = App::Db()->createCommand()->select(CallStatus::TABLE . '.*, cdr.dst')
                 ->from(CallStatus::TABLE)
                 ->calc()
                 ->limit($this->limit)
                 ->offset($this->offset)
                 ->select('queue_priority.callerid AS priorityId')
+                ->leftJoinOn('cdr', 'uniqueid', "callId" )
                 ->leftJoinOn('queue_priority', 'number', 'SUBSTRING(' . CallStatus::TABLE . '.callerId, 3)')
                 ->where("`timestamp` BETWEEN '{$this->fromdate}' AND '{$this->todate}' ")
                 ->order($sort);

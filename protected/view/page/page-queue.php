@@ -148,8 +148,8 @@
             <tr>
                 <td class="head sortable"  style="width: 150px;" <?php echo Utils::sortable('timestamp', $this->sort, $this->desc); ?> >Дата - Время</td>
                 <td class="head sortable"  style="width: 250px;" <?php echo Utils::sortable('callerId', $this->sort, $this->desc); ?> >Входящий номер</td>
+                <td class="head sortable"  style="width: 170px;" <?php echo Utils::sortable('callId', $this->sort, $this->desc); ?> >Назначение</td>
                 <td class="head sortable"  style="width: 150px;" <?php echo Utils::sortable('memberId', $this->sort, $this->desc); ?> >Оператор</td>
-                <td class="head sortable"  style="width: 170px;" <?php echo Utils::sortable('callId', $this->sort, $this->desc); ?> >ID звонка</td>
                 <td class="head sortable"  style="width: 170px;" <?php echo Utils::sortable('status', $this->sort, $this->desc); ?> >Действие</td>
                 <td class="head sortable"  style="width: 150px;" <?php echo Utils::sortable('holdtime', $this->sort, $this->desc); ?> >Ожидание в очереди</td>
                 <td class="head sortable"  style="width: 150px;" <?php echo Utils::sortable('ringtime', $this->sort, $this->desc); ?> >Поднятие трубки</td>
@@ -170,8 +170,8 @@
                 <tr>
                     <td><?php echo $row->timestamp->format('d.m.Y H:i:s');; ?></td>
                     <td><?php echo $row->getCaller(); ?></td>
+                    <td><?php echo $row->dst; ?></td>
                     <td><?php echo $row->getOper(); ?></td>
-                    <td><?php echo $row->callId; ?></td>
                     <td><?php echo $row->getStatus(); ?></td>
                     <td><?php echo Utils::time($row->holdtime); ?></td>
                     <td><?php echo $row->ringtime; ?></td>

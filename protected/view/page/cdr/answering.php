@@ -112,8 +112,8 @@
                 <td class="head sortable"  style="width: 150px;" <?php echo Utils::sortable("src", $this->sort, $this->desc); ?> >Источник</td>
                 <td class="head "  style="width: 135px;" >Запись</td>
                 <td class="head sortable"  style="width: 70px;"  <?php echo Utils::sortable("audio_duration", $this->sort, $this->desc); ?> >Время</td>
-                <td class="head sortable"  style="" <?php echo Utils::sortable("queue", $this->queue, $this->desc); ?> >Очередь</td>
-                <td class="head sortable"  style=""              <?php echo Utils::sortable("comment", $this->sort, $this->desc); ?> >Комментарий</td>
+                <td class="head sortable"  <?php echo Utils::sortable("queue", $this->sort, $this->desc); ?> >Очередь</td>
+                <td class="head sortable"  <?php echo Utils::sortable("comment", $this->sort, $this->desc); ?> >Комментарий</td>
             </tr>
         </thead>
         <tbody>

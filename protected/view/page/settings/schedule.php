@@ -6,7 +6,7 @@
  * @copyright  Copyright (c) 2012 AC Software
  */
 // $agents = $this->agents;
-// include VIEWDIR.'page/supervisor/dialog-operators.php';
+include 'dialog-list-operators.php';
 ?>
 <div class="filters clear_fix">
     <form method="get" action="" class="of_h">
@@ -63,7 +63,11 @@ $weekday = array("Вс", "Пн", "Вт", "Ср", "Чт", "Пт", "Сб");
     <tbody>
         <?php
         $date = $this->date->format('Y-m-');
-        foreach ($this->agents as $id => $name) {
+        $agents = QueueAgent::getQueueAgents();
+
+
+        foreach (App::Config()->setting_schedule['agentid'] as $id ) {
+            $name = $agents[$id];
             echo "<tr agentid=\"{$id}\">";
             echo "<td>{$name}</td>";
             $duration = 0;
