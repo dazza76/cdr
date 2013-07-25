@@ -260,7 +260,7 @@ class SettingsController extends Controller {
         if ( ! file_exists($filename)) {
             // print_r(App::Config()->autoinform);
             // Log::trace("Конфигурационный файл не найден");
-            die("1 : Конфигурационный файл не найден");
+            die("1 : Конфигурационный файл не найден $filename");
         }
 
 

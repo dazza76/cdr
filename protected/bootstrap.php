@@ -40,7 +40,7 @@ require_once __DIR__.'/autoload.php';
 
 // Установка систкмной конфигурации
 // ---------------------------------------------------------------------------
-$_config_system           = @include_once CONFIGDIR .'system.php';
+$_config_system           = @include_once 'config/system.php';
 App::Config()->mergeRecursive($_config_system);
 $_config_file             = @$_config_system['config'];
 if (@$config['config']) {
@@ -48,7 +48,7 @@ if (@$config['config']) {
 }
 // дополнительный файл конфигурации
 if (@$_config_file) {
-    $_config_system = @include_once CONFIGDIR . $_config_file . '.php';
+    $_config_system = @include_once 'config/'. $_config_file . '.php';
     App::Config()->mergeRecursive($_config_system);
 }
 unset($_config_system);

@@ -10,7 +10,7 @@ class Queue {
 
     private static function _init() {
         if ( ! self::$_queue) {
-            self::$_queue = @include_once CONFIGDIR . 'queue.php';
+            self::$_queue = @include_once APPPATH . 'config/queue.php';
         }
     }
 

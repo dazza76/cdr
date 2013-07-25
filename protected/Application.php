@@ -88,7 +88,7 @@ class App extends Application {
         if ($section_load !== null) {
             if (!isset(self::$_config->$section_load)) {
                 self::$_config->$section_load = array();
-                $filename = CONFIGDIR . "{$section_load}.php";
+                $filename = APPPATH."config/{$section_load}.php";
                 if (file_exists($filename)) {
                     self::$_config->$section_load = @include $filename;
                 }
