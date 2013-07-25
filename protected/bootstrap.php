@@ -29,6 +29,7 @@ defined('BR') or define('BR', '<br />' . PHP_EOL);
 defined('ROOT') or define('ROOT', dirname(dirname(__FILE__)) . DS);
 defined('APPPATH') or define('APPPATH', dirname(__FILE__) . DS);
 defined('VIEWDIR') or define('VIEWDIR', APPPATH . 'view' . DS);
+defined('CONFIGDIR') or define('CONFIGDIR', ROOT . 'config' . DS);
 // ----------------------------------------------------------------------------
 
 require_once 'ac/AC.php';
@@ -39,7 +40,7 @@ require_once __DIR__.'/autoload.php';
 
 // Установка систкмной конфигурации
 // ---------------------------------------------------------------------------
-$_config_system           = @include_once 'config/system.php';
+$_config_system           = @include_once CONFIGDIR .'system.php';
 App::Config()->mergeRecursive($_config_system);
 $_config_file             = @$_config_system['config'];
 if (@$config['config']) {
@@ -47,7 +48,7 @@ if (@$config['config']) {
 }
 // дополнительный файл конфигурации
 if (@$_config_file) {
-    $_config_system = @include_once 'config/' . $_config_file . '.php';
+    $_config_system = @include_once CONFIGDIR . $_config_file . '.php';
     App::Config()->mergeRecursive($_config_system);
 }
 unset($_config_system);

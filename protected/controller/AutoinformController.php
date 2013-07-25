@@ -144,7 +144,7 @@ class AutoinformController extends Controller {
     }
 
     public function iniType() {
-        $type = @include APPPATH . 'config/autoinform_callback.php';
+        $type = @include CONFIGDIR . 'autoinform_callback.php';
         Log::dump($type, "<font color=\"#cc0000\">парамет \"<i>Тип вызова</i>\" загружен из файла</font>");
         App::Config()->autoinform['type'] = $type;
     }
