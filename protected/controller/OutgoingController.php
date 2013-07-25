@@ -17,6 +17,7 @@ class OutgoingController extends Controller {
         'todate' => array('parseDatetime'),
         'src' => array('parsePhone'),
         'dst' => array('parsePhone'),
+        'oper' => 1,
         'limit' => 1,
         'offset' => 1,
         'desc' => 1
@@ -74,6 +75,13 @@ class OutgoingController extends Controller {
         {
             $temp .= " AND disposition = '$_GET[disposition]'";
         };
+
+
+        if ($this->oper) {
+            $temp .= "AND ((`dcontext` = 'incoming' AND `dstchannel` = '{$this->oper}')OR (`dcontext` <> 'incoming' AND `userfield`= '{$this->oper}' )) ";
+        }
+
+
         $sql_req = "SELECT * from cdr WHERE $temp AND LENGTH(src) < 5  AND ((LENGTH(dst) > 7) OR (dst LIKE '#%')) ORDER BY calldate;";
         // $result = $db->query($sql_req) or die ('query');
 

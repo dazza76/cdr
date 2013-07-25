@@ -30,6 +30,15 @@
         </div>
 
         <div class="filter fl_l sep">
+            <div class="label">Оператор</div>
+            <div class="labeled">
+                <select name="oper" size="1"  default="<?php echo $this->oper; ?>">
+                    <?php echo QueueAgent::showOperslist(); ?>
+                </select>
+            </div>
+        </div>
+
+        <div class="filter fl_l sep">
             <div class="label">Статус</div>
             <div class="labeled">
                 <select name="disposition" size="1"  default="<?php echo $this->disposition; ?>">
@@ -41,16 +50,16 @@
             </div>
         </div>
 
-<!--         <div class="filter fl_l sep">
-            <div class="label">Показать</div>
-            <div class="labeled">
-                <select name="limit" size="1"  default="<?php echo $this->limit; ?>">
-                    <option value="" selected="selected">30</option>
-                    <option value="100">100</option>
-                    <option value="500">500</option>
-                </select>
-            </div>
-        </div> -->
+        <!--         <div class="filter fl_l sep">
+                    <div class="label">Показать</div>
+                    <div class="labeled">
+                        <select name="limit" size="1"  default="<?php echo $this->limit; ?>">
+                            <option value="" selected="selected">30</option>
+                            <option value="100">100</option>
+                            <option value="500">500</option>
+                        </select>
+                    </div>
+                </div> -->
 
         <div class="filter fl_l">
             <div class="labeled">
@@ -66,49 +75,50 @@
 
 <div class="clear clear_fix bigblock">
     <table id="result" class="grid" style="width: 900px;"  >
-            <thead>
-                <tr>
-                    <td class="head" style="width: 135px;" >Дата - Время</td>
-                    <td class="head" style="" >Источник</td>
-                    <td class="head" style="width: 135px;" >Назначение</td>
-                    <td class="head" style="width: 135px;" >Ожидание</td>
-                    <td class="head" style="width: 135px;" >Разговор</td>
-                    <td class="head" style="width: 135px;" >Результат</td>
-                </tr>
-            </thead>
-            <tbody>
-<?php
-while($row = $this->dataResult->fetchAssoc()) {
-    $count = count($row);
-    $html_out = "<tr>";
-    $html_out .= '<td>'.$row[calldate].'</td>';
-    $html_out .= '<td>'.QueueAgent::getOper($row[userfield]).'('.$row[src].')</td>';
-    if(strlen($row[dst])>4)
-            $html_out .= '<td>'.substr($row[dst],1).'</td>';
-        else
-        $html_out .= '<td>'.$row[dst].'</td>';
-    $html_out .= '<td>'.Utils::time($row[duration]-$row[billsec]).'</td>';
-    $html_out .= '<td>'.Utils::time($row[billsec]).'</td>';
-    switch($row[disposition])
-    {
-        case 'BUSY':
-            $html_out .= '<td>Занято</td>';
-        break;
-        case 'ANSWERED':
-            $html_out .= '<td>Принят</td>';
-        break;
-        case 'NO ANSWER':
-            $html_out .= '<td>Нет ответа</td>';
-        break;
-        default:
-            $html_out .= '<td>Н/Д</td>';
-        break;
-    }
-    $html_out .= "</tr>";
-    echo $html_out;
-}
-?>
-</tbody>
-</table>
+        <thead>
+            <tr>
+                <td class="head" style="width: 135px;" >Дата - Время</td>
+                <td class="head" style="" >Источник</td>
+                <td class="head" style="width: 135px;" >Назначение</td>
+                <td class="head" style="width: 135px;" >Ожидание</td>
+                <td class="head" style="width: 135px;" >Разговор</td>
+                <td class="head" style="width: 135px;" >Результат</td>
+            </tr>
+        </thead>
+        <tbody>
+            <?php
+            // LOG::dump($this->dataResult->getFetchAssocs(), 'dataResult'); // LOG::dump
+            while ($row = $this->dataResult->fetchObject(Cdr)) {
+                // $count    = count($row);
+
+                $html_out = "<tr>";
+                $html_out .= '<td>' . $row->calldate . '</td>';
+                $html_out .= '<td>' . QueueAgent::getOper($row->getOperatorCode()) . '(' . $row->src . ')</td>';
+                if (strlen($row->dst) > 4)
+                    $html_out .= '<td>' . substr($row->dst, 1) . '</td>';
+                else
+                    $html_out .= '<td>' . $row->dst . '</td>';
+                $html_out .= '<td>' . Utils::time($row->duration - $row->billsec) . '</td>';
+                $html_out .= '<td>' . Utils::time($row->billsec) . '</td>';
+                switch ($row->disposition) {
+                    case 'BUSY':
+                        $html_out .= '<td>Занято</td>';
+                        break;
+                    case 'ANSWERED':
+                        $html_out .= '<td>Принят</td>';
+                        break;
+                    case 'NO ANSWER':
+                        $html_out .= '<td>Нет ответа</td>';
+                        break;
+                    default:
+                        $html_out .= '<td>Н/Д</td>';
+                        break;
+                }
+                $html_out .= "</tr>";
+                echo $html_out;
+            }
+            ?>
+        </tbody>
+    </table>
 </div>
 
