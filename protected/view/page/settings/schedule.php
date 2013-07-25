@@ -5,10 +5,22 @@
  * @author     Tyurin D. <fobia3d@gmail.com>
  * @copyright  Copyright (c) 2012 AC Software
  */
+// $agents = $this->agents;
+// include VIEWDIR.'page/supervisor/dialog-operators.php';
 ?>
 <div class="filters clear_fix">
     <form method="get" action="" class="of_h">
         <input name="section" type="hidden" value="schedule" />
+
+        <div class="filter fl_l">
+            <div class="labeled">
+                <span>
+                    <input type="hidden" id="export_type" name="export" value="1" />
+                    <a id="button-operators" href="#" class="icon icon-group puinter">Операторы</a>
+                </span>
+            </div>
+        </div>
+
         <div class="filter fl_l sep">
             <div class="label">Дата</div>
             <div class="labeled">

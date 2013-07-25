@@ -45,7 +45,7 @@ class CdrController extends Controller {
                 "dst",
                 "audio_duration",
                 "comment",
-                "queue"
+                // "queue"
             )),
         'mob' => array('parseCheck'),
         'vip' => 1,
