@@ -167,6 +167,8 @@ class OperatorController extends Controller
                     $pause_length[$agentLog->agentid] += strtotime($agentLog->datetime) - $pause_begin[$agentLog->agentid];
                     $pause_begin[$agentLog->agentid] = 0;
                     break;
+
+
                 case 'login':
                     $agentLog->action1               = 'Вошел в очередь';
                     if ($this->dataResult[$date]['day_begin'] == 0) {
@@ -182,6 +184,7 @@ class OperatorController extends Controller
                         $this->dataResult[$date]['day_end']    = $agentLog->datetime->format('H:i:s');
                     };
                     break;
+
                 case 'change':
                     $agentLog->action1 = 'Смена рабочего места';
                     break;
@@ -400,18 +403,25 @@ class OperatorController extends Controller
             switch ($action) {
                 // -- простой --------------------------------------------
                 case 'login':
+                    // if ($opers[$id]['prost_tmp']) {
+                    //     $opers[$id]['prost'] += ($datetime - $opers[$id]['prost_tmp']);
+                    //     $opers[$id]['prost_tmp'] = 0;
+                    // }
+                    // LOG::trace("$id : $action : $datetime"); // LOG::trace
+                    if (!$opers[$id]['prost_tmp']) {
+                        $opers[$id]['prost_tmp'] = $datetime;
+                    }
+                    break;
+                case 'logoff':
+                case 'logout':
+                    // if (!$opers[$id]['prost_tmp']) {
+                    //     $opers[$id]['prost_tmp'] = $datetime;
+                    // }
+                    // LOG::trace("$id : $action : $datetime"); // LOG::trace
                     if ($opers[$id]['prost_tmp']) {
                         $opers[$id]['prost'] += ($datetime - $opers[$id]['prost_tmp']);
                         $opers[$id]['prost_tmp'] = 0;
                     }
-                    // LOG::trace("$id : $action : $datetime"); // LOG::trace
-                    break;
-                case 'logoff':
-                case 'logout':
-                    if (!$opers[$id]['prost_tmp']) {
-                        $opers[$id]['prost_tmp'] = $datetime;
-                    }
-                    // LOG::trace("$id : $action : $datetime"); // LOG::trace
                     break;
 
                 // -- Перерыв --------------------------------------------

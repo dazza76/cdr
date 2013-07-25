@@ -174,7 +174,7 @@
                     <td><?php echo $row->getOper(); ?></td>
                     <td><?php echo $row->getStatus(); ?></td>
                     <td><?php echo Utils::time($row->holdtime); ?></td>
-                    <td><?php echo $row->ringtime; ?></td>
+                    <td><?php echo Utils::time($row->ringtime); ?></td>
                     <td><?php echo Utils::time($row->callduration); ?></td>
                     <td><?php echo $row->originalPosition; ?></td>
                     <td><?php echo $row->position; ?></td>

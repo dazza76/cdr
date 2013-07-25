@@ -303,6 +303,22 @@ class SupervisorController extends Controller {
     }
 
     public function sectionInvalidevents() {
+        $this->queue = FiltersValue::parseQueue($this->queue);
+        $this->oper = FiltersValue::parseQueue($this->oper);
+
+        $command = App::Db()->createCommand()->select()
+                ->from('invalid_events_notify')
+                ->addWhere('dateofevent', array($this->fromdate, $this->todate), 'BETWEEN');
+        if ($this->oper) {
+            $command->addWhere('agentid', $this->oper);
+        }
+        if (count($this->queue)) {
+            $command->addWhere('agentid', $this->queue, 'IN');
+        }
+        $this->dataResult =  $command->query();
+    }
+
+    public function sectionFcr() {
 
     }
 

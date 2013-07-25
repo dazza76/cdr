@@ -27,7 +27,8 @@ return array(
             'queue' => 'Очереди',
             'operator' => 'Операторы',
             'analogue' => 'Распределение',
-            'invalidevents' => 'Недопустимые события'
+            'invalidevents' => 'Недопустимые события',
+            'fcr' => 'FCR'
         ),
     ),
     'settings' => array(
