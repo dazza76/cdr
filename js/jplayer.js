@@ -18,7 +18,7 @@ $(document).ready(function () {
         } else {
             $player.jPlayer("stop");
             var audiofile = $(this).find("input").val();
-            var file = "http://" + document.domain + audiofile;
+            var file = "http://" + /* document.domain + */ audiofile;
             var setMedia = {};
             setMedia[rec.format] = file;
 

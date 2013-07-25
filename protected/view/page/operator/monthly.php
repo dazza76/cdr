@@ -52,7 +52,7 @@
                 <td class="head"  style="width: 150px;">Входящие, шт.</td>
                 <td class="head"  style="width: 150px;">Исходящие, шт.</td>
                 <td class="head"  style="width: 150px;">Всего вызовов, шт.</td>
-                <td class="head"  style="width: 150px;">Простой, ЧЧ:ММ:СС</td>
+                <td class="head"  style="width: 150px;">В системе, ЧЧ:ММ:СС</td>
                 <td class="head"  style="width: 150px;">Обработка, ЧЧ:ММ:СС</td>
                 <td class="head"  style="width: 150px;">Перерыв, ЧЧ:ММ:СС</td>
                 <td class="head"  style="width: 150px;">Долгое поднятие трубки, шт.</td>
@@ -67,9 +67,9 @@
                     <td><?php echo (int) $row['src']; ?></td>
                     <td><?php echo (int) $row['dst']; ?></td>
                     <td><?php echo (int) $row['src'] + (int) $row['dst']; ?></td>
-                    <td><?php echo $row['prost']; ?></td>
-                    <td><?php echo $row['obrab']; ?></td>
-                    <td><?php echo $row['perer']; ?></td>
+                    <td><?php echo Utils::time($row['prost']); ?></td>
+                    <td><?php echo Utils::time($row['obrab']); ?></td>
+                    <td><?php echo Utils::time($row['perer']); ?></td>
                     <td><?php echo (int) $row['maxring']; ?></td>
                     <td><?php echo $row['callduration']; ?></td>
                     <td><?php echo $row['ringtime']; ?></td>

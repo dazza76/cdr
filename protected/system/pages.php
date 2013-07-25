@@ -26,7 +26,8 @@ return array(
         'section' => array(
             'queue' => 'Очереди',
             'operator' => 'Операторы',
-            'analogue' => 'Распределение'
+            'analogue' => 'Распределение',
+            'invalidevents' => 'Недопустимые события'
         ),
     ),
     'settings' => array(
@@ -37,7 +38,8 @@ return array(
             'schedule' => 'Расписание ',
             'mode' => 'Режим работы',
             'pause' => 'Паузы',
-            'answering' => 'Автоинформатор'
+            'answering' => 'Автоинформатор',
+             'invalidevents' => 'Недопустимые события'
         ),
     ),
     'autoinform' => array(
@@ -51,5 +53,8 @@ return array(
             'monthly' => 'Месячный отчет'
         )
     ),
+    'outgoing' => array(
+        'page' => 'Исходящие',
+    )
 );
 

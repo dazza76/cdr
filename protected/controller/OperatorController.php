@@ -379,61 +379,90 @@ class OperatorController extends Controller
                 ->addWhere('datetime', $fromdate->format('Y-m') . "%", 'LIKE')
                 ->addWhere('agentid', $opers_list, 'IN')
                 ->addWhere('action',
-                           array('Login', 'Logout', 'pause', 'unpause', 'pausecall',
-                    'unpausecal'), 'IN')
+                           array('Login', 'Logout', 'logoff',
+                            'pause' , 'autopaused',  'unpause',
+                            'pausecall', 'unpausecal',
+                            'unaftercal', 'aftercall'
+                    ), 'IN')
                 ->query();
-        LOG::trace(__s('Result# count:').$result->count()); // LOG::trace
-        LOG::dump($result->fetch(), 'Первоя строка'); // LOG::dump
-        $result->data_seek(0);
+        // LOG::trace(__s('Result# count:').$result->count()); // LOG::trace
+        // LOG::dump($result->fetch(), 'Первоя строка'); // LOG::dump
+        // $result->data_seek(0);
         while ($row = $result->fetchAssoc()) {
-            $action   = strtolower($row['action']);
+            $action   = trim(strtolower($row['action']));
             $datetime = strtotime($row['datetime']);
             $id = $row['agentid'];
+
             $_test = null;
+
+            $_prost_tmp = null;
+            // LOG::trace("$id : $action : $datetime"); // LOG::trace
             switch ($action) {
+                // -- простой --------------------------------------------
                 case 'login':
-                    $opers[$id]['prost'] -= $datetime;
-                    $_test = 'prost';
+                    if ($opers[$id]['prost_tmp']) {
+                        $opers[$id]['prost'] += ($datetime - $opers[$id]['prost_tmp']);
+                        $opers[$id]['prost_tmp'] = 0;
+                    }
+                    // LOG::trace("$id : $action : $datetime"); // LOG::trace
                     break;
+                case 'logoff':
                 case 'logout':
-                    $opers[$id]['prost'] += $datetime;
-                    $_test = 'prost';
+                    if (!$opers[$id]['prost_tmp']) {
+                        $opers[$id]['prost_tmp'] = $datetime;
+                    }
+                    // LOG::trace("$id : $action : $datetime"); // LOG::trace
                     break;
+
+                // -- Перерыв --------------------------------------------
+                case 'autopaused' :
                 case 'pause':
-                    $opers[$id]['obrab'] -= $datetime;
-                    $_test = 'obrab';
+                    if (!$opers[$id]['perer_tmp']) {
+                        LOG::trace("$id : $action : $datetime"); // LOG::trace
+                        $opers[$id]['perer_tmp'] = $datetime;
+                    }
                     break;
                 case 'unpause':
-                    $opers[$id]['obrab'] += $datetime;
-                    $_test = 'obrab';
+                    if ($opers[$id]['perer_tmp']) {
+                        $opers[$id]['perer'] += ($datetime - $opers[$id]['perer_tmp']);
+                        LOG::trace("$id : $action : $datetime - ".$opers[$id]['perer_tmp']." :: ". $opers[$id]['perer']); // LOG::trace
+                        $opers[$id]['perer_tmp'] = 0;
+                    }
                     break;
+
+                // -- Обработка --------------------------------------------
+                case 'aftercall':
                 case 'pausecall':
-                    $opers[$id]['perer'] -= $datetime;
-                    $_test = 'perer';
+                    LOG::trace("$id : $action : $datetime"); // LOG::trace
+                    if (!$opers[$id]['obrab_tmp']) {
+                        $opers[$id]['obrab_tmp'] = $datetime;
+                    }
                     break;
+
+                case 'unaftercal':
                 case 'unpausecal':
-                    $opers[$id]['perer'] += $datetime;
-                    $_test = 'perer';
+                    LOG::trace("$id : $action : $datetime - ".$opers[$id]['obrab_tmp']." :: ". $opers[$id]['obrab']); // LOG::trace
+                    if ($opers[$id]['obrab_tmp']) {
+                        $opers[$id]['obrab'] += ($datetime - $opers[$id]['obrab_tmp']);
+                        $opers[$id]['obrab_tmp'] = 0;
+                    }
                     break;
             }
-            $opers[$id]["test_{$_test}"] .= $action;
+            // $opers[$id]["test_{$_test}"] .= $action;
         }
         unset($datetime, $id, $action, $_test);
         // --------------------------------------------------------------------
         // Проверка
-        foreach ($opers_list as $id) {
-            $t = $opers[$id]['test_prost'];
-            $opers[$id]['prost'] .= "(" . substr_count($t, "login") . "/" . substr_count($t,
-                                                                                         "logout") . ")";
+        // foreach ($opers_list as $id) {
+        //     $t = $opers[$id]['test_prost'];
+        //     $opers[$id]['prost'] .= "(" . substr_count($t, "login") . "/" . substr_count($t, "logout") . ")";
 
-            $t = $opers[$id]['test_obrab'];
-            $opers[$id]['obrab'] .= "(" . substr_count($t, "pause") . "/" . substr_count($t,
-                                                                                         "unpause") . ")";
+        //     $t = $opers[$id]['test_obrab'];
+        //     $opers[$id]['obrab'] .= "(" . substr_count($t, "pause") . "/" . substr_count($t, "unpause") . ")";
 
-            $t = $opers[$id]['test_perer'];
-            $opers[$id]['perer'] .= "(" . substr_count($t, "pausecall") . "/" . substr_count($t,
-                                                                                             "unpausecal") . ")";
-        }
+        //     $t = $opers[$id]['test_perer'];
+        //     $opers[$id]['perer'] .= "(" . substr_count($t, "pausecall") . "/" . substr_count($t, "unpausecal") . ")";
+        // }
 
 
         // ------------------------------------------------------------

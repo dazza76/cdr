@@ -302,6 +302,10 @@ class SupervisorController extends Controller {
         Log::dump($result, "dataAnalogue");
     }
 
+    public function sectionInvalidevents() {
+
+    }
+
     ////////////////////////////////////////////////////////////////////////////
 
     /**
@@ -328,7 +332,16 @@ class SupervisorController extends Controller {
                 $vars = array('queue' => $queue);
                 $shell[] = ACUtils::parseTemplateString($shell_string, $vars);
             }
-            $shell = implode(' || ', $shell);
+            // $shell = implode(' || ', $shell);
+            $result = "";
+            foreach ($shell as $s) {
+                // $result = shell_exec($shell);
+                Log::trace($s);
+                $result .= shell_exec($s);
+            }
+            return ($result) ? $result : '';
+
+
             Log::trace($shell);
             if ($shell) {
                 $result = shell_exec($shell);

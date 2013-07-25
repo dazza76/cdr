@@ -7,6 +7,8 @@
  * @copyright  (c) 2013, AC
  */
 
+/* duration */
+
 /**
  * CdrController class
  *
@@ -36,12 +38,14 @@ class CdrController extends Controller {
         'comment' => 1,
         'limit' => 1,
         'offset' => 1,
+        'queue' => 1,
         'sort' => array('parseSort', array(
                 "calldate",
                 "src",
                 "dst",
-                "duration",
+                "audio_duration",
                 "comment",
+                "queue"
             )),
         'mob' => array('parseCheck'),
         'vip' => 1,
@@ -199,6 +203,11 @@ class CdrController extends Controller {
             $file = $_SERVER['DOCUMENT_ROOT'] . Cdr::audioFile($row['uniqueid'], null, $autoinform);
             if (file_exists($file)) {
                 $file_yes_1[] = $row['id'];
+
+                $this->_db->createCommand()->update(Cdr::TABLE)
+                    ->addSet('`audio_duration`', Cdr::audioDuration($file))
+                    ->addWhere('id', (int) $row['id'])
+                    ->query();
                 continue;
             }
 
@@ -206,6 +215,12 @@ class CdrController extends Controller {
             $file = $_SERVER['DOCUMENT_ROOT'] . Cdr::audioFile($row['uniqueid'], $row['calldate'], $autoinform);
             if (file_exists($file)) {
                 $file_yes_2[] = $row['id'];
+
+                $this->_db->createCommand()->update(Cdr::TABLE)
+                    ->addSet('`audio_duration`', Cdr::audioDuration($file))
+                    ->addWhere('id', (int) $row['id'])
+                    ->query();
+
                 continue;
             }
 
@@ -245,7 +260,7 @@ class CdrController extends Controller {
             $sort .= " DESC ";
         }
 
-log::dump($this->_db);
+        log::dump($this->_db);
         $command = $this->_db->createCommand()->select()
                 ->from(Cdr::TABLE)
                 ->calc()
@@ -313,6 +328,8 @@ log::dump($this->_db);
             $command->leftJoinOn('queue_priority', 'number', 'src')
                     ->having('callerid IS NOT NULL');
         }
+
+        // $command->leftJoinOn('call_status', '(LEFT(`call_status`.`callId`', '`cdr`.`uniqueid`');
 
         $result = $command->query();
         $this->offset = $result->calc['offset'];

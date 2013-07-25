@@ -291,6 +291,11 @@ class SettingsController extends Controller {
         $this->view('page/settings/answering.php');
     }
 
+
+    public function sectionInvalidevents() {
+
+    }
+
     // ---------------------------------------------
     // ACTION
     // ---------------------------------------------

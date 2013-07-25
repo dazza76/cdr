@@ -158,13 +158,13 @@ var Supervisor = {
         }
     },
     _updateSectionOperator: function(data) {
-        // var da = data.queueAgents;
-        // var lg = [];
-        // console.log(da);
-        // for (var i in da) {
-        //     lg[i] =  da[i].agentid + "; " + da[i].member + "; " + da[i].phone + "; " /* + da[i].queues.replace(/<br \/>/g, ',') + "; " */ + da[i].state_phone + "; ";
-        // }
-        // $("#ajaxlog").html(lg.join("<br />") + "<br />" + "time: " + data.time);
+        var da = data.queueAgents;
+        var lg = [];
+        console.log(da);
+        for (var i in da) {
+            lg[i] =  da[i].agentid + "; " + da[i].member + "; " + da[i].phone + "; " /* + da[i].queues.replace(/<br \/>/g, ',') + "; " */ + da[i].state_phone + "; ";
+        }
+        $("#ajaxlog").html(lg.join("<br />") + "<br />" + "time: " + data.time);
 
         var $tableAgent = $('#queueAgents tbody');
         for (var i in data.queueAgents) {
@@ -179,7 +179,7 @@ var Supervisor = {
         var $tableData = $('#queuesData tbody');
         for (var i in data.queuesData) {
             var qData = data.queuesData[i];
-            $tableData.find("td[queue='" + i + "'] span").text(qData);
+            $tableData.find('td[queue=' + i + '] span').text(qData);
         }
 
         var n = 0;
