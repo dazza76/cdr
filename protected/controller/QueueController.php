@@ -279,13 +279,13 @@ class QueueController extends Controller {
             $sort .= " DESC ";
         }
 
-        $command = App::Db()->createCommand()->select(CallStatus::TABLE . '.*, cdr.dst')
+        $command = App::Db()->createCommand()->select(CallStatus::TABLE . '.*')
                 ->from(CallStatus::TABLE)
                 ->calc()
                 ->limit($this->limit)
                 ->offset($this->offset)
                 ->select('queue_priority.callerid AS priorityId')
-                ->leftJoinOn('cdr', 'uniqueid', "callId" )
+                // ->leftJoinOn('cdr', 'uniqueid', "callId" )
                 ->leftJoinOn('queue_priority', 'number', 'SUBSTRING(' . CallStatus::TABLE . '.callerId, 3)')
                 ->where("`timestamp` BETWEEN '{$this->fromdate}' AND '{$this->todate}' ")
                 ->order($sort);

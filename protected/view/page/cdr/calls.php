@@ -48,12 +48,6 @@
             </div>
         </div>
 
-        <div class="filter fl_l sep">
-            <div class="label">Очередь</div>
-            <div class="labeled">
-                <?php echo Queue::showMultiple("queue[]", $this->queue); ?>
-            </div>
-        </div>
 
         <div class="filter fl_l sep">
             <div class="label">Комментарий</div>
@@ -123,7 +117,6 @@
                 <td class="head "  style="width: 150px;" >Оператор</td>
                 <td class="head "  style="width: 135px;" >Запись</td>
                 <td class="head sortable"  style="width: 70px;" <?php echo Utils::sortable("audio_duration", $this->sort, $this->desc); ?> >Время</td>
-                <td class="head sortable"  <?php echo Utils::sortable("queue", $this->sort, $this->desc); ?> >Очередь</td>
                 <td class="head sortable"  <?php echo Utils::sortable("comment", $this->sort, $this->desc); ?> >Комментарий</td>
             </tr>
         </thead>
@@ -145,7 +138,6 @@
                         <div class="player-slider fl_l"></div>
                     </td>
                     <td><?php echo $row->getTime(); ?></td>
-                    <td><?php echo html(Queue::getQueue($row->queue)); ?></td>
                     <td class="comment grid-edit"><span><?php echo html($row->comment); ?></span></td>
                 </tr>
                 <?php  } ?>

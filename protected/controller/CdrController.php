@@ -333,10 +333,10 @@ class CdrController extends Controller {
         // callId:   1342707947.325200
 
         // Очереди
-        $command->leftJoinOn('call_status', 'uniqueid', "callId" );
-        if (is_array($this->queue)) {
-            $command->addWhere('queue', $this->queue, 'IN');
-        }
+        // $command->leftJoinOn('call_status', 'uniqueid', "callId" );
+        // if (is_array($this->queue)) {
+        //     $command->addWhere('queue', $this->queue, 'IN');
+        // }
 
 
         $result = $command->query();
@@ -399,10 +399,10 @@ class CdrController extends Controller {
         }
 
         // Очереди
-        $command->leftJoinOn('call_status', 'uniqueid', "callId" );
-        if (is_array($this->queue)) {
-            $command->addWhere('queue', $this->queue, 'IN');
-        }
+        // $command->leftJoinOn('call_status', 'uniqueid', "callId" );
+        // if (is_array($this->queue)) {
+        //     $command->addWhere('queue', $this->queue, 'IN');
+        // }
 
         $result = $command->query();
         $this->offset = $result->calc['offset'];
