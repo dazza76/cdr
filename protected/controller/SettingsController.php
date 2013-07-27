@@ -302,7 +302,29 @@ class SettingsController extends Controller {
 
 
     public function sectionInvalidevents() {
+        if ($_POST['action'] == 'add') {
+            // $this->actionOperatorAdd();
+            // App::refresh();
+            //exit();
+        }
+        if ($_POST['action'] == 'delete') {
+            // $this->actionOperatorDelete();
+            // App::refresh();
+            //exit();
+        }
+        if ($_POST['action'] == 'edit') {
+            // $this->actionOperatorEdit();
+            // App::location($this->getPage(),
+                          // array('section' => $this->getSection()));
+            //exit();
+        }
 
+        if ($id == null) {
+            $id = $_GET['id'];
+        }
+        $id = (int) $id;
+
+        $this->view('page/settings/invalidevents.php');
     }
 
     // ---------------------------------------------

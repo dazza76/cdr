@@ -279,13 +279,13 @@ class QueueController extends Controller {
             $sort .= " DESC ";
         }
 
-        $command = App::Db()->createCommand()->select(CallStatus::TABLE . '.*')
+        $command = App::Db()->createCommand()->select(CallStatus::TABLE . '.*, cdr.dst')
                 ->from(CallStatus::TABLE)
-                ->calc()
+                // ->calc()
                 ->limit($this->limit)
                 ->offset($this->offset)
                 ->select('queue_priority.callerid AS priorityId')
-                // ->leftJoinOn('cdr', 'uniqueid', "callId" )
+                ->leftJoinOn('cdr', 'uniqueid', "callId" )
                 ->leftJoinOn('queue_priority', 'number', 'SUBSTRING(' . CallStatus::TABLE . '.callerId, 3)')
                 ->where("`timestamp` BETWEEN '{$this->fromdate}' AND '{$this->todate}' ")
                 ->order($sort);
@@ -321,9 +321,9 @@ class QueueController extends Controller {
         }
 
         $result = $command->query();
-        $this->offset = $result->calc['offset'];
-        $this->limit = $result->calc['limit'];
-        $this->count = $result->calc['count'];
+        // $this->offset = $result->calc['offset'];
+        // $this->limit = $result->calc['limit'];
+        $this->count = $this->offset + ($this->limit * 5);// $result->calc['offset'] + $result->calc['limit'] * 5;// $result->calc['count'];
 
         $this->rows = $result->getFetchObjects('CallStatus');
     }
