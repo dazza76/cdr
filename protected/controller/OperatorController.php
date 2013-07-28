@@ -115,11 +115,13 @@ class OperatorController extends Controller
         while ($agentLog = $result->fetchObject(AgentLog)) {
             /* @var $agentLog AgentLog */
             $date = $agentLog->datetime->format('d.m.Y');
+            $agentLog->initiator = "Оператор";
 
             $this->dataResult[$date]['logs'][] = $agentLog;
 
             $str = "";
             $str = strtolower($agentLog->action);
+
             switch ($str) {
                 case 'aftercall':
                     $agentLog->action1                   = 'Обработка звонка';
@@ -176,6 +178,9 @@ class OperatorController extends Controller
                         $this->dataResult[$date]['day_end']   = ""; //strtotime($agentLog->datetime->format('Y-m-d'). ' 23:59:59');
                     }
                     break;
+                case 'autologoff':
+                case 'autologout':
+                    $agentLog->initiator = "Система";
                 case 'logout':
                 case 'logoff':
                     $agentLog->action1 = 'Вышел из очереди';
@@ -193,6 +198,12 @@ class OperatorController extends Controller
                     break;
                 case 'lostcall':
                     $agentLog->action1 = 'Потеря вызова';
+                    break;
+
+                case 'autopause':
+                case 'autopaused':
+                    $agentLog->action1 = 'Ушел на перерыв';
+                    $agentLog->initiator = "Система";
                     break;
             }
         }
@@ -385,7 +396,8 @@ class OperatorController extends Controller
                            array('Login', 'Logout', 'logoff',
                             'pause' , 'autopaused',  'unpause',
                             'pausecall', 'unpausecal',
-                            'unaftercal', 'aftercall'
+                            'unaftercal', 'aftercall',
+                            'autologoff', 'autologout'
                     ), 'IN')
                 ->query();
         // LOG::trace(__s('Result# count:').$result->count()); // LOG::trace
@@ -412,6 +424,7 @@ class OperatorController extends Controller
                         $opers[$id]['prost_tmp'] = $datetime;
                     }
                     break;
+                case 'autologoff':
                 case 'logoff':
                 case 'logout':
                     // if (!$opers[$id]['prost_tmp']) {
