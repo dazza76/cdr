@@ -302,9 +302,13 @@ class SupervisorController extends Controller {
         Log::dump($result, "dataAnalogue");
     }
 
+    /**
+     * sectionInvalidevents
+     */
     public function sectionInvalidevents() {
         $this->queue = FiltersValue::parseQueue($this->queue);
-        $this->oper = FiltersValue::parseQueue($this->oper);
+        $this->event = FiltersValue::parseQueue($this->event);
+        $this->oper = FiltersValue::parseOper($this->oper);
         $this->eventsArr = App::Db()->query("SELECT id, name, filename FROM invalid_events_modules")->getFetchAssocs();
 
         $command = App::Db()->createCommand()->select()
@@ -315,7 +319,10 @@ class SupervisorController extends Controller {
             $command->addWhere('agentid', $this->oper);
         }
         if (count($this->queue)) {
-            $command->addWhere('agentid', $this->queue, 'IN');
+            $command->addWhere('queue', $this->queue, 'IN');
+        }
+        if (count($this->event)) {
+            $command->addWhere('name', $this->event, 'IN');
         }
         $this->dataResult =  $command->query();
     }
