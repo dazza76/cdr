@@ -305,9 +305,11 @@ class SupervisorController extends Controller {
     public function sectionInvalidevents() {
         $this->queue = FiltersValue::parseQueue($this->queue);
         $this->oper = FiltersValue::parseQueue($this->oper);
+        $this->eventsArr = App::Db()->query("SELECT id, name, filename FROM invalid_events_modules")->getFetchAssocs();
 
         $command = App::Db()->createCommand()->select()
                 ->from('invalid_events_notify')
+                ->leftJoinOn('invalid_events_modules', 'reason', "id" )
                 ->addWhere('dateofevent', array($this->fromdate, $this->todate), 'BETWEEN');
         if ($this->oper) {
             $command->addWhere('agentid', $this->oper);

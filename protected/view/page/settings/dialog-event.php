@@ -33,12 +33,19 @@
                     } else {
                         fields.name.removeClass("field-sucfail");
                     }
-                    if (!fields.agentid.val()) {
-                        fields.agentid.addClass("field-sucfail");
+                    if (!fields.filename.val()) {
+                        fields.filename.addClass("field-sucfail");
                         build = false;
                     } else {
-                        fields.agentid.removeClass("field-sucfail");
+                        fields.filename.removeClass("field-sucfail");
                     }
+
+                    // if (!fields.value.val()) {
+                    //     fields.value.addClass("field-sucfail");
+                    //     build = false;
+                    // } else {
+                    //     fields.value.removeClass("field-sucfail");
+                    // }
 
                     if (build) {
                         $dialog.find('form').eq(0).submit();
@@ -62,15 +69,15 @@
         <input type="hidden" name="action" value="add" />
         <div class="clear clear_fix bigblock">
             <div class="label fl_l ta_r"><span class="field-required">*</span>Причина срабатывания:</div>
-            <div class="labeled fl_l"><input type="text" name="name" value="" /></div>
+            <div class="labeled fl_l"><input type="text" name="name" value="" autocomplete="off" /></div>
         </div>
         <div class="clear clear_fix miniblock">
             <div class="label fl_l ta_r"><span class="field-required">*</span>Имя модуля:</div>
-            <div class="labeled fl_l"><input type="text" name="filename" value="" class="" maxlength="11" /></div>
+            <div class="labeled fl_l"><input type="text" name="filename" value="" class="" maxlength="11" autocomplete="off" /></div>
         </div>
         <div class="clear clear_fix mediumblock">
-            <div class="label fl_l ta_r"><span class="field-required">*</span>Значение</div>
-            <div class="labeled fl_l"><input type="text" name="value" value="" /></div>
+            <div class="label fl_l ta_r">Значение</div>
+            <div class="labeled fl_l"><input type="text" name="value" class="number" value="" autocomplete="off" /></div>
         </div>
         <div class="clear clear_fix miniblock">
             <div class="label fl_l ta_r">Регистрация события</div>
@@ -87,7 +94,7 @@
 <script type="text/javascript">
     function showEventDelete(id) {
         var $dialog = $('#dialog-event-delete');
-        $dialog.find('input[name=agentid]').val(id);
+        $dialog.find('input[name=id]').val(id);
         $dialog.dialog('open');
     }
 
@@ -114,7 +121,7 @@
 <div id="dialog-event-delete" class="dialog hidden edit-content" title="Удалить оператора">
     <form method="post">
         <input type="hidden" name="action" value="delete" />
-        <input type="hidden" name="agentid" value="0" />
+        <input type="hidden" name="id" value="0" />
         <div> Удалить  событие?</div>
     </form>
 </div>

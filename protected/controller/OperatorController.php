@@ -425,6 +425,7 @@ class OperatorController extends Controller
                     }
                     break;
                 case 'autologoff':
+                case 'autologout':
                 case 'logoff':
                 case 'logout':
                     // if (!$opers[$id]['prost_tmp']) {

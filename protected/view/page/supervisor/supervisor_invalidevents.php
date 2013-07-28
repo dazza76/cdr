@@ -48,8 +48,10 @@
             <div class="labeled">
                 <select name="event[]"  size="1" multiple="multiple">
                     <option value=" " >Все события</option>
-                    <option value="3001" >События 1</option>
-                    <option value="3002" >События 2</option>
+                    <?php foreach ($this->eventsArr as $value) {
+                        echo "<option value=\"{$value['id']}\" >{$value['filename']}</option>";
+                    }
+                    ?>
                 </select>
             </div>
         </div>
@@ -98,7 +100,7 @@
             <tr>
                 <td><?php echo html($row['dateofevent']); ?></td>
                 <td><?php echo QueueAgent::getOper($row['agentid']); ?></td>
-                <td><?php echo html($row['reason']); ?></td>
+                <td><?php echo html($row['name']."(".$row['value'].")"); ?><br /><small><?php echo html($row['reason']); ?></small></td>
                 <td> - </td>
             </tr>
             <?php } ?>

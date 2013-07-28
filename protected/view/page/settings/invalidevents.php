@@ -24,29 +24,19 @@ include 'dialog-event.php';
             </tr>
         </thead>
         <tbody>
+            <?php while ($row = $this->dataResult->fetchAssoc()) {?>
             <tr>
-                <td>Превышение длительности подачи звонка</td>
-                <td>ringtime_once</td>
-                <td align="center">10</td>
-                <td>Вкл.</td>
-                <td>Выкл.</td>
+                <td><?php echo html($row['name']); ?></td>
+                <td><?php echo html($row['filename']); ?></td>
+                <td align="center"><?php echo $row['value']; ?></td>
+                <td><?php echo (($row['enabled'] == 'yes') ? 'Вкл.' : 'Выкл.'); ?></td>
+                <td><?php echo (($row['urgent'] == 'yes') ? 'Вкл.' : 'Выкл.'); ?></td>
                 <td>
-                    <a href="?section=invalidevents&amp;name=incoming_rt" class="icon icon-edit pointer" style="margin-right: 5px;"></a>
-                    <a onclick="showEventDelete('incoming_rt');" class="icon icon-delete pointer"></a>
+                    <a  class="icon icon-edit pointer" style="margin-right: 5px;"></a>
+                    <a onclick="showEventDelete(<?php echo $row['id']; ?>);" class="icon icon-delete pointer"></a>
                 </td>
             </tr>
-            <tr>
-                <td>Превышение допустимого времени ожидания</td>
-                <td >holdtime_once</td>
-                <td align="center">120</td>
-                <td>Вкл.</td>
-                <td>Выкл.</td>
-                <td>
-                    <a href="?section=invalidevents&amp;name=incoming_rt" class="icon icon-edit pointer" style="margin-right: 5px;"></a>
-                    <a onclick="showEventDelete('incoming_rt');" class="icon icon-delete pointer"></a>
-                </td>
-            </tr>
-
+            <?php } ?>
         </tbody>
     </table>
 </div>

@@ -303,14 +303,29 @@ class SettingsController extends Controller {
 
     public function sectionInvalidevents() {
         if ($_POST['action'] == 'add') {
-            // $this->actionOperatorAdd();
-            // App::refresh();
-            //exit();
+            LOG::dump($_POST, '_POST'); // LOG::dump
+            if ( !$_POST['name'] || !$_POST['filename']) {
+                return;
+            }
+            $_POST['value'] = (int) $_POST['value'];
+            App::Db()->createCommand()->insert()->into('invalid_events_modules')
+                  ->addValue('name', $_POST['name'])
+                  ->addValue('filename', $_POST['filename'])
+                  ->addValue('value', $_POST['value'])
+                  ->addValue('enabled', $_POST['enabled'])
+                  ->addValue('urgent', $_POST['urgent'])
+                  ->query();
+            App::refresh();
+            exit();
         }
         if ($_POST['action'] == 'delete') {
-            // $this->actionOperatorDelete();
-            // App::refresh();
-            //exit();
+            App::Db()->createCommand()->delete()
+                ->from('invalid_events_modules')
+                ->addWhere('id', $_POST['id'])
+                ->limit(1)
+                ->query();
+            App::refresh();
+            exit();
         }
         if ($_POST['action'] == 'edit') {
             // $this->actionOperatorEdit();
@@ -323,6 +338,8 @@ class SettingsController extends Controller {
             $id = $_GET['id'];
         }
         $id = (int) $id;
+
+        $this->dataResult = App::Db()->query("SELECT * FROM invalid_events_modules");//->getFetchAssocs();
 
         $this->view('page/settings/invalidevents.php');
     }
