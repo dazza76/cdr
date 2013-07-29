@@ -167,9 +167,9 @@ class Cdr extends ACDataObject {
         $autoinform = in_array($this->dcontext, array('autoinform', 'outgoing', 'dialout'));
 
         if ($this->file_exists == 2) {
-            return self::audioFile($this->uniqueid, $this->calldate, $autoinform);
+            return self::getFileExist($this->uniqueid, $this->calldate, $autoinform);
         } else {
-            return self::audioFile($this->uniqueid, null, $autoinform);
+            return self::getFileExist($this->uniqueid, null, $autoinform);
         }
     }
 
@@ -199,8 +199,28 @@ class Cdr extends ACDataObject {
      * @param string $date  искать в папках по датам
      * @return string
      */
-    public static function audioFile($uniqueid, $date = null, $autoinform = false) {
-        return self::audioDir($date, $autoinform) . $uniqueid . '.' . App::Config()->cdr['file_format'];
+    public static function audioFile($uniqueid, $date = null, $autoinform = false, $file_format = true) {
+        $file = self::audioDir($date, $autoinform) . $uniqueid ;
+        if ($file_format) {
+             $file .= '.' . App::Config()->cdr['file_format'];
+        }
+        return $file;
+    }
+
+    public static function getFileExist($uniqueid, $date = null, $autoinform = false) {
+        $file_ln = self::audioFile($uniqueid, $date, $autoinform, false) ;
+
+        $file = $file_ln . '.' . strtolower(App::Config()->cdr['file_format']);
+        if (file_exists($file)) {
+            return $file;
+        }
+
+        $file = $file_ln . '.' . strtoupper(App::Config()->cdr['file_format']);
+        if (file_exists($file)) {
+            return $file;
+        }
+
+        return null;
     }
 
 

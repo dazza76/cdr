@@ -192,16 +192,16 @@ class CdrController extends Controller {
             // Автоинформатор
             $autoinform = in_array($row['dcontext'], array('autoinform', 'outgoing', 'dialout'));
 
-            if($row['uniqueid'] == "1353063786.4733") {
-                Log::dump($row);
-                Log::dump($_SERVER['DOCUMENT_ROOT'] . Cdr::audioFile($row['uniqueid'], null, $autoinform));
-                Log::dump($_SERVER['DOCUMENT_ROOT'] . Cdr::audioFile($row['uniqueid'], $row['calldate'], $autoinform));
-                Log::dump(Cdr::audioDir(), 'dir');
-            }
+            // if($row['uniqueid'] == "1353063786.4733") {
+            //     Log::dump($row);
+            //     Log::dump($_SERVER['DOCUMENT_ROOT'] . Cdr::audioFile($row['uniqueid'], null, $autoinform));
+            //     Log::dump($_SERVER['DOCUMENT_ROOT'] . Cdr::audioFile($row['uniqueid'], $row['calldate'], $autoinform));
+            //     Log::dump(Cdr::audioDir(), 'dir');
+            // }
 
             // Поиск в общей директории
-            $file = $_SERVER['DOCUMENT_ROOT'] . Cdr::audioFile($row['uniqueid'], null, $autoinform);
-            if (file_exists($file)) {
+            $file = $_SERVER['DOCUMENT_ROOT'] . Cdr::getFileExist($row['uniqueid'], null, $autoinform);
+            if ($file) {
                 $file_yes_1[] = $row['id'];
 
                 $this->_db->createCommand()->update(Cdr::TABLE)
@@ -212,8 +212,8 @@ class CdrController extends Controller {
             }
 
             // Поиск в подпапках в зависимости от даты
-            $file = $_SERVER['DOCUMENT_ROOT'] . Cdr::audioFile($row['uniqueid'], $row['calldate'], $autoinform);
-            if (file_exists($file)) {
+            $file = $_SERVER['DOCUMENT_ROOT'] . Cdr::getFileExist($row['uniqueid'], $row['calldate'], $autoinform);
+            if ($file) {
                 $file_yes_2[] = $row['id'];
 
                 $this->_db->createCommand()->update(Cdr::TABLE)
