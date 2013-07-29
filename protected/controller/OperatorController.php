@@ -37,7 +37,7 @@ class OperatorController extends Controller
 
     function __construct()
     {
-        App::Config('operator'); //->operator = @include APPPATH . 'config/operator.php';
+        App::Config('operator');
 
         parent::__construct();
 
