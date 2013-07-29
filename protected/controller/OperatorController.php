@@ -18,6 +18,7 @@ class OperatorController extends Controller
         'fromdate' => array('parseDatetime'), // array('_parseDatetime'),
         'todate'   => array('parseDatetime'),
         'oper'     => 1,
+        'queue'    => 1,
         'oaction'  => array('controller', 'parseOaction'),
         'limit'    => 1,
         'offset'   => 1,
@@ -514,5 +515,12 @@ class OperatorController extends Controller
 
         Log::dump($opers, "opers");
         $this->dataResult = $opers;
+    }
+
+
+
+    public function sectionTimeman()
+    {
+
     }
 }

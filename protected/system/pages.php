@@ -51,7 +51,8 @@ return array(
         'section' => array(
             'operlog' => 'Действия',
             'load' => 'Загруженность',
-            'monthly' => 'Месячный отчет'
+            'monthly' => 'Месячный отчет',
+            'timeman' => 'Распределение',
         )
     ),
     'outgoing' => array(
