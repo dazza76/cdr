@@ -122,7 +122,7 @@
                         </div>
                         <div class="player-slider fl_l"></div>
                     </td>
-                    <td><?php echo $row->getTime(); ?></td>
+                    <td><?php echo Utils::time($row->getTime()); ?></td>
                     <td class="comment grid-edit"><span><?php echo html($row->comment); ?></span></td>
                 </tr>
                 <?php  } ?>

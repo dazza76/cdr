@@ -164,11 +164,10 @@ class CdrController extends Controller {
      * @param int $limit_scan количество сканируемых файлов за раз
      * @return array результат работы [count_yes_1, count_file_yes_2, count__no]
      */
-    public function actionCheckFile($limit_scan = 500) {
+    public function actionCheckFile($limit_scan = 50) {
         if ($limit_scan <= 0) {
-            $limit_scan = 100;
+            $limit_scan = 50;
         }
-
 
         $command = $this->_db->createCommand()->select('id, calldate, uniqueid, dcontext')
                 ->from(Cdr::TABLE)
@@ -181,63 +180,20 @@ class CdrController extends Controller {
         if ($this->todate) {
             $command->addWhere('calldate', $this->todate->format(), '<=');
         }
-
-        $rows = $command->query()->getFetchAssocs();
-        $file_yes_1 = array();
-        $file_yes_2 = array();
         $file_no = array();
-
-        Log::dump(App::Config()->cdr);
-        foreach ($rows as $row) {
-            // Автоинформатор
-            $autoinform = in_array($row['dcontext'], array('autoinform', 'outgoing', 'dialout'));
-
-            // if($row['uniqueid'] == "1353063786.4733") {
-            //     Log::dump($row);
-            //     Log::dump($_SERVER['DOCUMENT_ROOT'] . Cdr::audioFile($row['uniqueid'], null, $autoinform));
-            //     Log::dump($_SERVER['DOCUMENT_ROOT'] . Cdr::audioFile($row['uniqueid'], $row['calldate'], $autoinform));
-            //     Log::dump(Cdr::audioDir(), 'dir');
-            // }
-
-            // Поиск в общей директории
-            $file = $_SERVER['DOCUMENT_ROOT'] . Cdr::getFileExist($row['uniqueid'], null, $autoinform);
-            if ($file) {
-                $file_yes_1[] = $row['id'];
-
-                $this->_db->createCommand()->update(Cdr::TABLE)
-                    ->addSet('`audio_duration`', Cdr::audioDuration($file))
-                    ->addWhere('id', (int) $row['id'])
+        $rows = $command->query()->getFetchObjects(Cdr);
+        /* @var $cdr Cdr */
+        foreach ($rows as $cdr) {
+            $cdr->file_exists =  $cdr->getFileExistsInPath();
+            if ($cdr->file_exists) {
+                $cmd = $this->_db->createCommand()->update(Cdr::TABLE)
+                    ->addSet('`file_exists`', $cdr->file_exists)
+                    ->addSet('`audio_duration`', $cdr->getTime())
+                    ->addWhere('id', $cdr->id)
                     ->query();
-                continue;
+            } else {
+                $file_no[] = $cdr->id;
             }
-
-            // Поиск в подпапках в зависимости от даты
-            $file = $_SERVER['DOCUMENT_ROOT'] . Cdr::getFileExist($row['uniqueid'], $row['calldate'], $autoinform);
-            if ($file) {
-                $file_yes_2[] = $row['id'];
-
-                $this->_db->createCommand()->update(Cdr::TABLE)
-                    ->addSet('`audio_duration`', Cdr::audioDuration($file))
-                    ->addWhere('id', (int) $row['id'])
-                    ->query();
-
-                continue;
-            }
-
-            $file_no[] = $row['id'];
-        }
-
-        if (count($file_yes_1)) {
-            $this->_db->createCommand()->update(Cdr::TABLE)
-                    ->addSet('`file_exists`', "1")
-                    ->addWhere('id', $file_yes_1, 'IN')
-                    ->query();
-        }
-        if (count($file_yes_2)) {
-            $this->_db->createCommand()->update(Cdr::TABLE)
-                    ->addSet('`file_exists`', "2")
-                    ->addWhere('id', $file_yes_2, 'IN')
-                    ->query();
         }
         if (count($file_no)) {
             $this->_db->createCommand()->update(Cdr::TABLE)
@@ -245,8 +201,6 @@ class CdrController extends Controller {
                     ->addWhere('id', $file_no, 'IN')
                     ->query();
         }
-
-        return array(count($file_yes_1), count($file_yes_2), count($file_no));
     }
 
     /**
