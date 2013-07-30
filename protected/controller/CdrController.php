@@ -80,6 +80,8 @@ class CdrController extends Controller {
 
     public function __construct() {
         App::Config('cdr');
+        App::Config()->cdr['file_format_low'] = strtolower(App::Config()->cdr['file_format']);
+        App::Config()->cdr['file_format_up'] = strtoupper(App::Config()->cdr['file_format']);
 
         parent::__construct();
 
@@ -164,9 +166,15 @@ class CdrController extends Controller {
      * @param int $limit_scan количество сканируемых файлов за раз
      * @return array результат работы [count_yes_1, count_file_yes_2, count__no]
      */
-    public function actionCheckFile($limit_scan = 50) {
+    public function actionCheckFile($limit_scan = 100, $fromdate = null, $todate = null) {
         if ($limit_scan <= 0) {
-            $limit_scan = 50;
+            $limit_scan = 100;
+        }
+        if (!ACValidation::date($todate)) {
+            $todate = $this->todate;
+        }
+        if (!ACValidation::date($fromdate)) {
+            $fromdate = $this->todate;
         }
 
         $command = $this->_db->createCommand()->select('id, calldate, uniqueid, dcontext')
@@ -189,18 +197,32 @@ class CdrController extends Controller {
                 $cmd = $this->_db->createCommand()->update(Cdr::TABLE)
                     ->addSet('`file_exists`', $cdr->file_exists)
                     ->addSet('`audio_duration`', $cdr->getTime())
-                    ->addWhere('id', $cdr->id)
-                    ->query();
+                    ->addWhere('id', $cdr->id);
+                $cmd->query();
             } else {
                 $file_no[] = $cdr->id;
             }
+
+            if ($this->test_cli) {
+                $r = array();
+                foreach ($cdr->toArray() as $k=>$v) {
+                    $r[]="$k:$v";
+                }
+                if ($cdr->file_exists) {
+                    $r[]="file:".$cdr->getFile();
+                    $r[]="time:".$cdr->getTime();
+                }
+                echo implode(", ", $r)."\n";
+            }
+
         }
         if (count($file_no)) {
-            $this->_db->createCommand()->update(Cdr::TABLE)
+            $cmd = $this->_db->createCommand()->update(Cdr::TABLE)
                     ->addSet('`file_exists`', "0")
-                    ->addWhere('id', $file_no, 'IN')
-                    ->query();
+                    ->addWhere('id', $file_no, 'IN');
+            $cmd->query();
         }
+        return count($rows);
     }
 
     /**

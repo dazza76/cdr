@@ -177,21 +177,21 @@ class Cdr extends ACDataObject {
         $file = $_SERVER['DOCUMENT_ROOT']. self::audioDir(null, $autoinform).$this->uniqueid;
 
         // echo "# " . $file.".".$format_lower. "\n";  // LOG::echo
-        if (file_exists($file.".".$format_lower)) {
+        if (file_exists($file.".".App::Config()->cdr['file_format_low'])) {
             return $this->file_exists = 1;
         }
         // echo "# " . $file.".".$format_upper. "\n";  // LOG::echo
-        if (file_exists($file.".".$format_upper)) {
+        if (file_exists($file.".".App::Config()->cdr['file_format_up'])) {
            return $this->file_exists = 1 | 4;
         }
 
         $file = $_SERVER['DOCUMENT_ROOT'].self::audioDir($this->calldate, $autoinform).$this->uniqueid;
         // echo "# " . $file.".".$format_lower. "\n";  // LOG::echo
-        if (file_exists($file.".".$format_lower)) {
+        if (file_exists($file.".".App::Config()->cdr['file_format_low'])) {
             return $this->file_exists = 2;
         }
         // echo "# " . $file.".".$format_upper. "\n";  // LOG::echo
-        if (file_exists($file.".".$format_upper)) {
+        if (file_exists($file.".".App::Config()->cdr['file_format_up'])) {
            return $this->file_exists = 2 | 4;
         }
 
