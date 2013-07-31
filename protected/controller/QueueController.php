@@ -72,31 +72,6 @@ class QueueController extends Controller {
     }
 
     public function init($params = null) {
-//        if ($params === null) {
-//            $chart           = $this->_parseChart($_GET['chart']);
-//            $params          = $_GET;
-//            $params['chart'] = $chart;
-//
-//            if (count($params) < 2) {
-//                $params = $_SESSION['pg_queue_' . $chart];
-//                if ($params) {
-//                    $params               = @unserialize($params);
-//                }
-//                $this->_sessionParams = true;
-//            } else {
-//                $params = $_GET;
-//            }
-//        }
-//
-//        $chart           = $this->_parseChart($_GET['chart']);
-//        $params['chart'] = $chart;
-//
-//        $this->_filters_url             = $params;
-//        $_SESSION['pg_queue_' . $chart] = @serialize($params);
-//
-//        Log::trace('Session parametr: ' . ((int) $this->_sessionParams));
-//        Log::vardump($params);
-
         parent::init($params);
         $this->index();
     }
@@ -111,52 +86,6 @@ class QueueController extends Controller {
 
         $this->$chart();
     }
-
-    public function export() {
-        $data = array(
-            array(
-                'Принято',
-                $this->getComplete(0, 15),
-                $this->getComplete(15 + 1, 30),
-                $this->getComplete(30 + 1, 45),
-                $this->getComplete(45 + 1, 60),
-                $this->getComplete(60 + 1, 90),
-                $this->getComplete(90 + 1, 120),
-                $this->getComplete(120+ 1, 180),
-                $this->getComplete(180+ 1, 32768),
-                $this->getAvgComplete(),
-            ),
-            array(
-                'Потеряно',
-                $this->getAbandoned(0, 15),
-                $this->getAbandoned(15 + 1, 30),
-                $this->getAbandoned(30 + 1, 45),
-                $this->getAbandoned(45 + 1, 60),
-                $this->getAbandoned(60 + 1, 90),
-                $this->getAbandoned(90 + 1, 120),
-                $this->getAbandoned(120+ 1, 180),
-                $this->getAbandoned(180+ 1, 32768),
-                $this->getAvgAbandoned(),
-            )
-        );
-
-        $export = new Export($data);
-        $export->thead = array(
-                'Время ожидания',
-                '0 - 15',
-                '15 - 30',
-                '30 - 45',
-                '45 - 60',
-                '60 - 90',
-                '90 - 120',
-                '120 - 180',
-                '180 - +',
-                'Среднее',
-            );
-        $export->send('timeman');
-        exit();
-    }
-
 
     /**
      * Очередь произвольного выбора

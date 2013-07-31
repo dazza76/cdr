@@ -328,6 +328,60 @@ class SupervisorController extends Controller {
     }
 
     public function sectionFcr() {
+        $sort = $this->sort;
+
+        if ($this->desc) {
+            $sort .= " DESC ";
+        }
+        $day = $this->fromdate->format('Y-m-d');
+
+        $command = App::Db()->createCommand()->select(CallStatus::TABLE . '.*')
+                // ->select('COUNT(call_status.callerId) AS `count`')
+                ->from(CallStatus::TABLE)
+                ->select('queue_priority.callerid AS priorityId')
+                ->leftJoinOn('queue_priority', 'number', 'SUBSTRING(' . CallStatus::TABLE . '.callerId, 3)')
+                ->where("`timestamp` LIKE '{$day}%' ");
+                // ->group('call_status.callerId')
+                // ->having('`count` > 1')
+
+
+        // if ($sort != 'timestamp') {
+            $command->order('timestamp ASC');
+        // }
+        // $command->order($sort);
+
+        /* @var $command ACDbSelectCommand */
+        if ($this->queue) {
+            $command->addWhere('queue', $this->queue, 'IN');
+        }
+
+
+        // только мобильные
+        // AND LEFT(call_status.callerId, 3)='989' AND CHAR_LENGTH(call_status.callerId)=12
+        if ($this->mob) {
+            // "[9]89XXXXXXXXX".
+            $command->where(" AND (
+                ( LEFT(`call_status`.`callerId`, 3)='989' AND CHAR_LENGTH(`call_status`.`callerId`)=12 )
+             OR ( LEFT(`call_status`.`callerId`, 1)='9'   AND CHAR_LENGTH(`call_status`.`callerId`)=10 )
+             ) ");
+        } else {
+            $command->addWhere('LENGTH(' . CallStatus::TABLE . '.callerId)', 6, ">");
+        }
+        if ($this->vip) {
+            $command->having('priorityId IS NOT NULL');
+        }
+
+
+
+        $result = $command->query();
+        $this->rows_fcr = array();
+        while ($row = $result->fetchObject('CallStatus')) {
+            $this->rows_fcr[$row->getCaller()][] = $row;
+        }
+
+        $this->rows = array(); $result->getFetchObjects('CallStatus');
+
+        LOG::dump($this->rows_fcr); // LOG::trace
 
     }
 
