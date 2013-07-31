@@ -281,11 +281,14 @@ class SupervisorController extends Controller {
         // $this->fromdate = FiltersValue::parseDatetime($_GET['fromdate'], $date);
         // $this->todate   = FiltersValue::parseDatetime($_GET['todate'], $date);
 
-        // $command = App::Db()->createCommand()->select("`cdr`.`dst`, COUNT(*) AS `count`, COUNT(`call_status`.`callId`) AS count2")
         $command = App::Db()->createCommand()->select("`cdr`.`dst`, COUNT(*) AS `count`")
+                // ->select('COUNT(`call_status`.`callId`) AS count2')
+                // ->leftJoinOn('call_status', 'uniqueid', 'callId')
+                // $command = App::Db()->createCommand()->select("`cdr`.`dst`, COUNT(*) AS `count`")
                 ->from(Cdr::TABLE)
                 ->addWhere("dcontext", "incoming")
                 ->addWhere('`calldate`', "'{$this->fromdate}' AND '{$this->todate}'", "BETWEEN")
+                // ->addWhere('LENGTH(dst)', 5, '>')
                 ->group("`dst`");
         $channel = array();
         foreach (App::Config()->supervisor['analogue_channel'] as $value) {
@@ -308,6 +311,7 @@ class SupervisorController extends Controller {
         $query = "SELECT dst, COUNT(*) as count FROM cdr
                 WHERE dcontext = 'incoming'
                     AND uniqueid NOT IN (SELECT DISTINCT callId FROM call_status)
+                    AND calldate BETWEEN '{$this->fromdate}' AND '{$this->todate}'
                     AND LENGTH(dst) > 5
                 GROUP BY dst";
         $result = App::Db()->query($query);

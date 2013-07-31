@@ -32,7 +32,7 @@
         </div>
 
 
-        <div class="filter fl_l sep">
+<!--         <div class="filter fl_l sep">
             <div class="label">Формат экспорта</div>
             <div class="labeled">
                 <select id="export_type" name="export">
@@ -42,7 +42,7 @@
                 <input type="submit" id="button-export" class="button" value="Экспорт" />
             </div>
         </div>
-
+ -->
 
     </form>
 </div>
@@ -56,8 +56,8 @@
         <thead>
             <tr>
                 <td class="head"  style="width: 150px;">Номер телефона</td>
-                <td class="head"  style="width: 150px;">Количество вызовов</td>
-                <td class="head"  style="width: 150px;">Количество вызовов 2</td>
+                <td class="head"  style="width: 150px;">Общее количество вызовов</td>
+                <td class="head"  style="width: 150px;">Количество вызовов не попавших в очередь</td>
             </tr>
         </thead>
         <tbody>
