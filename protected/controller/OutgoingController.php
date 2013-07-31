@@ -82,7 +82,7 @@ class OutgoingController extends Controller {
         }
 
 
-        $sql_req = "SELECT * from cdr WHERE $temp AND LENGTH(src) < 5  AND ((LENGTH(dst) > 7) OR (dst LIKE '#%')) ORDER BY calldate;";
+        $sql_req = "SELECT * from cdr WHERE $temp AND LENGTH(src) < 7  AND ((LENGTH(dst) > 7) OR (dst LIKE '#%')) ORDER BY calldate;";
         // $result = $db->query($sql_req) or die ('query');
 
         $this->dataResult = App::Db()->query($sql_req);

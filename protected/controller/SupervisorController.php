@@ -281,12 +281,12 @@ class SupervisorController extends Controller {
         // $this->fromdate = FiltersValue::parseDatetime($_GET['fromdate'], $date);
         // $this->todate   = FiltersValue::parseDatetime($_GET['todate'], $date);
 
-        $command = App::Db()->createCommand()->select("`dst`, COUNT(*) AS `count`")
+        // $command = App::Db()->createCommand()->select("`cdr`.`dst`, COUNT(*) AS `count`, COUNT(`call_status`.`callId`) AS count2")
+        $command = App::Db()->createCommand()->select("`cdr`.`dst`, COUNT(*) AS `count`")
                 ->from(Cdr::TABLE)
                 ->addWhere("dcontext", "incoming")
                 ->addWhere('`calldate`', "'{$this->fromdate}' AND '{$this->todate}'", "BETWEEN")
                 ->group("`dst`");
-
         $channel = array();
         foreach (App::Config()->supervisor['analogue_channel'] as $value) {
             $channel[] = "`channel` LIKE '{$value}'";
@@ -296,10 +296,29 @@ class SupervisorController extends Controller {
             $command->where(" AND ({$channel})");
         }
 
+        LOG::trace($result_tmp->count); // LOG::trace
 
-        $result = $command->query()->getFetchAssocs();
-        $this->dataAnalogue = $result;
-        Log::dump($result, "dataAnalogue");
+
+        $result = $command->query();
+        $rows = array();
+        while($row = $result->fetch()) {
+            $rows[$row['dst']] = $row;
+        }
+
+        $query = "SELECT dst, COUNT(*) as count FROM cdr
+                WHERE dcontext = 'incoming'
+                    AND uniqueid NOT IN (SELECT DISTINCT callId FROM call_status)
+                    AND LENGTH(dst) > 5
+                GROUP BY dst";
+        $result = App::Db()->query($query);
+        while ($row = $result->fetch()) {
+            if ($rows[$row['dst']]) {
+                $rows[$row['dst']]['count2'] = $row['count'];
+            }
+        }
+
+        $this->dataAnalogue = $rows;
+        Log::dump($rows, "dataAnalogue");
     }
 
     /**
