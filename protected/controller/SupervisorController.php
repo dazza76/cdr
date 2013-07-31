@@ -399,10 +399,13 @@ class SupervisorController extends Controller {
         $result = $command->query();
         $this->rows_fcr = array();
         while ($row = $result->fetchObject('CallStatus')) {
-            $this->rows_fcr[$row->getCaller()][] = $row;
+            if ($row->callerId && is_numeric($row->callerId)) {
+                $this->rows_fcr[$row->getCaller()][] = $row;
+            }
         }
 
-        $this->rows = array(); $result->getFetchObjects('CallStatus');
+        $this->rows = array();
+        // $result->getFetchObjects('CallStatus');
 
         LOG::dump($this->rows_fcr); // LOG::trace
 

@@ -73,6 +73,15 @@
             </div>
         </div>
 
+        <div class="filter fl_r">
+            <div class="labeled" style="margin-top: 24px;">
+                <span>
+                    <input type="hidden" id="export_type" name="export" value="1">
+                    <a id="button-export" href="" class="icon icon_excel">Экспорт</a>
+                </span>
+            </div>
+        </div>
+
         <div class="filter fl_l">
             <div class="labeled">
                 <input type="submit" name="search" id="button-search" class="button button-search" value="Показать" />

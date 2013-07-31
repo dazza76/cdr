@@ -101,7 +101,7 @@ ORDER BY
     f20tinf DESC;";
 $res = App::Db()->query($dbquery);
 // echo $dbquery."<br><br><br>";
-$html_out .= '<table id="result" class="grid">
+$html_out .= '<table class="grid" style="width: 800px; ">
         <thead height="50px">
             <td class="head" align=center >Поднятие трубки</td>
             <td class="head" align=center width=50px>0-3</td>
@@ -210,7 +210,7 @@ ORDER BY
     f60t120 DESC,
     f120t180 DESC,
     f180tinf DESC;";
-$html_out .= '<table id="result" class="grid">
+$html_out .= '<table class="grid" style="width: 800px; ">
             <thead height="50px">
             <td class="head" align=center width=100px>Длительность входящих</td>
             <td class="head" align=center width=50px>0-15</td>
@@ -327,7 +327,7 @@ ORDER BY
 
 
 
-$html_out .= '<table id="result" class="grid">
+$html_out .= '<table class="grid" style="width: 800px; ">
             <thead height="50px">
             <td class="head" align=center width=100px>Длительность исходящих</td>
             <td class="head" align=center width=50px>0-15</td>

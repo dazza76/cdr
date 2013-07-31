@@ -92,10 +92,15 @@ class QueueController extends Controller {
      */
     public function chartArbit() {
         $this->offset = FiltersValue::parseOffset($_GET['offset'], $this->limit);
+
+        if ($this->export && $_GET['export']) {
+            $this->limit = null;
+        }
         $this->search();
         $this->getTotalResult();
 
         if ($this->export && $_GET['export']) {
+            $data = array();
             foreach ($this->rows as $row) {
                 /* @var $row CallStatus */
                 if ($this->vip && ( ! $row->priorityId)) {
@@ -114,7 +119,6 @@ class QueueController extends Controller {
                     $row->position,
                     Queue::getQueue($row->queue),
                 );
-
             }
 
             $export = new Export($data);
@@ -210,14 +214,14 @@ class QueueController extends Controller {
 
         $command = App::Db()->createCommand()->select(CallStatus::TABLE . '.*')
                 ->from(CallStatus::TABLE)
-                ->calc()
-                ->limit($this->limit)
-                ->offset($this->offset)
                 ->select('queue_priority.callerid AS priorityId')
                 // ->leftJoinOn('cdr', 'uniqueid', "callId" )
                 ->leftJoinOn('queue_priority', 'number', 'SUBSTRING(' . CallStatus::TABLE . '.callerId, 3)')
                 ->where("`timestamp` BETWEEN '{$this->fromdate}' AND '{$this->todate}' ")
                 ->order($sort);
+        if($this->limit !== null) {
+            $command->calc()->limit($this->limit)->offset($this->offset);
+        }
 
         /* @var $command ACDbSelectCommand */
 
@@ -259,6 +263,7 @@ class QueueController extends Controller {
         $this->count =  $result->calc['count'];
 
         $this->rows = $result->getFetchObjects('CallStatus');
+        return $this->rows;
     }
 
     /**
