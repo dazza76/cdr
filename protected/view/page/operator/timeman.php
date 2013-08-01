@@ -52,10 +52,23 @@
 <?php
 $tempfromdate = $this->fromdate->format('Y-m-d H:i').':00';
 $temptodate = $this->todate->format('Y-m-d H:i').':00';
-$queues = @implode(',',$this->queue);
-if(!$queues) {
-    $queues =implode(',', array_keys(Queue::getQueueArr()));
+
+// $queues = @implode(',',$this->queue);
+// if(!$queues) {
+//     $queues =implode(',', array_keys(Queue::getQueueArr()));
+// }
+
+$queue_arr = $this->queue;
+if(!$queue_arr) {
+    $queue_arr = array_keys(Queue::getQueueArr());
 }
+foreach ($queue_arr as $queue) {
+    $queues[]=App::Db()->quoteEscapeString($queue);
+}
+$queues = implode(',',$queues);
+unset($queue_arr, $queue);
+// -------------------------------------------
+
 
 $dbquery = "SELECT
     memberId,

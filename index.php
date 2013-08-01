@@ -241,7 +241,7 @@ md5 вклинивать, главное, чтобы был уникален. Pa
  $app = new Application();
 //print_r($_SERVER)
 //print_r($app);
-
+// history.replaceState({page: 3}, "title 3", "?page=3");
 App::location('cdr');
 
 //echo $_SERVER["HTTP_HOST"];
