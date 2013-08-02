@@ -89,7 +89,7 @@
                 <td><?php echo $this->getComplete(90 + 1, 120); ?></td>
                 <td><?php echo $this->getComplete(120 + 1, 180); ?></td>
                 <td><?php echo $this->getComplete(180 + 1, 32768); ?></td>
-                <td><?php echo $this->getAvgComplete(); ?></td>
+                <td><?php echo (int) $this->getAvgComplete(); ?></td>
             </tr>
             <tr>
                 <td>Потеряно</td>
@@ -101,7 +101,7 @@
                 <td><?php echo $this->getAbandoned(90 + 1, 120); ?></td>
                 <td><?php echo $this->getAbandoned(120 + 1, 180); ?></td>
                 <td><?php echo $this->getAbandoned(180 + 1, 32768); ?></td>
-                <td><?php echo $this->getAvgAbandoned(); ?></td>
+                <td><?php echo (int) $this->getAvgAbandoned(); ?></td>
             </tr>
             <tr>
                 <td>Переведено</td>
@@ -113,7 +113,7 @@
                 <td><?php echo $this->getTransfer(90 + 1, 120); ?></td>
                 <td><?php echo $this->getTransfer(120 + 1, 180); ?></td>
                 <td><?php echo $this->getTransfer(180 + 1, 32768); ?></td>
-                <td><?php echo $this->getAvgTransfer(); ?></td>
+                <td><?php echo (int) $this->getAvgTransfer(); ?></td>
             </tr>
         </tbody>
     </table>
