@@ -30,7 +30,8 @@ class SupervisorController extends Controller {
 
 
     function __construct() {
-        App::Config('supervisor');
+        // App::Config('supervisor');
+        App::Config()->supervisor = include CONFIG_DIR . "/supervisor.php";
 
         parent::__construct();
     }

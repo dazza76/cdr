@@ -79,7 +79,7 @@ class CdrController extends Controller {
     // --------------------------------------------------------------
 
     public function __construct() {
-        App::Config('cdr');
+        App::Config()->cdr = include CONFIG_DIR . '/cdr.php';
         App::Config()->cdr['file_format_low'] = strtolower(App::Config()->cdr['file_format']);
         App::Config()->cdr['file_format_up'] = strtoupper(App::Config()->cdr['file_format']);
 

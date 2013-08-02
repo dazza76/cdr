@@ -35,7 +35,8 @@ class AutoinformController extends Controller {
     private $_result;
 
     public function __construct() {
-        App::Config('autoinform');
+        // App::Config('autoinform');
+        App::Config()->autoinform = include CONFIG_DIR . "/autoinform.php";
 
         parent::__construct();
 
