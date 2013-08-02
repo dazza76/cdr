@@ -263,12 +263,12 @@ class SupervisorController extends Controller {
 
 
         // минитабличка
-        $date = date('Y-m-d H:i:s', time() - 1800); //2012-07-28+03
-        $date = new DateTime($date); // '2011-03-11 00:00:00'
+        $date = date('Y-m-d H:i:s', time() - 1800); // 2012-07-28+03
+        $date = new DateTime($date);                // '2011-03-11 00:00:00'
 
         $this->queuesData = $this->getStatisticOperator($date);
 
-
+        Log::dump($this->queuesData, 'queuesData');
         // header('Refresh: 1; url='.$_SERVER['PHP_SELF'].'?section=operator');
         // connect, complete%
     }
@@ -281,12 +281,15 @@ class SupervisorController extends Controller {
         // $this->fromdate = FiltersValue::parseDatetime($_GET['fromdate'], $date);
         // $this->todate   = FiltersValue::parseDatetime($_GET['todate'], $date);
 
-        $command = App::Db()->createCommand()->select("`dst`, COUNT(*) AS `count`")
+        $command = App::Db()->createCommand()->select("`cdr`.`dst`, COUNT(*) AS `count`")
+                // ->select('COUNT(`call_status`.`callId`) AS count2')
+                // ->leftJoinOn('call_status', 'uniqueid', 'callId')
+                // $command = App::Db()->createCommand()->select("`cdr`.`dst`, COUNT(*) AS `count`")
                 ->from(Cdr::TABLE)
                 ->addWhere("dcontext", "incoming")
                 ->addWhere('`calldate`', "'{$this->fromdate}' AND '{$this->todate}'", "BETWEEN")
+                // ->addWhere('LENGTH(dst)', 5, '>')
                 ->group("`dst`");
-
         $channel = array();
         foreach (App::Config()->supervisor['analogue_channel'] as $value) {
             $channel[] = "`channel` LIKE '{$value}'";
@@ -296,10 +299,116 @@ class SupervisorController extends Controller {
             $command->where(" AND ({$channel})");
         }
 
+        LOG::trace($result_tmp->count); // LOG::trace
 
-        $result = $command->query()->getFetchAssocs();
-        $this->dataAnalogue = $result;
-        Log::dump($result, "dataAnalogue");
+
+        $result = $command->query();
+        $rows = array();
+        while($row = $result->fetch()) {
+            $rows[$row['dst']] = $row;
+        }
+
+        $query = "SELECT dst, COUNT(*) as count FROM cdr
+                WHERE dcontext = 'incoming'
+                    AND uniqueid NOT IN (SELECT DISTINCT callId FROM call_status)
+                    AND calldate BETWEEN '{$this->fromdate}' AND '{$this->todate}'
+                    AND LENGTH(dst) > 5
+                GROUP BY dst";
+        $result = App::Db()->query($query);
+        while ($row = $result->fetch()) {
+            if ($rows[$row['dst']]) {
+                $rows[$row['dst']]['count2'] = $row['count'];
+            }
+        }
+
+        $this->dataAnalogue = $rows;
+        Log::dump($rows, "dataAnalogue");
+    }
+
+    /**
+     * sectionInvalidevents
+     */
+    public function sectionInvalidevents() {
+        $this->queue = FiltersValue::parseQueue($this->queue);
+        $this->event = FiltersValue::parseQueue($this->event);
+        $this->oper = FiltersValue::parseOper($this->oper);
+        $this->eventsArr = App::Db()->query("SELECT id, name, filename FROM invalid_events_modules")->getFetchAssocs();
+
+        $command = App::Db()->createCommand()->select()
+                ->from('invalid_events_notify')
+                ->leftJoinOn('invalid_events_modules', 'reason', "id" )
+                ->addWhere('dateofevent', array($this->fromdate, $this->todate), 'BETWEEN');
+        if ($this->oper) {
+            $command->addWhere('agentid', $this->oper);
+        }
+        if (count($this->queue)) {
+            $command->addWhere('queue', $this->queue, 'IN');
+        }
+        if (count($this->event)) {
+            $command->addWhere('name', $this->event, 'IN');
+        }
+        $this->dataResult =  $command->query();
+    }
+
+    public function sectionFcr() {
+        $sort = $this->sort;
+
+        if ($this->desc) {
+            $sort .= " DESC ";
+        }
+        $day = $this->fromdate->format('Y-m-d');
+
+        $command = App::Db()->createCommand()->select(CallStatus::TABLE . '.*')
+                // ->select('COUNT(call_status.callerId) AS `count`')
+                ->from(CallStatus::TABLE)
+                ->select('queue_priority.callerid AS priorityId')
+                ->leftJoinOn('queue_priority', 'number', 'SUBSTRING(' . CallStatus::TABLE . '.callerId, 3)')
+                ->where("`timestamp` LIKE '{$day}%' ");
+                // ->group('call_status.callerId')
+                // ->having('`count` > 1')
+
+
+        // if ($sort != 'timestamp') {
+            $command->order('timestamp ASC');
+        // }
+        // $command->order($sort);
+
+        /* @var $command ACDbSelectCommand */
+        if ($this->queue) {
+            $command->addWhere('queue', $this->queue, 'IN');
+        }
+
+
+        // только мобильные
+        // AND LEFT(call_status.callerId, 3)='989' AND CHAR_LENGTH(call_status.callerId)=12
+        if ($this->mob) {
+            // "[9]89XXXXXXXXX".
+            $command->where(" AND (
+                ( LEFT(`call_status`.`callerId`, 3)='989' AND CHAR_LENGTH(`call_status`.`callerId`)=12 )
+             OR ( LEFT(`call_status`.`callerId`, 1)='9'   AND CHAR_LENGTH(`call_status`.`callerId`)=10 )
+             ) ");
+        } else {
+            $command->addWhere('LENGTH(' . CallStatus::TABLE . '.callerId)', 6, ">");
+        }
+        if ($this->vip) {
+            $command->having('priorityId IS NOT NULL');
+        }
+
+
+
+        $result = $command->query();
+        $this->rows_fcr = array();
+        while ($row = $result->fetchObject('CallStatus')) {
+            if ($row->callerId && is_numeric($row->callerId)) {
+                $this->rows_fcr[$row->getCaller()][] = $row;
+            }
+        }
+
+        $this->rows = array();
+        // $result->getFetchObjects('CallStatus');
+
+        LOG::dump($this->rows_fcr); // LOG::trace
+
     }
 
     ////////////////////////////////////////////////////////////////////////////
@@ -328,7 +437,16 @@ class SupervisorController extends Controller {
                 $vars = array('queue' => $queue);
                 $shell[] = ACUtils::parseTemplateString($shell_string, $vars);
             }
-            $shell = implode(' || ', $shell);
+            // $shell = implode(' || ', $shell);
+            $result = "";
+            foreach ($shell as $s) {
+                // $result = shell_exec($shell);
+                Log::trace($s);
+                $result .= shell_exec($s);
+            }
+            return ($result) ? $result : '';
+
+
             Log::trace($shell);
             if ($shell) {
                 $result = shell_exec($shell);

@@ -201,7 +201,16 @@ class SettingsController extends Controller {
         }
 
         $this->date   = FiltersValue::parseDatetime($_GET['date']);
-        $this->agents = QueueAgent::getQueueAgents();
+        // $this->agents = QueueAgent::getQueueAgents();
+
+
+        if (!empty($_COOKIE['schedule_agentid'])) {
+            App::Config()->setting_schedule['agentid'] = explode(",", $_COOKIE['schedule_agentid']);
+        } else {
+            App::Config()->setting_schedule['agentid'] = array_keys( QueueAgent::getQueueAgents() );
+        }
+        LOG::dump(App::Config()->setting_schedule, 'App::Config()->setting_schedule'); // LOG::dump
+
 
         $this->schedule = array();
         $result         = App::Db()->createCommand()->select()->from('timetable')
@@ -251,7 +260,7 @@ class SettingsController extends Controller {
         if ( ! file_exists($filename)) {
             // print_r(App::Config()->autoinform);
             // Log::trace("Конфигурационный файл не найден");
-            die("1 : Конфигурационный файл не найден");
+            die("1 : Конфигурационный файл не найден $filename");
         }
 
 
@@ -289,6 +298,50 @@ class SettingsController extends Controller {
 
 
         $this->view('page/settings/answering.php');
+    }
+
+
+    public function sectionInvalidevents() {
+        if ($_POST['action'] == 'add') {
+            LOG::dump($_POST, '_POST'); // LOG::dump
+            if ( !$_POST['name'] || !$_POST['filename']) {
+                return;
+            }
+            $_POST['value'] = (int) $_POST['value'];
+            App::Db()->createCommand()->insert()->into('invalid_events_modules')
+                  ->addValue('name', $_POST['name'])
+                  ->addValue('filename', $_POST['filename'])
+                  ->addValue('value', $_POST['value'])
+                  ->addValue('enabled', $_POST['enabled'])
+                  ->addValue('urgent', $_POST['urgent'])
+                  ->query();
+            App::refresh();
+            exit();
+        }
+        if ($_POST['action'] == 'delete') {
+            App::Db()->createCommand()->delete()
+                ->from('invalid_events_modules')
+                ->addWhere('id', $_POST['id'])
+                ->limit(1)
+                ->query();
+            App::refresh();
+            exit();
+        }
+        if ($_POST['action'] == 'edit') {
+            // $this->actionOperatorEdit();
+            // App::location($this->getPage(),
+                          // array('section' => $this->getSection()));
+            //exit();
+        }
+
+        if ($id == null) {
+            $id = $_GET['id'];
+        }
+        $id = (int) $id;
+
+        $this->dataResult = App::Db()->query("SELECT * FROM invalid_events_modules");//->getFetchAssocs();
+
+        $this->view('page/settings/invalidevents.php');
     }
 
     // ---------------------------------------------

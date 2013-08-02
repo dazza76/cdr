@@ -27,6 +27,7 @@ $agents = QueueAgent::getQueueAgents();
                     //     fields[i].val('');
                     //     fields[i].removeClass("field-sucfail");
                     // }
+                    location.reload(true);
                     $dialog.dialog('close');
                 }
             }

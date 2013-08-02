@@ -7,6 +7,8 @@
  * @copyright  (c) 2013, AC
  */
 
+/* duration */
+
 /**
  * CdrController class
  *
@@ -36,12 +38,14 @@ class CdrController extends Controller {
         'comment' => 1,
         'limit' => 1,
         'offset' => 1,
+        'queue' => 1,
         'sort' => array('parseSort', array(
                 "calldate",
                 "src",
                 "dst",
-                "duration",
+                "audio_duration",
                 "comment",
+                "queue"
             )),
         'mob' => array('parseCheck'),
         'vip' => 1,
@@ -76,6 +80,8 @@ class CdrController extends Controller {
 
     public function __construct() {
         App::Config('cdr');
+        App::Config()->cdr['file_format_low'] = strtolower(App::Config()->cdr['file_format']);
+        App::Config()->cdr['file_format_up'] = strtoupper(App::Config()->cdr['file_format']);
 
         parent::__construct();
 
@@ -160,11 +166,16 @@ class CdrController extends Controller {
      * @param int $limit_scan количество сканируемых файлов за раз
      * @return array результат работы [count_yes_1, count_file_yes_2, count__no]
      */
-    public function actionCheckFile($limit_scan = 500) {
+    public function actionCheckFile($limit_scan = 100, $fromdate = null, $todate = null) {
         if ($limit_scan <= 0) {
             $limit_scan = 100;
         }
-
+        if (!ACValidation::date($todate)) {
+            $todate = $this->todate;
+        }
+        if (!ACValidation::date($fromdate)) {
+            $fromdate = $this->todate;
+        }
 
         $command = $this->_db->createCommand()->select('id, calldate, uniqueid, dcontext')
                 ->from(Cdr::TABLE)
@@ -177,61 +188,41 @@ class CdrController extends Controller {
         if ($this->todate) {
             $command->addWhere('calldate', $this->todate->format(), '<=');
         }
-
-        $rows = $command->query()->getFetchAssocs();
-        $file_yes_1 = array();
-        $file_yes_2 = array();
         $file_no = array();
-
-        Log::dump(App::Config()->cdr);
-        foreach ($rows as $row) {
-            // Автоинформатор
-            $autoinform = in_array($row['dcontext'], array('autoinform', 'outgoing', 'dialout'));
-
-            if($row['uniqueid'] == "1353063786.4733") {
-                Log::dump($row);
-                Log::dump($_SERVER['DOCUMENT_ROOT'] . Cdr::audioFile($row['uniqueid'], null, $autoinform));
-                Log::dump($_SERVER['DOCUMENT_ROOT'] . Cdr::audioFile($row['uniqueid'], $row['calldate'], $autoinform));
-                Log::dump(Cdr::audioDir(), 'dir');
+        $rows = $command->query()->getFetchObjects(Cdr);
+        /* @var $cdr Cdr */
+        foreach ($rows as $cdr) {
+            $cdr->file_exists =  $cdr->getFileExistsInPath();
+            if ($cdr->file_exists) {
+                $cmd = $this->_db->createCommand()->update(Cdr::TABLE)
+                    ->addSet('`file_exists`', $cdr->file_exists)
+                    ->addSet('`audio_duration`', $cdr->getTime())
+                    ->addWhere('id', $cdr->id);
+                $cmd->query();
+            } else {
+                $file_no[] = $cdr->id;
             }
 
-            // Поиск в общей директории
-            $file = $_SERVER['DOCUMENT_ROOT'] . Cdr::audioFile($row['uniqueid'], null, $autoinform);
-            if (file_exists($file)) {
-                $file_yes_1[] = $row['id'];
-                continue;
+            if ($this->test_cli) {
+                $r = array();
+                foreach ($cdr->toArray() as $k=>$v) {
+                    $r[]="$k:$v";
+                }
+                if ($cdr->file_exists) {
+                    $r[]="file:".$cdr->getFile();
+                    $r[]="time:".$cdr->getTime();
+                }
+                echo implode(", ", $r)."\n";
             }
 
-            // Поиск в подпапках в зависимости от даты
-            $file = $_SERVER['DOCUMENT_ROOT'] . Cdr::audioFile($row['uniqueid'], $row['calldate'], $autoinform);
-            if (file_exists($file)) {
-                $file_yes_2[] = $row['id'];
-                continue;
-            }
-
-            $file_no[] = $row['id'];
-        }
-
-        if (count($file_yes_1)) {
-            $this->_db->createCommand()->update(Cdr::TABLE)
-                    ->addSet('`file_exists`', "1")
-                    ->addWhere('id', $file_yes_1, 'IN')
-                    ->query();
-        }
-        if (count($file_yes_2)) {
-            $this->_db->createCommand()->update(Cdr::TABLE)
-                    ->addSet('`file_exists`', "2")
-                    ->addWhere('id', $file_yes_2, 'IN')
-                    ->query();
         }
         if (count($file_no)) {
-            $this->_db->createCommand()->update(Cdr::TABLE)
+            $cmd = $this->_db->createCommand()->update(Cdr::TABLE)
                     ->addSet('`file_exists`', "0")
-                    ->addWhere('id', $file_no, 'IN')
-                    ->query();
+                    ->addWhere('id', $file_no, 'IN');
+            $cmd->query();
         }
-
-        return array(count($file_yes_1), count($file_yes_2), count($file_no));
+        return count($rows);
     }
 
     /**
@@ -245,7 +236,7 @@ class CdrController extends Controller {
             $sort .= " DESC ";
         }
 
-log::dump($this->_db);
+        log::dump($this->_db);
         $command = $this->_db->createCommand()->select()
                 ->from(Cdr::TABLE)
                 ->calc()
@@ -314,6 +305,16 @@ log::dump($this->_db);
                     ->having('callerid IS NOT NULL');
         }
 
+        // uniqueid: 1353062433.4492
+        // callId:   1342707947.325200
+
+        // Очереди
+        // $command->leftJoinOn('call_status', 'uniqueid', "callId" );
+        // if (is_array($this->queue)) {
+        //     $command->addWhere('queue', $this->queue, 'IN');
+        // }
+
+
         $result = $command->query();
         $this->offset = $result->calc['offset'];
         $this->limit = $result->calc['limit'];
@@ -372,6 +373,12 @@ log::dump($this->_db);
                     . "OR (LEFT(`dst`, 3)='989' AND CHAR_LENGTH(`dst`)=12)"
                     . ")");
         }
+
+        // Очереди
+        // $command->leftJoinOn('call_status', 'uniqueid', "callId" );
+        // if (is_array($this->queue)) {
+        //     $command->addWhere('queue', $this->queue, 'IN');
+        // }
 
         $result = $command->query();
         $this->offset = $result->calc['offset'];

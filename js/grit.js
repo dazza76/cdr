@@ -77,6 +77,8 @@ $(document).ready(function() {
         desc = (desc == 'asc') ? 1 : '';
         $(".filters form input[name=sort]").val(sort);
         $(".filters form input[name=desc]").val(desc);
+
+        $("#export_type").removeAttr('name');
         $(".filters form").submit();
     });
 

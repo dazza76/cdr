@@ -1,0 +1,11 @@
+*.sublime-project
+*.sublime-workspace
+tmp/*
+nbproject/*
+build/*
+INF/*
+data/*
+monitor/*
+tests/*
+*test-*
+TASK.todo

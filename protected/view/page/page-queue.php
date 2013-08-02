@@ -62,11 +62,32 @@
             </div>
         </div>
 
+        <div class="filter fl_l sep">
+            <div class="label">Показать</div>
+            <div class="labeled">
+                <select name="limit" size="1"  default="<?php echo $this->limit; ?>">
+                    <option value="" selected="selected">30</option>
+                    <option value="100">100</option>
+                    <option value="500">500</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="filter fl_r">
+            <div class="labeled" style="margin-top: 24px;">
+                <span>
+                    <input type="hidden" id="export_type" name="export" value="1">
+                    <a id="button-export" href="" class="icon icon_excel">Экспорт</a>
+                </span>
+            </div>
+        </div>
+
         <div class="filter fl_l">
             <div class="labeled">
                 <input type="submit" name="search" id="button-search" class="button button-search" value="Показать" />
             </div>
         </div>
+
 
         <input type="hidden" name="sort" value="<?php echo $this->sort; ?>" />
         <input type="hidden" name="desc" value="<?php echo $this->desc; ?>" />
@@ -128,8 +149,8 @@
             <tr>
                 <td class="head sortable"  style="width: 150px;" <?php echo Utils::sortable('timestamp', $this->sort, $this->desc); ?> >Дата - Время</td>
                 <td class="head sortable"  style="width: 250px;" <?php echo Utils::sortable('callerId', $this->sort, $this->desc); ?> >Входящий номер</td>
+                <td class="head sortable"  style="width: 170px;" <?php echo Utils::sortable('callId', $this->sort, $this->desc); ?> >Назначение</td>
                 <td class="head sortable"  style="width: 150px;" <?php echo Utils::sortable('memberId', $this->sort, $this->desc); ?> >Оператор</td>
-                <td class="head sortable"  style="width: 170px;" <?php echo Utils::sortable('callId', $this->sort, $this->desc); ?> >ID звонка</td>
                 <td class="head sortable"  style="width: 170px;" <?php echo Utils::sortable('status', $this->sort, $this->desc); ?> >Действие</td>
                 <td class="head sortable"  style="width: 150px;" <?php echo Utils::sortable('holdtime', $this->sort, $this->desc); ?> >Ожидание в очереди</td>
                 <td class="head sortable"  style="width: 150px;" <?php echo Utils::sortable('ringtime', $this->sort, $this->desc); ?> >Поднятие трубки</td>
@@ -150,8 +171,8 @@
                 <tr>
                     <td><?php echo $row->timestamp->format('d.m.Y H:i:s');; ?></td>
                     <td><?php echo $row->getCaller(); ?></td>
+                    <td><?php echo $row->dst; ?></td>
                     <td><?php echo $row->getOper(); ?></td>
-                    <td><?php echo $row->callId; ?></td>
                     <td><?php echo $row->getStatus(); ?></td>
                     <td><?php echo Utils::time($row->holdtime); ?></td>
                     <td><?php echo $row->ringtime; ?></td>

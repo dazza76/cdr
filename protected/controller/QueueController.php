@@ -72,31 +72,6 @@ class QueueController extends Controller {
     }
 
     public function init($params = null) {
-//        if ($params === null) {
-//            $chart           = $this->_parseChart($_GET['chart']);
-//            $params          = $_GET;
-//            $params['chart'] = $chart;
-//
-//            if (count($params) < 2) {
-//                $params = $_SESSION['pg_queue_' . $chart];
-//                if ($params) {
-//                    $params               = @unserialize($params);
-//                }
-//                $this->_sessionParams = true;
-//            } else {
-//                $params = $_GET;
-//            }
-//        }
-//
-//        $chart           = $this->_parseChart($_GET['chart']);
-//        $params['chart'] = $chart;
-//
-//        $this->_filters_url             = $params;
-//        $_SESSION['pg_queue_' . $chart] = @serialize($params);
-//
-//        Log::trace('Session parametr: ' . ((int) $this->_sessionParams));
-//        Log::vardump($params);
-
         parent::init($params);
         $this->index();
     }
@@ -116,8 +91,55 @@ class QueueController extends Controller {
      * Очередь произвольного выбора
      */
     public function chartArbit() {
+        $this->offset = FiltersValue::parseOffset($_GET['offset'], $this->limit);
+
+        if ($this->export && $_GET['export']) {
+            $this->limit = null;
+        }
         $this->search();
         $this->getTotalResult();
+
+        if ($this->export && $_GET['export']) {
+            $data = array();
+            foreach ($this->rows as $row) {
+                /* @var $row CallStatus */
+                if ($this->vip && ( ! $row->priorityId)) {
+                    continue;
+                }
+                $data[] = array(
+                    $row->timestamp->format('d.m.Y H:i:s'),
+                    $row->getCaller(),
+                    $row->dst,
+                    $row->getOper(),
+                    $row->getStatus(),
+                    Utils::time($row->holdtime),
+                    $row->ringtime,
+                    Utils::time($row->callduration),
+                    $row->originalPosition,
+                    $row->position,
+                    Queue::getQueue($row->queue),
+                );
+            }
+
+            $export = new Export($data);
+            $export->thead = array(
+                'Дата - Время',
+                'Входящий номер',
+                'Назначение',
+                'Оператор',
+                'Действие',
+                'Ожидание в очереди',
+                'Поднятие трубки',
+                'Длительность',
+                'Вошел',
+                'Вышел',
+                'Очередь',
+                );
+            $export->send('queue');
+            exit();
+        }
+        // LOG::dump($this->rows, 'this->rows'); // LOG::dump
+
         $this->viewMain('page/page-queue.php');
     }
 
@@ -192,13 +214,14 @@ class QueueController extends Controller {
 
         $command = App::Db()->createCommand()->select(CallStatus::TABLE . '.*')
                 ->from(CallStatus::TABLE)
-                ->calc()
-                ->limit($this->limit)
-                ->offset($this->offset)
                 ->select('queue_priority.callerid AS priorityId')
+                // ->leftJoinOn('cdr', 'uniqueid', "callId" )
                 ->leftJoinOn('queue_priority', 'number', 'SUBSTRING(' . CallStatus::TABLE . '.callerId, 3)')
                 ->where("`timestamp` BETWEEN '{$this->fromdate}' AND '{$this->todate}' ")
                 ->order($sort);
+        if($this->limit !== null) {
+            $command->calc()->limit($this->limit)->offset($this->offset);
+        }
 
         /* @var $command ACDbSelectCommand */
 
@@ -231,11 +254,16 @@ class QueueController extends Controller {
         }
 
         $result = $command->query();
+        // $this->offset = $result->calc['offset'];
+        // $this->limit = $result->calc['limit'];
+        // $this->count = $this->offset + ($this->limit * 5);// $result->calc['offset'] + $result->calc['limit'] * 5;// $result->calc['count'];
+
         $this->offset = $result->calc['offset'];
         $this->limit = $result->calc['limit'];
-        $this->count = $result->calc['count'];
+        $this->count =  $result->calc['count'];
 
         $this->rows = $result->getFetchObjects('CallStatus');
+        return $this->rows;
     }
 
     /**

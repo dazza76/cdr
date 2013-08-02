@@ -84,7 +84,7 @@
                         // <td>  ".date('H:i:s', $dayLogArr['day_begin'] + $dayLogArr['dey_length'])." </td>
                         . "<td>  ".$dayLogArr['day_end']." </td> "
 
-                        . "<td>  </td>
+                        . "<td> ".Utils::time($dayLogArr['dey_length'])." </td>
                         <td><a onclick=\"return false;\" class=\"subreport\">[<sp>+</sp>{$c}]</a></td>
                     </tr>";
                 ?>
@@ -101,8 +101,8 @@
                             <?php foreach ($dayLog as $agentLog) { ?>
                                 <tr>
                                     <td><?php echo $agentLog->datetime->format('H:i:s'); ?></td>
-                                    <td> <?php echo $agentLog->action1; ?> <!-- <tt class="field-inf"><?php echo $agentLog->action; ?></tt> --></td>
-                                    <td> Оператор </td>
+                                    <td> <?php echo $agentLog->action1; ?>  <tt class="field-inf"><?php echo $agentLog->action; ?></tt> </td>
+                                    <td> <?php echo $agentLog->initiator; ?> </td>
                                     <td><?php echo $agentLog->action2; ?></td>
                                     <td> </td>
                                 </tr>

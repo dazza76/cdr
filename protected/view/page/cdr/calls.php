@@ -48,6 +48,7 @@
             </div>
         </div>
 
+
         <div class="filter fl_l sep">
             <div class="label">Комментарий</div>
             <div class="labeled">
@@ -115,8 +116,8 @@
                 <td class="head sortable"  style="width: 150px;" <?php echo Utils::sortable("dst", $this->sort, $this->desc); ?> >Назначение</td>
                 <td class="head "  style="width: 150px;" >Оператор</td>
                 <td class="head "  style="width: 135px;" >Запись</td>
-                <td class="head sortable"  style="width: 70px;" <?php echo Utils::sortable("duration", $this->sort, $this->desc); ?> >Время</td>
-                <td class="head sortable"  style="" <?php echo Utils::sortable("comment", $this->sort, $this->desc); ?> >Комментарий</td>
+                <td class="head sortable"  style="width: 70px;" <?php echo Utils::sortable("audio_duration", $this->sort, $this->desc); ?> >Время</td>
+                <td class="head sortable"  <?php echo Utils::sortable("comment", $this->sort, $this->desc); ?> >Комментарий</td>
             </tr>
         </thead>
         <tbody>
@@ -132,11 +133,11 @@
                             <a href="<?php echo $row->getFile(); ?>" target="_blank" ><img src="images/b_save.png" /></a>
                         </div>
                         <div class="player-button fl_l icon-play" style="margin-left: 5px;">
-                            <input type="hidden" value="<?php echo $row->getFile(); ?>" />
+                            <input type="hidden" value="<?php echo App::Request()->host.$row->getFile(); ?>" />
                         </div>
                         <div class="player-slider fl_l"></div>
                     </td>
-                    <td><?php echo $row->getTime(); ?></td>
+                    <td><?php echo Utils::time($row->getTime()); ?></td>
                     <td class="comment grid-edit"><span><?php echo html($row->comment); ?></span></td>
                 </tr>
                 <?php  } ?>

@@ -21,7 +21,9 @@
         <div class="filter fl_l sep">
             <div class="label">Очереди</div>
             <div class="labeled">
-                <?php echo Queue::showMultiple("queue[]", $this->queue); ?>
+                <?php
+                echo Queue::showMultiple("queue[]", $this->queue);
+                ?>
             </div>
         </div>
 
@@ -73,34 +75,103 @@
                 <td class="head" >90 - 120</td>
                 <td class="head" >120 - 180</td>
                 <td class="head" >180 - +</td>
-                <td class="head"  align=center width=100px>Среднее</td>
+                <td class="head"  align=center width="100px">Среднее</td>
             </tr>
         </thead>
         <tbody>
             <tr>
                 <td>Принято</td>
                 <td><?php echo $this->getComplete(0, 15); ?></td>
-                <td><?php echo $this->getComplete(15, 30); ?></td>
-                <td><?php echo $this->getComplete(30, 45); ?></td>
-                <td><?php echo $this->getComplete(45, 60); ?></td>
-                <td><?php echo $this->getComplete(60, 90); ?></td>
-                <td><?php echo $this->getComplete(90, 120); ?></td>
-                <td><?php echo $this->getComplete(120, 180); ?></td>
-                <td><?php echo $this->getComplete(180, 32768); ?></td>
-                <td><?php echo $this->getAvgComplete(); ?></td>
+                <td><?php echo $this->getComplete(15 + 1, 30); ?></td>
+                <td><?php echo $this->getComplete(30 + 1, 45); ?></td>
+                <td><?php echo $this->getComplete(45 + 1, 60); ?></td>
+                <td><?php echo $this->getComplete(60 + 1, 90); ?></td>
+                <td><?php echo $this->getComplete(90 + 1, 120); ?></td>
+                <td><?php echo $this->getComplete(120 + 1, 180); ?></td>
+                <td><?php echo $this->getComplete(180 + 1, 32768); ?></td>
+                <td><?php echo (int) $this->getAvgComplete(); ?></td>
             </tr>
             <tr>
                 <td>Потеряно</td>
                 <td><?php echo $this->getAbandoned(0, 15); ?></td>
-                <td><?php echo $this->getAbandoned(15, 30); ?></td>
-                <td><?php echo $this->getAbandoned(30, 45); ?></td>
-                <td><?php echo $this->getAbandoned(45, 60); ?></td>
-                <td><?php echo $this->getAbandoned(60, 90); ?></td>
-                <td><?php echo $this->getAbandoned(90, 120); ?></td>
-                <td><?php echo $this->getAbandoned(120, 180); ?></td>
-                <td><?php echo $this->getAbandoned(180, 32768); ?></td>
-                <td><?php echo $this->getAvgAbandoned(); ?></td>
+                <td><?php echo $this->getAbandoned(15 + 1, 30); ?></td>
+                <td><?php echo $this->getAbandoned(30 + 1, 45); ?></td>
+                <td><?php echo $this->getAbandoned(45 + 1, 60); ?></td>
+                <td><?php echo $this->getAbandoned(60 + 1, 90); ?></td>
+                <td><?php echo $this->getAbandoned(90 + 1, 120); ?></td>
+                <td><?php echo $this->getAbandoned(120 + 1, 180); ?></td>
+                <td><?php echo $this->getAbandoned(180 + 1, 32768); ?></td>
+                <td><?php echo (int) $this->getAvgAbandoned(); ?></td>
+            </tr>
+            <tr>
+                <td>Переведено</td>
+                <td><?php echo $this->getTransfer(0, 15); ?></td>
+                <td><?php echo $this->getTransfer(15 + 1, 30); ?></td>
+                <td><?php echo $this->getTransfer(30 + 1, 45); ?></td>
+                <td><?php echo $this->getTransfer(45 + 1, 60); ?></td>
+                <td><?php echo $this->getTransfer(60 + 1, 90); ?></td>
+                <td><?php echo $this->getTransfer(90 + 1, 120); ?></td>
+                <td><?php echo $this->getTransfer(120 + 1, 180); ?></td>
+                <td><?php echo $this->getTransfer(180 + 1, 32768); ?></td>
+                <td><?php echo (int) $this->getAvgTransfer(); ?></td>
             </tr>
         </tbody>
     </table>
+    <br>
+<!--     <table id="result" class="grid" >
+        <thead height="50px">
+            <tr>
+                <td class="head" align="center" width="150px" >Поднятие трубки</td>
+                <td class="head" >0-3</td>
+                <td class="head" >3-7</td>
+                <td class="head" >7-10</td>
+                <td class="head" >10-20</td>
+                <td class="head" >20+</td>
+                <td class="head" align="center" width="150px" >Среднее</td>
+            </tr>
+        </thead>
+        <tbody>
+
+        </tbody>
+    </table>
+
+    <br>
+    <table id="result" class="grid" >
+        <thead height="50px">
+            <tr>
+                <td class="head" align="center" width="150px">Дительность входящих</td>
+                <td class="head">0-15</td>
+                <td class="head">15-30</td>
+                <td class="head">30-45</td>
+                <td class="head">45-60</td>
+                <td class="head">60-120</td>
+                <td class="head">120-180</td>
+                <td class="head">180+</td>
+                <td class="head" align="center" width="150px">Среднее</td>
+            </tr>
+        </thead>
+        <tbody>
+
+        </tbody>
+
+    </table>
+    <br>
+    <table id="result" class="grid" >
+        <thead height="50px">
+            <tr>
+                <td class="head" align="center" width="150px">Дительность исходящих</td>
+                <td class="head" >0-15</td>
+                <td class="head" >15-30</td>
+                <td class="head" >30-45</td>
+                <td class="head" >45-60</td>
+                <td class="head" >60-120</td>
+                <td class="head" >120-180</td>
+                <td class="head" >180+</td>
+                <td class="head" align="center" width="150px">Среднее</td>
+            </tr>
+        </thead>
+        <tbody>
+
+        </tbody>
+    </table> -->
 </div>

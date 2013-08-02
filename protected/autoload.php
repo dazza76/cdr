@@ -57,6 +57,7 @@ spl_autoload_register(
                 'log' => '/ac/logger/Log.php',
                 'model' => '/model/Model.php',
                 'operatorcontroller' => '/controller/OperatorController.php',
+                'outgoingcontroller' => '/controller/OutgoingController.php',
                 'queue' => '/model/Queue.php',
                 'queueagent' => '/model/QueueAgent.php',
                 'queuecontroller' => '/controller/QueueController.php',

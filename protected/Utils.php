@@ -25,13 +25,15 @@ class Utils {
      * @todo доработать
      */
     public static function time($seconds) {
-        return date('H:i:s', $seconds - 10800);
+        // return date('d H:i:s', $seconds - 10800);
+        list($d, $h, $i, $s) = explode(' ', (date('d H i s', $seconds - 10800)));
+        return (($d - 1)*24 + $h).":$i:$s";
 
         $seconds = (int) $seconds;
-        return $seconds;
+        // return $seconds;
 
         $h = $seconds % 3600;// / 60);
-        $seconds = $second - $h * 3600;
+        $seconds = $second - ($h * 3600);
 
         $m = $seconds % 60;
         $seconds = $seconds - ($m * 60);

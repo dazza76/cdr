@@ -26,10 +26,17 @@ defined('TIME_START') or define('TIME_START', microtime(true));
 defined('DS') or define('DS', DIRECTORY_SEPARATOR);
 defined('BR') or define('BR', '<br />' . PHP_EOL);
 // ----------------------------------------------------------------------------
+
+/*
+ * Путь к конфигам
+ */
+defined('CONFIG_DIR') or define('CONFIG_DIR', dirname(dirname(__FILE__)) . '/config' );
+// ----------------------------------------------------------------------------
+
 defined('ROOT') or define('ROOT', dirname(dirname(__FILE__)) . DS);
 defined('APPPATH') or define('APPPATH', dirname(__FILE__) . DS);
 defined('VIEWDIR') or define('VIEWDIR', APPPATH . 'view' . DS);
-// ----------------------------------------------------------------------------
+
 
 require_once 'ac/AC.php';
 require_once __DIR__.'/autoload.php';
@@ -39,7 +46,7 @@ require_once __DIR__.'/autoload.php';
 
 // Установка систкмной конфигурации
 // ---------------------------------------------------------------------------
-$_config_system           = @include_once 'config/system.php';
+$_config_system           = @include_once CONFIG_DIR . '/system.php';
 App::Config()->mergeRecursive($_config_system);
 $_config_file             = @$_config_system['config'];
 if (@$config['config']) {
@@ -47,7 +54,7 @@ if (@$config['config']) {
 }
 // дополнительный файл конфигурации
 if (@$_config_file) {
-    $_config_system = @include_once 'config/' . $_config_file . '.php';
+    $_config_system = @include_once CONFIG_DIR . "/{$_config_file}.php";
     App::Config()->mergeRecursive($_config_system);
 }
 unset($_config_system);
@@ -74,6 +81,12 @@ if (!App::Config()->enable_ie) {
 }
 // ----------------------------------------------------------------------------
 
+function __s($str) {
+   return  '<font color="#f57900">'.$str.'</font>';
+}
+
+
+
 //require_once 'ac/AC.php';
 //require_once 'ac/base/ACLoader.php';
 
@@ -83,4 +96,4 @@ Log::enable(DEBUG);
 Log::trace('bootstrap');
 
 // CASHE STATIC FILE
-App::Config()->v  = 21;
+App::Config()->v  = 23;

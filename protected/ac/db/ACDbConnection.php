@@ -190,7 +190,7 @@ class ACDbConnection extends mysqli {
 
         $time = sprintf("%01.5f", microtime(true) - $time_start);
 
-        log::trace("{$query}", 'SQL' );
+        log::trace("{$query} <br><font color=\"#888a85\">time: $time</font>", 'SQL' );
         if ($this->errno) {
             log::error("[Error] |-> " . $this->errno . "; " . $this->error . "; ");
         }

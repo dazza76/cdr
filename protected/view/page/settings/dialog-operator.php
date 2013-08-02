@@ -67,35 +67,35 @@
         <input type="hidden" name="action" value="add" />
         <div class="clear clear_fix bigblock">
             <div class="label fl_l ta_r"><span class="field-required">*</span>ФИО:</div>
-            <div class="labeled fl_l"><input type="text" name="name" value="" /></div>
+            <div class="labeled fl_l"><input type="text" name="name" value="" autocomplete="off" /></div>
         </div>
         <div class="clear clear_fix miniblock">
             <div class="label fl_l ta_r"><span class="field-required">*</span>Номер оператора:</div>
-            <div class="labeled fl_l"><input type="text" name="agentid" value="" class="field-number" maxlength="11" /></div>
+            <div class="labeled fl_l"><input type="text" name="agentid" value="" class="field-number" maxlength="11" autocomplete="off" /></div>
         </div>
         <div class="clear clear_fix mediumblock">
             <div class="label fl_l ta_r">Список очередей пенальти 1:</div>
-            <div class="labeled fl_l"><input type="text" name="queues1" value="" /></div>
+            <div class="labeled fl_l"><input type="text" name="queues1" value="" autocomplete="off" /></div>
         </div>
         <div class="clear clear_fix miniblock">
             <div class="label fl_l ta_r">Пенальти в очередях 1:</div>
-            <div class="labeled fl_l"><input type="text" name="penalty1" value="" class="field-number" maxlength="2" /></div>
+            <div class="labeled fl_l"><input type="text" name="penalty1" value="" class="field-number" maxlength="2" autocomplete="off" /></div>
         </div>
         <div class="clear clear_fix mediumblock">
             <div class="label fl_l ta_r">Список очередей пенальти 2:</div>
-            <div class="labeled fl_l"><input type="text" name="queues2" value="" /></div>
+            <div class="labeled fl_l"><input type="text" name="queues2" value="" autocomplete="off" /></div>
         </div>
         <div class="clear clear_fix miniblock">
             <div class="label fl_l ta_r">Пенальти в очередях 2:</div>
-            <div class="labeled fl_l"><input type="text" name="penalty2" value="" class="field-number" maxlength="2" /></div>
+            <div class="labeled fl_l"><input type="text" name="penalty2" value="" class="field-number" maxlength="2" autocomplete="off" /></div>
         </div>
         <div class="clear clear_fix mediumblock">
             <div class="label fl_l ta_r">Список очередей пенальти 3:</div>
-            <div class="labeled fl_l"><input type="text" name="queues3" value="" /></div>
+            <div class="labeled fl_l"><input type="text" name="queues3" value="" autocomplete="off" /></div>
         </div>
         <div class="clear clear_fix miniblock">
             <div class="label fl_l ta_r">Пенальти в очередях 3:</div>
-            <div class="labeled fl_l"><input type="text" name="penalty3" value="" class="field-number" maxlength="2" /></div>
+            <div class="labeled fl_l"><input type="text" name="penalty3" value="" class="field-number" maxlength="2" autocomplete="off" /></div>
         </div>
     </form>
 </div>

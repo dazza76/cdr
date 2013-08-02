@@ -49,7 +49,7 @@
                 <tr k="<?php echo $k; ?>">
                     <td><?php echo $oper['oper']; ?></td>
                     <td><?php echo $oper['total']; ?></td>
-                    <td><?php echo round($oper['time'] / 60, 2); ?></td>
+                    <td><?php echo Utils::time($oper['time']); ?></td>
                     <td><?php echo round($oper['time'] / $oper['total']); ?></td>
                     <td><?php echo $oper['avg_tr']; ?></td>
                     <td><?php echo $oper['calls']; ?></td>

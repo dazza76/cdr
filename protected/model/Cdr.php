@@ -110,22 +110,10 @@ class Cdr extends ACDataObject {
 
     /**
      * длительность вызова
-     * @return string в формате hh:mm::ss
+     * @return int
      */
     public function getTime() {
-        $file = $file = $_SERVER['DOCUMENT_ROOT'] .  $this->getFile();
-
-        // $f = fopen($file, 'r');
-        // fseek($f, 16);
-        // list(, $chunk_size) = unpack('V', fread($f, 4));
-        // fseek($f, 28);
-        // list(, $bps) = unpack('V', fread($f, 4));
-        // fseek($f, 24 + $chunk_size);
-        // list(, $data_size) = unpack('V', fread($f, 4));
-
-        // return $data_size / $bps;
-
-
+        $file = $_SERVER['DOCUMENT_ROOT'] .  $this->getFile();
 
         $fp = @fopen($file, 'r');
         if ($fp && fread($fp, 4) == "RIFF") {
@@ -140,42 +128,81 @@ class Cdr extends ACDataObject {
             $rawheader = fread($fp, 4);
             $data = unpack('Vdatasize', $rawheader);
             $sec = $data[datasize] / $header[bytespersec];
-            $minutes = intval(($sec / 60) % 60);
-            $seconds = intval($sec % 60);
-            return str_pad($minutes, 2, "0", STR_PAD_LEFT) . ":" . str_pad($seconds, 2, "0", STR_PAD_LEFT);
+
+            return (int) $sec;
+
+            // $minutes = intval(($sec / 60) % 60);
+            // $seconds = intval($sec % 60);
+            // return str_pad($minutes, 2, "0", STR_PAD_LEFT) . ":" . str_pad($seconds, 2, "0", STR_PAD_LEFT);
         }
-
-        // $seconds = (int) $this->duration;
-        // $di      = new DateInterval('PT' . $seconds . 'S');
-        // $di->h   = floor($seconds / 60 / 60);
-        // $seconds -= $di->h * 3600;
-        // $di->i   = floor($seconds / 60);
-        // $seconds -= $di->i * 60;
-        // $di->s   = $seconds;
-
-        // return $di->format('%H:%I:%S');
     }
-
-
-
 
     /**
      * Ссылка на файл
      * @return string
      */
     public function getFile() {
-        $autoinform = in_array($this->dcontext, array('autoinform', 'outgoing', 'dialout'));
-
-        if ($this->file_exists == 2) {
-            return self::audioFile($this->uniqueid, $this->calldate, $autoinform);
-        } else {
-            return self::audioFile($this->uniqueid, null, $autoinform);
+        if (!$this->file_exists) {
+            return;
         }
+
+        $autoinform = in_array($this->dcontext, array('autoinform', 'outgoing', 'dialout'));
+        $date = null;
+        $format = App::Config()->cdr['file_format'];
+        $format = ($this->file_exists & 4) ? strtoupper($format) : strtolower($format);
+
+        if ($this->file_exists & 2) {
+            $date = $this->calldate;
+        }
+
+
+        return self::audioDir($date, $autoinform).$this->uniqueid.".".$format;
+    }
+
+
+    /**
+     * Поиск аудио файла по директориям.
+     * mask:  1 - файл в директории
+     *        2 - файл в папках по датам
+     *        4 - верхний регистр расширения
+     * @return int
+     */
+    public function getFileExistsInPath()
+    {
+        $autoinform = in_array($this->dcontext, array('autoinform', 'outgoing', 'dialout'));
+        $file_exists = 0;
+        $format_lower = strtolower(App::Config()->cdr['file_format']);
+        $format_upper = strtoupper(App::Config()->cdr['file_format']);
+
+        $file = $_SERVER['DOCUMENT_ROOT']. self::audioDir(null, $autoinform).$this->uniqueid;
+
+        // echo "# " . $file.".".$format_lower. "\n";  // LOG::echo
+        if (file_exists($file.".".App::Config()->cdr['file_format_low'])) {
+            return $this->file_exists = 1;
+        }
+        // echo "# " . $file.".".$format_upper. "\n";  // LOG::echo
+        if (file_exists($file.".".App::Config()->cdr['file_format_up'])) {
+           return $this->file_exists = 1 | 4;
+        }
+
+        $file = $_SERVER['DOCUMENT_ROOT'].self::audioDir($this->calldate, $autoinform).$this->uniqueid;
+        // echo "# " . $file.".".$format_lower. "\n";  // LOG::echo
+        if (file_exists($file.".".App::Config()->cdr['file_format_low'])) {
+            return $this->file_exists = 2;
+        }
+        // echo "# " . $file.".".$format_upper. "\n";  // LOG::echo
+        if (file_exists($file.".".App::Config()->cdr['file_format_up'])) {
+           return $this->file_exists = 2 | 4;
+        }
+
+        // $this->file_exists = $file_exists;
+        return $this->file_exists = 0;
     }
 
     /**
      * Директория с аудиозаписями
      * @param string $date  искать в папках по датам
+     * @param bool   $autoinform
      * @return string
      */
     public static function audioDir($date = null, $autoinform = false) {
@@ -193,15 +220,66 @@ class Cdr extends ACDataObject {
         return $dir . implode('/', $date) . '/';
     }
 
+
     /**
      * Полный путь к файлу
      * @param string $uniqueid
      * @param string $date  искать в папках по датам
      * @return string
      */
-    public static function audioFile($uniqueid, $date = null, $autoinform = false) {
-        return self::audioDir($date, $autoinform) . $uniqueid . '.' . App::Config()->cdr['file_format'];
+    /*
+    public static function audioFile($uniqueid, $date = null, $autoinform = false, $file_format = true) {
+        $file = self::audioDir($date, $autoinform) . $uniqueid ;
+        if ($file_format) {
+             $file .= '.' . App::Config()->cdr['file_format'];
+        }
+        return $file;
     }
+    */
+    /*
+    public static function getFileExist($uniqueid, $date = null, $autoinform = false) {
+        $file_ln = self::audioFile($uniqueid, $date, $autoinform, false) ;
 
+        $file = $file_ln . '.' . strtolower(App::Config()->cdr['file_format']);
+        if (file_exists($file)) {
+            return $file;
+        }
+
+        $file = $file_ln . '.' . strtoupper(App::Config()->cdr['file_format']);
+        if (file_exists($file)) {
+            return $file;
+        }
+
+        return null;
+    }
+    */
+    /*
+    public static function audioDuration($file, $format = false) {
+        $fp = @fopen($file, 'r');
+        if ($fp && fread($fp, 4) == "RIFF") {
+            fseek($fp, 20);
+            $rawheader = fread($fp, 16);
+            $header = unpack('vtype/vchannels/Vsamplerate/Vbytespersec/valignment/vbits', $rawheader);
+            $pos = ftell($fp);
+            while (fread($fp, 4) != "data" && !feof($fp)) {
+                $pos++;
+                fseek($fp, $pos);
+            }
+            $rawheader = fread($fp, 4);
+            $data = unpack('Vdatasize', $rawheader);
+            $sec = $data[datasize] / $header[bytespersec];
+
+
+            if (!$format)  {
+                return $sec;
+            }
+            $minutes = intval(($sec / 60) % 60);
+            $seconds = intval($sec % 60);
+            return str_pad($minutes, 2, "0", STR_PAD_LEFT) . ":" . str_pad($seconds, 2, "0", STR_PAD_LEFT);
+        }
+
+        return 0;
+    }
+    */
 
 }
