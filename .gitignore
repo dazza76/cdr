@@ -8,4 +8,4 @@ data/*
 monitor/*
 tests/*
 *test-*
-TASKS.todo
+TASK.todo

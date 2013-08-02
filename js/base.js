@@ -14,7 +14,7 @@ function $ajax(data, callback) {
     }).fail(function() {
         errorBox.Connect();
     }).done(function(result) {
-        console.log("[API] "  + data.act + " > " + result);
+        console.log("[API] " + data.act + " > " + result);
         if (Object.prototype.toString.call(callback) !== '[object Function]') {
             return;
         }
@@ -50,7 +50,11 @@ $(document).ready(function() {
         modal: true,
         closeOnEscape: false
     });
+
     $('.tabs').tabs();
+    $('.tabs-no-content').removeClass('ui-widget ui-widget-content ui-corner-all')
+        .find('div[role="tabpanel"]').removeClass('ui-tabs-panel ui-widget-content');
+
     $('.button').button();
 
 

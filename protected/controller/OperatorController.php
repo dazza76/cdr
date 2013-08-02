@@ -115,7 +115,7 @@ class OperatorController extends Controller
 
         while ($agentLog = $result->fetchObject(AgentLog)) {
             /* @var $agentLog AgentLog */
-            $date = $agentLog->datetime->format('d.m.Y');
+            $date                = $agentLog->datetime->format('d.m.Y');
             $agentLog->initiator = "Оператор";
 
             $this->dataResult[$date]['logs'][] = $agentLog;
@@ -173,7 +173,7 @@ class OperatorController extends Controller
 
 
                 case 'login':
-                    $agentLog->action1               = 'Вошел в очередь';
+                    $agentLog->action1 = 'Вошел в очередь';
                     if ($this->dataResult[$date]['day_begin'] == 0) {
                         $this->dataResult[$date]['day_begin'] = strtotime($agentLog->datetime);
                         $this->dataResult[$date]['day_end']   = ""; //strtotime($agentLog->datetime->format('Y-m-d'). ' 23:59:59');
@@ -184,7 +184,7 @@ class OperatorController extends Controller
                     $agentLog->initiator = "Система";
                 case 'logout':
                 case 'logoff':
-                    $agentLog->action1 = 'Вышел из очереди';
+                    $agentLog->action1   = 'Вышел из очереди';
                     if ($this->dataResult[$date]['day_begin']) {
                         $this->dataResult[$date]['dey_length'] = strtotime($agentLog->datetime) - $this->dataResult[$date]['day_begin'];
                         $this->dataResult[$date]['day_end']    = $agentLog->datetime->format('H:i:s');
@@ -203,7 +203,7 @@ class OperatorController extends Controller
 
                 case 'autopause':
                 case 'autopaused':
-                    $agentLog->action1 = 'Ушел на перерыв';
+                    $agentLog->action1   = 'Ушел на перерыв';
                     $agentLog->initiator = "Система";
                     break;
             }
@@ -242,7 +242,7 @@ class OperatorController extends Controller
         LOG::dump($opers, "opers (original)"); // LOG::trace
         LOG::dump($members, 'members (original)'); // LOG::dump
 
-        $k       = array_search('NONE', $members);
+        $k = array_search('NONE', $members);
         if ($k !== false) {
             unset($opers[$k], $members[$k]);
         }
@@ -395,19 +395,19 @@ class OperatorController extends Controller
                 ->addWhere('agentid', $opers_list, 'IN')
                 ->addWhere('action',
                            array('Login', 'Logout', 'logoff',
-                            'pause' , 'autopaused',  'unpause',
-                            'pausecall', 'unpausecal',
-                            'unaftercal', 'aftercall',
-                            'autologoff', 'autologout'
-                    ), 'IN')
+                    'pause', 'autopaused', 'unpause',
+                    'pausecall', 'unpausecal',
+                    'unaftercal', 'aftercall',
+                    'autologoff', 'autologout'
+                        ), 'IN')
                 ->query();
         // LOG::trace(__s('Result# count:').$result->count()); // LOG::trace
         // LOG::dump($result->fetch(), 'Первоя строка'); // LOG::dump
         // $result->data_seek(0);
-        while ($row = $result->fetchAssoc()) {
+        while ($row    = $result->fetchAssoc()) {
             $action   = trim(strtolower($row['action']));
             $datetime = strtotime($row['datetime']);
-            $id = $row['agentid'];
+            $id       = $row['agentid'];
 
             $_test = null;
 
@@ -421,7 +421,7 @@ class OperatorController extends Controller
                     //     $opers[$id]['prost_tmp'] = 0;
                     // }
                     // LOG::trace("$id : $action : $datetime"); // LOG::trace
-                    if (!$opers[$id]['prost_tmp']) {
+                    if ( ! $opers[$id]['prost_tmp']) {
                         $opers[$id]['prost_tmp'] = $datetime;
                     }
                     break;
@@ -442,7 +442,7 @@ class OperatorController extends Controller
                 // -- Перерыв --------------------------------------------
                 case 'autopaused' :
                 case 'pause':
-                    if (!$opers[$id]['perer_tmp']) {
+                    if ( ! $opers[$id]['perer_tmp']) {
                         LOG::trace("$id : $action : $datetime"); // LOG::trace
                         $opers[$id]['perer_tmp'] = $datetime;
                     }
@@ -450,7 +450,7 @@ class OperatorController extends Controller
                 case 'unpause':
                     if ($opers[$id]['perer_tmp']) {
                         $opers[$id]['perer'] += ($datetime - $opers[$id]['perer_tmp']);
-                        LOG::trace("$id : $action : $datetime - ".$opers[$id]['perer_tmp']." :: ". $opers[$id]['perer']); // LOG::trace
+                        LOG::trace("$id : $action : $datetime - " . $opers[$id]['perer_tmp'] . " :: " . $opers[$id]['perer']); // LOG::trace
                         $opers[$id]['perer_tmp'] = 0;
                     }
                     break;
@@ -459,14 +459,14 @@ class OperatorController extends Controller
                 case 'aftercall':
                 case 'pausecall':
                     LOG::trace("$id : $action : $datetime"); // LOG::trace
-                    if (!$opers[$id]['obrab_tmp']) {
+                    if ( ! $opers[$id]['obrab_tmp']) {
                         $opers[$id]['obrab_tmp'] = $datetime;
                     }
                     break;
 
                 case 'unaftercal':
                 case 'unpausecal':
-                    LOG::trace("$id : $action : $datetime - ".$opers[$id]['obrab_tmp']." :: ". $opers[$id]['obrab']); // LOG::trace
+                    LOG::trace("$id : $action : $datetime - " . $opers[$id]['obrab_tmp'] . " :: " . $opers[$id]['obrab']); // LOG::trace
                     if ($opers[$id]['obrab_tmp']) {
                         $opers[$id]['obrab'] += ($datetime - $opers[$id]['obrab_tmp']);
                         $opers[$id]['obrab_tmp'] = 0;
@@ -481,15 +481,11 @@ class OperatorController extends Controller
         // foreach ($opers_list as $id) {
         //     $t = $opers[$id]['test_prost'];
         //     $opers[$id]['prost'] .= "(" . substr_count($t, "login") . "/" . substr_count($t, "logout") . ")";
-
         //     $t = $opers[$id]['test_obrab'];
         //     $opers[$id]['obrab'] .= "(" . substr_count($t, "pause") . "/" . substr_count($t, "unpause") . ")";
-
         //     $t = $opers[$id]['test_perer'];
         //     $opers[$id]['perer'] .= "(" . substr_count($t, "pausecall") . "/" . substr_count($t, "unpausecal") . ")";
         // }
-
-
         // ------------------------------------------------------------
         // export
         // $_GET['export'] = FiltersValue::parseExport($_GET['export']);
@@ -517,10 +513,173 @@ class OperatorController extends Controller
         $this->dataResult = $opers;
     }
 
-
-
+    /**
+     * Операторы::Распределение
+     *
+     * Фильтр :
+     *  - fromdate (datetime)
+     *  - todate   (datetime)
+     *  - queue  (array)
+     *
+     */
     public function sectionTimeman()
     {
+        /*
+        $fromdate = $this->fromdate->format('Y-m-d H:i:00'); //.':00';
+        $todate   = $this->todate->format('Y-m-d H:i:00');    //.':00';
 
+        $queues_arr = $this->queue;
+        if ($this->queue) {
+            $queues_arr = $this->queue;
+        } else {
+            $queues_arr = array_keys(Queue::getQueueArr());
+        }
+        foreach ($queues_arr as $queue) {
+            $queues[] = App::Db()->quoteEscapeString($queue);
+        }
+        $queues = implode(',', $queues);
+        unset($queue);
+
+        $this->dataResult = array();
+
+        // Длительность поднятие трубки (ringtime)
+        // ---------------------------------------
+        $this->dataResult['ringtime'] = array();
+
+        $columns                      = array(3, 7, 10, 20);
+        $command                      = App::Db()->createCommand()->select('memberId')->from('call_status')
+                ->addWhere('timestamp', array($fromdate, $todate), 'BETWEEN')
+                ->addWhere('memberId', 'NONE', '<>')
+                ->addWhere('queue', $queues_arr, 'IN')
+                ->group('memberId')
+                ->order('memberId ASC');
+        $this->_add_array_column_timeman($command, $columns, 'ringtime');
+        $command->select('COUNT(ringtime) as quantity');
+
+        $result = $command->query();
+        while ($row    = $result->fetch()) {
+            $this->dataResult['ringtime'][$row['memberId']] = $row;
+        }
+
+        $query  = "SELECT memberId, AVG(ringtime) as average
+            FROM call_status
+            WHERE queue IN ({$queues}) AND timestamp BETWEEN '{$fromdate}' AND '{$todate}' AND memberId <> 'NONE'
+            GROUP BY memberId
+            ORDER BY memberId ASC";
+        $result = App::Db()->query($query);
+        while ($row    = $result->fetch()) {
+            $this->dataResult['ringtime'][$row['memberId']]['average'] = round($row['average'],1);
+        }
+        // ---------------------------------------
+
+        // Длительность входящих (callduration)
+        // ---------------------------------------
+        $this->dataResult['callduration'] = array();
+
+        $columns = array(15, 30, 45, 60, 120, 180);
+        $command = App::Db()->createCommand()->select('memberId')->from('call_status')
+                ->addWhere('timestamp', array($fromdate, $todate), 'BETWEEN')
+                ->addWhere('memberId', 'NONE', '<>')
+                ->addWhere('queue', $queues_arr, 'IN')
+                ->group('memberId')
+                ->order('memberId ASC');
+        $this->_add_array_column_timeman($command, $columns, 'callduration');
+        $command->select('COUNT(callduration) as quantity');
+
+        $result = $command->query();
+        while ($row    = $result->fetch()) {
+            $this->dataResult['callduration'][$row['memberId']] = $row;
+        }
+
+        $query  = "SELECT memberId, AVG(callduration) as average
+                    FROM call_status
+                    WHERE queue IN ($queues) AND timestamp BETWEEN '{$fromdate}' AND '{$todate}' AND memberId <> 'NONE'
+                    GROUP BY memberId
+                    ORDER BY memberId ASC";
+        $result = App::Db()->query($query);
+        while ($row    = $result->fetch()) {
+            $this->dataResult['callduration'][$row['memberId']]['average'] = round($row['average'],1);
+        }
+        // ---------------------------------------
+
+        // Длительность исходящих (duration)
+        // ---------------------------------------
+        $this->dataResult['duration'] = array();
+
+        $columns = array(15, 30, 45, 60, 120, 180);
+        $command = App::Db()->createCommand()->select('userfield as memberId')->from('cdr')
+                ->addWhere('calldate', array($fromdate, $todate), 'BETWEEN')
+                ->addWhere('dcontext', array('world','country','city','local'), 'IN')
+                ->addWhere('LENGTH(dst)', 8, '>=')
+                ->addWhere('LENGTH(userfield)',0, '>')
+                ->group('memberId')
+                ->order('memberId ASC');
+        $this->_add_array_column_timeman($command, $columns, 'duration');
+        $command->select('COUNT(duration) as quantity');
+
+        $result = $command->query();
+        while ($row    = $result->fetch()) {
+            $this->dataResult['duration'][$row['memberId']] = $row;
+        }
+
+        $query = "SELECT userfield as memberId, AVG(duration) as average
+                    FROM cdr
+                    WHERE calldate BETWEEN '{$fromdate}' AND '{$todate}' AND
+                            dcontext IN ('world','country','city','local') AND
+                            LENGTH(dst) >= 8 AND LENGTH(userfield) > 0
+                    GROUP BY memberId
+                    ORDER BY memberId ASC";
+        $result = App::Db()->query($query);
+        while ($row    = $result->fetch()) {
+            $this->dataResult['duration'][$row['memberId']]['average'] = round($row['average'],1);
+        }
+        // ---------------------------------------
+
+        LOG::dump($this->dataResult, 'dataResult'); // LOG::dump
+        */
+    }
+
+    /**
+     *
+     * @param ACDbSelectCommand $command
+     * @param array             $column_list
+     * @param string            $column_name
+     *
+     * @return ACDbSelectCommand
+     */
+    private function _add_array_column_timeman($command, $column_list,
+                                               $column_name)
+    {
+        $from = 0;
+        foreach ($column_list as $to) {
+            $as = "f" . $from . "t" . $to;
+            $tt = ($from !== 0) ? "AND {$column_name} > {$from}" : "";
+
+            $command->select("({$column_name} <= {$to} {$tt}) AS {$as}")
+                    ->group("{$column_name} <= {$to}")
+                    ->order("{$as} DESC");
+            $from = $to;
+        }
+        $command->select("({$column_name} > {$to}) AS f{$to}tinf")
+                ->group("{$column_name} > {$to}")
+                ->order("f{$to}tinf DESC");
+
+        return $command;
+    }
+
+    /**
+     *
+     * @param ACDbSelectCommand $command
+     * @param int $to
+     * @param int $from
+     */
+    private function _add_column_timeman($command, $to, $from = 0)
+    {
+        $as = "f" . $from . "t" . $to;
+        $tt = ($from !== 0) ? "AND ringtime > {$from}" : "";
+
+        $command->select("(ringtime <= {$to} {$tt}) AS {$as})")
+                ->group("ringtime <= {$to}")
+                ->order("{$as} DESC");
     }
 }

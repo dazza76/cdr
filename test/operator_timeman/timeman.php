@@ -5,21 +5,6 @@
  * @copyright  (c) 2013, AC
  */
 /* @var $this OperatorController */
-
-$tempfromdate = $this->fromdate->format('Y-m-d H:i').':00';
-$temptodate = $this->todate->format('Y-m-d H:i').':00';
-
-$queue_arr = $this->queue;
-if(!$queue_arr) {
-    $queue_arr = array_keys(Queue::getQueueArr());
-}
-foreach ($queue_arr as $queue) {
-    $queues[]=App::Db()->quoteEscapeString($queue);
-}
-$queues = implode(',',$queues);
-unset($queue_arr, $queue);
-
-
 ?>
 <div class="filters clear_fix">
     <form method="get" action="" class="of_h">
@@ -73,7 +58,6 @@ unset($queue_arr, $queue);
             <li><a href="#tabs-5">Длительность поствызывных обработок</a></li>
         </ul>
 
-
         <div id="tabs-1">
             <table class="grid" style="width: 900px; ">
                 <thead height="50px">
@@ -88,12 +72,10 @@ unset($queue_arr, $queue);
                     </tr>
                 </thead>
                 <tbody>
-<?php
-$html = include 'timeman/table-1.php';
-echo $html;
-?>
+
                 </tbody>
             </table>
+
         </div>
 
 
@@ -114,10 +96,7 @@ echo $html;
                     </tr>
                 </thead>
                 <tbody>
-<?php
-$html = include 'timeman/table-2.php';
-echo $html;
-?>
+
                 </tbody>
             </table>
         </div>
@@ -139,10 +118,7 @@ echo $html;
                     </tr>
                 </thead>
                 <tbody>
-<?php
-$html = include 'timeman/table-3.php';
-echo $html;
-?>
+
                 </tbody>
             </table>
         </div>
@@ -154,12 +130,13 @@ echo $html;
                 <thead height="50px">
                     <tr>
                         <td class="head" align="center"             >Оператор</td>
-                        <td class="head" align="center" width="70px">0-1</td>
-                        <td class="head" align="center" width="70px">1-5</td>
-                        <td class="head" align="center" width="70px">5-10</td>
-                        <td class="head" align="center" width="70px">10-15</td>
-                        <td class="head" align="center" width="70px">15-20</td>
-                        <td class="head" align="center" width="70px">20+</td>
+                        <td class="head" align="center" width="70px">0-15</td>
+                        <td class="head" align="center" width="70px">15-30</td>
+                        <td class="head" align="center" width="70px">30-45</td>
+                        <td class="head" align="center" width="70px">45-60</td>
+                        <td class="head" align="center" width="70px">60-120</td>
+                        <td class="head" align="center" width="70px">120-180</td>
+                        <td class="head" align="center" width="70px">180+</td>
                         <td class="head" align="center" width="100px">Среднее</td>
                     </tr>
                 </thead>
@@ -176,12 +153,13 @@ echo $html;
                 <thead height="50px">
                     <tr>
                         <td class="head" align="center"             >Оператор</td>
-                        <td class="head" align="center" width="70px">0-1</td>
-                        <td class="head" align="center" width="70px">1-5</td>
-                        <td class="head" align="center" width="70px">5-10</td>
-                        <td class="head" align="center" width="70px">10-15</td>
-                        <td class="head" align="center" width="70px">15-20</td>
-                        <td class="head" align="center" width="70px">20+</td>
+                        <td class="head" align="center" width="70px">0-15</td>
+                        <td class="head" align="center" width="70px">15-30</td>
+                        <td class="head" align="center" width="70px">30-45</td>
+                        <td class="head" align="center" width="70px">45-60</td>
+                        <td class="head" align="center" width="70px">60-120</td>
+                        <td class="head" align="center" width="70px">120-180</td>
+                        <td class="head" align="center" width="70px">180+</td>
                         <td class="head" align="center" width="100px">Среднее</td>
                     </tr>
                 </thead>
@@ -191,8 +169,6 @@ echo $html;
             </table>
         </div>
     </div>
-
-
 
 
 </div>
