@@ -9,3 +9,4 @@ monitor/*
 tests/*
 *test-*
 TASK.todo
+/config/localhost.php

@@ -253,7 +253,8 @@ class SettingsController extends Controller {
      * Автоинформаторы
      */
     public function sectionAnswering() {
-        App::Config('autoinform'); //->autoinform = @include APPPATH . 'config/autoinform.php';
+        // App::Config('autoinform'); //->autoinform = @include APPPATH . 'config/autoinform.php';
+        App::Config()->autoinform = include CONFIG_DIR . "/autoinform.php";
         // Log::dump(App::Config());
 
         $filename = App::Config()->autoinform['file_conf'];

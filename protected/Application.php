@@ -86,11 +86,14 @@ class App extends Application {
         }
 
         if ($section_load !== null) {
-            if (!isset(self::$_config->$section_load)) {
-                self::$_config->$section_load = array();
+            $obj = self::$_config;
+
+            if (!isset($obj->$section_load)) {
+                $obj->$section_load = array();
                 $filename = CONFIG_DIR."/{$section_load}.php";
                 if (file_exists($filename)) {
-                    self::$_config->$section_load = @include $filename;
+                    $arr = @include $filename;
+                    $obj->$section_load = $arr;
                 }
             }
         }
