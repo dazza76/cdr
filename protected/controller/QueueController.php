@@ -384,7 +384,6 @@ class QueueController extends Controller {
             $oxY[$i] = $time;
             $total[$i] = 0;
             $complete[$i] = 0;
-            $transfer[$i] = 0;
         }
 
         $query_total = "
@@ -420,25 +419,7 @@ class QueueController extends Controller {
             $complete[$row['hour']] = (int) $row['complete'];
         }
 
-
-        $query_transfer = "
-            SELECT
-              HOUR(`timestamp`) AS `hour`,
-              COUNT(*) AS `transfer`
-            FROM `call_status`
-            WHERE
-              DATE(`timestamp`) = '{$date->format('Y-m-d')}'
-              AND `status` = 'TRANSFER'
-              {$query}
-              {$mob}
-            GROUP BY `hour`";
-
-        $result = App::Db()->query($query_transfer);
-        while ($row = $result->fetchAssoc()) {
-            $transfer[$row['hour']] = (int) $row['transfer'];
-        }
-
-        return array(array_values($oxY), array_values($total), array_values($complete), array_values($transfer));
+        return array(array_values($oxY), array_values($total), array_values($complete));
     }
 
     /**
@@ -480,7 +461,6 @@ class QueueController extends Controller {
             $oxY[$day] = $dayNames[$i]; //."<br/>".$dateTime->format('m-d');
             $total[$day] = 0;
             $complete[$day] = 0;
-            $transfer[$day] = 0;
             if ($i == 0) {
                 $_fromdate = $dateTime->format('Y-m-d');
             }
@@ -532,26 +512,7 @@ class QueueController extends Controller {
         }
         Log::dump($complete, 'Масив по complete');
 
-
-
-        $query_transfer = "
-            SELECT
-              DATE(`timestamp`) AS `date`,
-              COUNT(*) AS `transfer`
-            FROM `call_status`
-            WHERE
-              `timestamp` BETWEEN '{$_fromdate}' AND '{$_todate}'
-              AND `status` = 'TRANSFER'
-              {$query}
-              {$mob}
-            GROUP BY `date`";
-
-        $result = App::Db()->query($query_transfer);
-        while ($row = $result->fetchAssoc()) {
-            $transfer[$row['date']] = (int) $row['transfer'];
-        }
-
-        return array(array_values($oxY), array_values($total), array_values($complete), array_values($transfer));
+        return array(array_values($oxY), array_values($total), array_values($complete));
     }
 
     /**
@@ -584,7 +545,6 @@ class QueueController extends Controller {
             $oxY[$i] = $i;
             $total[$i] = 0;
             $complete[$i] = 0;
-            $transfer[$i] = 0;
         }
 
 
@@ -629,24 +589,7 @@ class QueueController extends Controller {
             $complete[$row['day']] = (int) $row['complete'];
         }
 
-        $query_transfer = "
-            SELECT
-              DAY(`timestamp`) AS `day`,
-              COUNT(*) AS `transfer`
-            FROM `call_status`
-            WHERE
-              `timestamp` BETWEEN '{$this->_month_fromdate}' AND '{$this->_month_todate}'
-              AND `status` = 'TRANSFER'
-              {$query}
-              {$mob}
-            GROUP BY `day`";
-
-        $result = App::Db()->query($query_transfer);
-        while ($row = $result->fetchAssoc()) {
-            $transfer[$row['day']] = (int) $row['transfer'];
-        }
-
-        return array(array_values($oxY), array_values($total), array_values($complete), array_values($transfer));
+        return array(array_values($oxY), array_values($total), array_values($complete));
     }
 
     protected function _parseCompareType($type) {
