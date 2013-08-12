@@ -1,7 +1,7 @@
-# Запрет на отображение содержимого каталога
+# The ban on the display of the contents of the directory
 Options -Indexes
 
-# Запрет доступа к файлам
+# Deny access to files
 <Files ~ "*">
   Deny from all
 </Files>
