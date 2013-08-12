@@ -4,7 +4,6 @@
  * -- Базовая функциональность.
  *
  * Handles loading of core files needed on every request
- * -- Проводит загрузку основных файлов, необходимых на каждый запрос
  *
  * PHP 5.3
  *
@@ -12,7 +11,7 @@
  */
 error_reporting(E_ALL & ~E_NOTICE);
 
-// Проверка конфигурации apache
+//Checking Config apache
 //if ( ini_get('magic_quotes_gpc') != "0" ) die ("'magic_quotes_gpc' is not 1");
 //if ( ini_get('magic_quotes_runtime') != "0" ) die ("'magic_quotes_runtime' is not 1");
 //if ( ini_get('variables_order') != "GPCS" ) die ("'variables_order' is not GPCS");
@@ -44,7 +43,7 @@ require_once __DIR__.'/autoload.php';
 //require_once 'ac/base/ACObject.php';
 //require_once 'Application.php';
 
-// Установка систкмной конфигурации
+// Setting the config file
 // ---------------------------------------------------------------------------
 $_config_system           = @include_once CONFIG_DIR . '/system.php';
 App::Config()->mergeRecursive($_config_system);
@@ -52,22 +51,22 @@ $_config_file             = @$_config_system['config'];
 if (@$config['config']) {
     $_config_file = $config['config'];
 }
-// дополнительный файл конфигурации
+// Additional Config file
 if (@$_config_file) {
     $_config_system = @include_once CONFIG_DIR . "/{$_config_file}.php";
     App::Config()->mergeRecursive($_config_system);
 }
 unset($_config_system);
-// локальные конфигурации
+// Local Config
 if (is_array($config)) {
     App::Config()->mergeRecursive($config);
 }
-// шапка страниц
+// Pages
 App::Config()->pages = @include_once 'system/pages.php';
 
 
 defined('DEBUG') or define('DEBUG', (App::Config()->debug) ? 1 : false);
-// Добавлять в отчет все PHP ошибки
+// Enable Debugging
 if ( ! DEBUG) {
     error_reporting(0);
 }
