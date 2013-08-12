@@ -1,240 +1,240 @@
 <?php
 
-// TODO Задача 1 [Выполнено]: Thursday, December 06, 2012 5:20 PM
-/* ----------------------------------------------------------------------------
- * Высылаю Вам новую порцию =)
- * Есть дамп базы (так одна табличка старая, новую пока не реализовали вживую),
- * пример нашей версии и описание полей.
- *
- * Хотелось бы получить реализацию
- * http://demo.line24.ru/cc-line24/admin.php/reports/cc
- * http://demo.line24.ru/cc-line24/admin.php/reports/hours
- * http://demo.line24.ru/cc-line24/admin.php/reports/queues
- *
- * + графики оттуда же
- * + страничка с добавлением новых операторов (queue_agents)
- * + авторизация на сессиях, два уровня – пользователь (только отчеты) и администратор.
- ---------------------------------------------------------------------------- */
+/ / TODO Task 1 [Done]: Thursday, December 06, 2012 5:20 PM
+/ * ------------------------------------------------ ----------------------------
+ * I send you a new batch =)
+ * There is a database dump (as one plate is old, not yet implemented the new live)
+ * Example of our version, and description fields.
+ *
+ * I would like to get implementation
+ * Http://demo.line24.ru/cc-line24/admin.php/reports/cc
+ * Http://demo.line24.ru/cc-line24/admin.php/reports/hours
+ * Http://demo.line24.ru/cc-line24/admin.php/reports/queues
+ *
+ * + Graphics from the same
+ * Page with the addition of new operators (queue_agents)
+ * + Authentication sessions on two levels - the user (only reports) and the administrator.
+ -------------------------------------------------- -------------------------- * /
 
-// TODO Задача 2: Sippeers.
-/*
- * Это форма на добавление. Нужно из нее еще на редактирование и вывод списка сделать.
- * Соответственно, все это идет в настройки, вместе с операторами.
- * Не совсем, sippeers к очередям не имеет отношения. В ней параметры учетных
- * записей для SIP-клиентов, т.е. телефонов, софтфонов etc.
- */
-/*
- * Docs: /sippeers
- * Прилагаю два дампа, оба рабочих, таблицу по полям (main – основные настройки, expert – расширенные, нужно будет скрыть их под спойлером, hidden – выводим, поля обновляются asterisk).
- * Так же скрипт на добавление, простенькая формочка.
- */
+/ / TODO Task 2: Sippeers.
+/ *
+ * This form is to add. Was still a need for editing and output the list to do.
+ * Accordingly, it all goes to the settings, together with operators.
+ * Not really, sippeers to queues is irrelevant. In her account settings
+ * Records for SIP-clients, ie phones, softphones etc.
+ * /
+/ *
+ * Docs: / sippeers
+ * I enclose two dump both the workers in the fields table (main - main settings, expert - advanced, you will need to hide them under spoiler, hidden - deduce fields are updated asterisk).
+ * The same script to add, a simple shaper.
+ * /
 
-// TODO Задача 3 [Выполнено]: Friday, February 22, 2013 3:56 AM
-/* ----------------------------------------------------------------------------
- * + 1) Нужна галочка "Только мобильные" в записи разгвооров и статистике. По ней
- *      выбираем ТОЛЬКО входящие вида "9ХХХХХХХХХ" и исходящие вида "[9]89XXXXXXXXX".
- * + 2) В добавлении операторов не нужно поле "Телефон, на котором работает", с
- *      ним работает только Asterisk.
- * + 3) В настройках нужно разнести по пунктам: "Операторы", "Очереди" (таблицу
- *      скину позже) и "Расписание" (здесь будет расписание диспетчеров, пока в
- *      зачаточном состоянии, мы еще алгоритм разрабатываем)
- ---------------------------------------------------------------------------- */
+/ / TODO Task 3 [Done]: Friday, February 22, 2013 3:56 AM
+/ * ------------------------------------------------ ----------------------------
+ * + 1) Need checkbox "Only mobile" in razgvoorov records and statistics. On it
+ * Choose only the incoming type "9HHHHHHHHH" and outgoing type "[9] 89XXXXXXXXX".
+ + * 2) In addition the operators do not need the "phone that runs" with
+ * It only works Asterisk.
+ * + 3) In the settings should be moved by point: "Operators", "Queue" (table
+ * Strip off later) and "Schedule" (here is the schedule controllers, until
+ * Infancy, we are developing an algorithm)
+ -------------------------------------------------- -------------------------- * /
 
-// TODO Задача 4: Управления очередями. docs/task5  Friday, February 22, 2013 3:56 AM
-/*
- * Дамп таблицы для отчета дамп для управления очередями шлю.
- * По второй табличке все более-менее просто:
- * Имя очереди, Интерфейс (в скобках -- устройство, у нас будет иметь вид
- * ХХХХ(SIP/YYYY)), где ХХХХ -- номер оператора, а УУУУ -- 3-4значный номер
- * телефона, на котором он работает. Пенальти -- грубо говоря уровень скилла
- * оператора, uniqueid -- не используется, но астериск его хотел, туда можно
- * md5 вклинивать, главное, чтобы был уникален. Paused -- 0 или 1, в
- * зависимости от того, поступают ли вызовы агенту.
- */
+/ / TODO Task 4: Office bursts. docs/task5 Friday, February 22, 2013 3:56 AM
+/ *
+ * Dump the table to dump the report to manage queues whore.
+ * On the second plate is more or less simple:
+ * Name of the queue interface (in brackets - device, we will have the form
+ * XXXX (SIP / YYYY)), where XXXX - the number of the operator, and Oooo - 3-4-digit number
+ * Phone on which he works. Penalty - roughly the level of skill
+ * Operator, uniqueid - not used, but it would asterisk, there can be
+ * Md5 wedge in, the main thing that was unique. Paused - 0 or 1,
+ * Depending on whether the received calls to the agent.
+ * /
 
-// TODO Задача 5: Супервизор. docs/task5
-/*
- * + 1) В записи Tab1 и Tab2 обозвать "Звонки" и "Автоинформатор"
- * + 2) В записи тоже нужен вывод фамилии оператора.
- * + 3) В настройках по операторам доделать редактирование и удаление.
- * + 4) Шапки таблиц в записи и очереди необходимо закрепить, чтобы они не
- *      уползали при прокрутке.
- * + 5) Панельки для супервизора прилагаются.
- *
- *
- *  Очереди   -- все, на каждую по строчке.
- *  Операторы -- суммарное количество операторов в них. Можно брать из базы.
- *  Ожидают   -- количество вызовов в ней в таблице ActiveCall.
- *  Дольше всего ожидает -- максимальное время ожидания на данный момент.
- *  Обслужено -- суммарное число принятых и переведенных звонков. либо с 00:00,
- *               либо за последние 24 часа. Задается в конфиге.
- *  Уровень обслуживания -- процент вызовов, обслуженных за заданное время
- *               (задается в самой форме). Во время обслуживания тут входит
- *               ожидание и разговор.
- */
+/ / TODO Task 5: The supervisor. docs/task5
+/ *
+ * + 1) Recorded Tab1 and Tab2 call "Call" and "Answering machine"
+ + * 2) In the recording, too, need the output name of the operator.
+ * + 3) In the setting of operators to finish editing and deleting.
+ * + 4) Hats tables in the record and the queue must be secured so that they do not
+ * Crawled when scrolling.
+ * 5 +) socket for a supervisor attached.
+ *
+ *
+ * Queues - all on each line.
+ * Operators - the total number of agents in them. Can be taken from the base.
+ * Waiting - the number of calls to her table ActiveCall.
+ * The longest waits - the maximum waiting time at the moment.
+ * Handle - the total number of calls received and translated. or 00:00,
+ * Or for the last 24 hours. Specified in the config file.
+ * The level of service - the percentage of calls served within the specified time
+ * (Specified in the form itself). During the service there is
+ * Waiting and talking.
+ * /
 
-// TODO Задача 6: Супервизор - Доработки
-/*
- *   1) Динамическое обновление супервизоров.
- *   2) Счетчики времени должны тикать, все-таки.
- *   3) Формула Service Level:  Service Level, % = Answered Less X seconds / Entered
- *      SL = (кол-во с holdtime < X)/общее кол-во. X IN (‘10’,’20’,’30’) – возможность выбора в фильтре.
- *
- *      По параметрам – нужен вывод либо с начала суток, либо за последние полчаса через радиокнопку.
- *      По очереди    - в таблице queues1-3.
- *      Время         – по operlog (agent_log таблица.)
- *
- *   4) в панель супервизора делаем «Распределение», туда вписываем
- *      распределение входящих звонков по номерам.
- *   5) Контекст – желательно в конфиге, хотя обычно он везде incoming.
- *   6) В панели «Операторы» показываем только зарегистрированных и обслуживающих
- *      очереди, заданные в конфиге.
- *   7)В настройках делаем еще одну заглушку – «Паузы».
- */
-
-
-/*
-посмотрите в логаг какие фильтры он принимает и от куда
-session parametr 1 - говорит о том что фильтры взяты из сессии
-[1:34:58] Дмитрий: сабмит стерает все предыдущии фильтры и ставит новые текущии выбранные
-[1:35:23] Дмитрий: вообще фильтры сбиваються при любом гет запросе, кроме параметра section
-[1:35:56] Дмитрий: он не являеться поводом для зброса из сессии
-
-*/
+/ / TODO Task 6: Supervisor - Improvements
+/ *
+ * 1) The dynamic update supervisors.
+ * 2) Time counters must tick, after all.
+ * 3) The formula Service Level: Service Level,% = Answered Less X seconds / Entered
+ * SL = (number of a holdtime <X) / total number of. X IN ('10 ', '20', '30 ') - the choice of the filter.
+ *
+ * The parameters - you need a conclusion either from the beginning of the day, or for the last half an hour through the radio.
+ * One at a time - in the table queues1-3.
+ * Time - by operlog (agent_log table.)
+ *
+ * 4) in the panel supervisor do "Distribution", there is entered
+ * Distribution of incoming calls to numbers.
+ * 5) Context - preferably in the config file, but usually it's everywhere incoming.
+ * 6) In the "Operators" only show registered and serving
+ * Queue specified in the config file.
+ * 7) In the settings do another plug - "Pause".
+ * /
 
 
-/*
-1.  [+]   В таблицах формат даты ВЕЗДЕ привести к ДД.ММ.ГГГГ ЧЧ:ММ:СС
-2.  [+-]  Галочка «Мобильные» в отчете по очереди
-      >   кроме таблиц. Таблица не реагирует на фильтры «VIP» и «мобильные»
-3.  [+]   Проверить Воскресенье в недельном отчете. По дебагу видно, что он смотрит до 00:00 воскресенья, игнорируя его.
-4.  [--]  Проверить верстку (таблицы продолжают ползти)
-      >   Мгновенным решением может служить отказ от фиксированой шапки таблицы вверху (Из-за нее все палзет)
-      >   Другой способ это CSS+JS, - займет неопределенный срок, т.к. мне самому нужно будет копаться в инете и читать доки
-5.  [+]   В записи выводим длительность файла, а не данные из базы -- http://codepaste.ru/1358/
-6.  [+-]  Отчеты по операторам – КПД (у меня он под названием monthly) + Рабочее время, как на http://demo.line24.ru
-       >  нужно проверить
-7.  [+]   Заменить ползунки в календарях на поля ввода.
-8.  [+]   Галочка «VIP» в записи разговоров
-9.  [=]   Табличка саммари (как в произвольном отчете) в графических отчетах (суточный, недельный, месячный) под графиком
-10. [+-]  Галочки «Мобильные», «VIP» в профиле вызовов
-      >   VIP проверить
-11. [-]   В отчете супервизор-операторы в таблице операторов в графе очереди писать название очередей, в столбик
-12. [-]   В отчете супервизор-операторы должно идти время нахождения оператора в данном статусе
-13. [+-]  В очереди не работает галочка «VIP». Не пересчитывается таблица, не выводятся записи (в поле callerid добавлено «98» в начале номера)
-14. [-]   В настройках очереди используется не та таблица.
-15. [-]   Нет настройки SIP peers
-16. [?]   Не работает отчет по автоинформатору (игнорирует конфиг, не выводит ничего)
-17. [?]   Не работает запись разговоров «Автоинформатор»
-18. [--]  Менюшка ползет даже на 1280х1024. Имеет смысл подпункты перенести вниз, сделать вторую полоску.
-19. [--]  Операторов в настройках имеет смысл выводить постранично.
-20. [--]  В настройках операторов следует сделать фильтр по очередям, поиск по фамилии, коду оператора.
-21. [?]   В настройках операторов при сохранении скрипт работает как-то долго.
-22. [--]  Операторов для отчета Супервизор-операторы выбираем только тех, у кого state <> ‘out’
-23. [+-]  Кнопка «Экспорт в Excel»
-      >   пока готово в "Профиль вызовов", "Супервизор:Распределение", "Месячный отчет"
- */
-      // 1. У нас не отображаються столбцы "обработка", "звонит".
+/ *
+logag look at what filters it receives and from where
+session parametr 1 - indicates that the filters are taken from the session
+[1:34:58] Dmitry: sabmite steranes all previous filters, and the currently selected setting new
+[1:35:23] Dmitry: all filters sbivayutsya with any het request, except the section
+[1:35:56] Dmitry: it is not the reason for yavlyaetsya zbrosa of session
 
-/*
-Итак, по системе:
-1) Запись.
-Нет записи разговоров автоинформатора. Они просто не выводятся.
-2) Очереди.
-Нет саммари в графиках
-В произвольном отчете не пересчитывается табличка при выборе только мобильных
-Не открываются недельный и сравнение. Дебаг тоже не открыть.
-3) Профиль.
-При экспорте открывает файл два раза
-В файл пишем iconv(‘utf8’,’cp1251’,$data);
-4) Супервизоры.
-Не выводится список очередей.
-Не тикает время.
-«Занят» переименовываем в «Разговаривает»
-Не все статусы показывает.
-5) Настройки оператора – тот же косяк, не та таблица.
+* /
 
 
-4.    +++ Проверить верстку (таблицы продолжают ползти)
-6.    +++ Отчеты по операторам – КПД (у меня он под названием monthly) + Рабочее время, как на http://demo.line24.ru
-8.    +++ Галочка «VIP» в записи разговоров
-9.    ++- Табличка саммари (как в произвольном отчете) в графических отчетах (суточный, недельный, месячный) под графиком
-11.   +++ В отчете супервизор-операторы в таблице операторов в графе очереди писать название очередей, в столбик
-12.   --- В отчете супервизор-операторы должно идти время нахождения оператора в данном статусе
-13.   +-+ В очереди не работает галочка «VIP». Не пересчитывается таблица, не выводятся записи (в поле callerid добавлено «98» в начале номера)
-14.   --- В настройках очереди используется не та таблица.
-15.   +++ Нет настройки SIP peers
-16.   --- Не работает отчет по автоинформатору (игнорирует конфиг, не выводит ничего)
-17.   --- Не работает запись разговоров «Автоинформатор»
-18.   +++ Менюшка ползет даже на 1280х1024. Имеет смысл подпункты перенести вниз, сделать вторую полоску.
-19.   +++ Операторов в настройках имеет смысл выводить постранично.
-20.   +++ В настройках операторов следует сделать фильтр по очередям, поиск по фамилии, коду оператора.
-21.   +++ В настройках операторов при сохранении скрипт работает как-то долго. (он созраняет сразу, но не редиректит)
-23.   --- Нет списка очередей, не тикает время, не все статусы выводит, меняем «Занят» на «Разговаривает»
-24.   +-+ Кнопка «Экспорт в Excel»
+/ *
+1. [+] The date format tables EVERYWHERE cause DD.MM.YYYY HH: MM: SS
+2. [+ -] Tick "Mobile" in a report by one
+      > Besides tables. Table does not respond to the filters «VIP» and "mobile"
+3. [+] Check Sunday in the weekly report. According to debug it is clear that he is looking to 00:00 Sunday, ignoring him.
+4. [-] Check layout (table continues to creep)
+      > Instant solution can serve as a rejection of the fixity of the cap at the top of the table (because of her all palzet)
+      > Another way is to CSS + JS, - take an indefinite period, as I myself will have to dig in the internet and read docks
+5. [+] Recorded deduce the duration of the file, not the data from the database - http://codepaste.ru/1358/
+6. [+ -] Reports operators - Efficiency (I called it monthly) + Working time, as http://demo.line24.ru
+       > Need to check
+7. [+] Replace the sliders in the calendars on the input field.
+8. [+] The tick «VIP» to record conversations
+9. [=] Sammari plate (as in any report) in graphical reports (daily, weekly, monthly) under the graph
+10. [+ -] Ticks "Mobile», «VIP» in profile calls
+      > VIP check
+11. [-] The report supervisor operators in the table of operators in the graph line to write the name of the queue in a column
+12. [-] The report supervisor operators must go time the agent spent in this status
+13. [+ -] In the queue does not work check «VIP». Not recalculated table, not output records (in the callerid added "98" in the beginning of the number)
+14. [-] In the setting of the queue table that is not used.
+15. [-] No setting SIP peers
+16. [?] Does not work report on an answerphone (ignores configuration, no display)
+17. [?] Not record conversations "Answering machine"
+18. [-] Menus creeps even at 1280x1024. It makes sense to move the sub down to make a second strip.
+19. [-] Operators in the settings it makes sense to print page by page.
+20. [-] In the setting of the operators should make the filter at a time, search by name, code operator.
+21. [?] In the setting of the operators while keeping the script runs once a long time.
+22. [-] Operators to report Supervisor operators select only those whose state <> 'out'
+23. [+ -] Button "Export to Excel»
+      > Until ready to "Profile Call", "Supervisor: Distribution", "Monthly Report"
+ * /
+      / / 1. We had no time will be displayed columns for "processing" or "call."
+
+/ *
+Thus, in the system:
+1) Record.
+There is no record of conversations answerphone. They just do not appear.
+2) Queue.
+No sammari in graphs
+In no particular statement is not recalculated when choosing a tablet only mobile
+I can not open a week and compared. Debug is also not open.
+3) Profile.
+When you export a file opens twice
+In the file write iconv ('utf8', 'cp1251', $ data);
+4) Supervisors.
+Not a list of queues.
+No time is ticking.
+"Busy" rename to "talk"
+Not all status displays.
+5) Setting the operator - the same joint, not the table.
 
 
-
-+++ -- сделано
-+-+ --не основное (не хватает данных по таблице VIP)/не до конца.
---- -- не сделано
+4. + + + Check the layout (table continues to creep)
+6. + + + Reports operators - Efficiency (I called it monthly) + Working time, as http://demo.line24.ru
+8. + + + The tick «VIP» to record conversations
+9. + + - Sammari plate (as in any report) in graphical reports (daily, weekly, monthly) under the graph
+11. + + + In the report, the supervisor operators in the table of operators in the graph line to write the name of the queue in a column
+12. --- The report supervisor operators must go time the agent spent in this status
+13. + - + In the queue does not work check «VIP». Not recalculated table, not output records (in the callerid added "98" in the beginning of the number)
+14. --- In the setting of the queue table that is not used.
+15. + + + No setup SIP peers
+16. --- Does not work report on an answerphone (ignores configuration, no display)
+17. --- Not record conversations "Answering machine"
+18. + + + Menus creeps even at 1280x1024. It makes sense to move the sub down to make a second strip.
+19. + + + Operators in the settings it makes sense to print page by page.
+20. + + + In the setting of the operators should make the filter at a time, search by name, code operator.
+21. + + + In the setting of the operators while keeping the script runs once a long time. (Sozranyat it once, but do not redirect)
+23. --- No list of queues that are not ticking time, not all status displays, change the "Busy" to "talk"
+24. + - + Button "Export to Excel»
 
 
 
-Дамп таблицы для отчета дамп для управления очередями шлю.
-
-По второй табличке все более-менее просто:
-Имя очереди, Интерфейс (в скобках -- устройство, у нас будет иметь вид
-ХХХХ(SIP/YYYY)), где ХХХХ -- номер оператора, а УУУУ -- 3-4значный номер
-телефона, на котором он работает. Пенальти -- грубо говоря уровень скилла
-оператора, uniqueid -- не используется, но астериск его хотел, туда можно
-md5 вклинивать, главное, чтобы был уникален. Paused -- 0 или 1, в
-зависимости от того, поступают ли вызовы агенту.
-
-Хотелось бы понимать по срокам когда что будет готово.
-
-Пришлите полный бильд
-[0:30:30] Вадим Тесалов: При включении мобильных у некоторых клиентов пустой график
-[0:33:06] Вадим Тесалов: В автоифнорматоре игнорит настройки result/
-[0:34:19] Вадим Тесалов: по нажатию на "п попыток" пусть раскрывается спойлер с подробностями
-*/
-
-/*
-1) ++   Давай повторять шапку периодически в таблице (как в phpmyadmin, при больших выводах шапка периодически повторяется как строка в таблице)
-2) --     Autoinformlog.php не пашет, может, я туплю, куда смотреть?
-3) ++   Ползунки все-таки можем заменить на окошки?
-4) +-   В автоинформаторе нужен еще один параметр – количество обрезаемых символов в начале номера. Очень нужен =)
-5) --   В супервизорах нужна возможность настраивать выводимых операторов. Либо галочками, либо в конфигах.
-        У операторов пишем статусы: «Разговаривает», «Свободен», «На перерыве», «В обработке»
-6) --   Тикание, помнишь, да?)
-7) ++   В operlog хочется иметь фильтр по действиям («вызовы», «действия»)
-8) ++   В отчетах по операторам не выбираем NONE. Из запроса убираем NONE в «memberId IN (‘..’,’..’,’NONE’,’..’,’..’)»
-*/
-
-// ---------------------------------------------------------------------------
-// TODO Задача 7: Current
-// TODO Задача 7.1: Время
-//                  SELECT MIN(NOW()-datetime) FROM ((SELECT datetime,action FROM `agent_log`  WHERE agentid = 1024 AND action IN ('Login','unpause','unaftercal') ORDER BY `agent_log`.`datetime` DESC LIMIT 1) UNION ALL (SELECT timestamp as datetime,status AS action FROM call_status WHERE memberId=1024 AND status LIKE 'COMPLETE%' ORDER BY timestamp DESC LIMIT 1)) AS temp;
-// + Проверить индексирование записей (одновременно сличать и автоифнорматор, и записи разговоров)
-// + Включить автообновление и сортировки где возможно.
-// TODO Задача 7.3 Расписание (Вместо ставки делаем факт, считаем суммарную длительность как в месячном отчете) + экспорт в xls.
-// TODO Задача 7.4 Спиздить отчет по рабочему времени из лайна + выделение строк по клику другим цветом.
-// TODO Задача 7.5 Настрйока очередей.
-// + Настройка автоинформатора
-// TODO Задача 7.7 Разные перерывы (пользовательские)
++ + + - Made
++ - + - Not the main (not enough data on the table VIP) / not completely.
+----- Not done
 
 
 
-// ---------------------------------------------------------------------------
-// Ср. время поднятия трубки, сек
-//
-// ++ Необходимо доделать статусы в отчете с плюсиками (вместо aftercall и unaftercall), время в ЧЧ:ММ:СС (в длительностях перерывов)
-// Тикающее время в супервизорах.
-// ++  Если в записи разговоров выбрать 100 или 500 записей на страницу, по страницам не переключает
-// ++ В отчете Операторы-Загруженность проверить шапку (две одинкаовых графы с разными данными)
-// Авторизация (тут ты волен творить все, что угодно, но доступ надо ограничить)!!!
-//
-//print_r($_SERVER);
+Dump the table to dump the report to manage queues whore.
+
+On the second plate is more or less simple:
+Name of the queue interface (in brackets - device, we will have the form
+XXXX (SIP / YYYY)), where XXXX - the number of the operator, and Oooo - 3-4-digit number
+phone on which he works. Penalty - roughly the level of skill
+operator, uniqueid - not used, but it would asterisk, there can be
+md5 wedge in, the main thing that was unique. Paused - 0 or 1,
+Depending on the agent receives a call.
+
+I would like to understand the maturity when it is ready.
+
+Send full Bild
+[0:30:30] Vadim Tesalov: When some mobile clients empty schedule
+[0:33:06] Vadim Tesalov: In avtoifnormatore ignore settings result /
+[0:34:19] Vadim Tesalov: by pressing the "n attempts to" let the spoiler reveals the details
+* /
+
+/ *
+1) + + Let's repeat the cap periodically in the table (as in phpmyadmin, the findings for large cap repeated periodically as a row in the table)
+2) - Autoinformlog.php not plow, maybe I tuplyu where to look?
+3) + + Sliders can still replace windows?
+4) + - In an answerphone need another option - the number of circumcised characters in the beginning of the number. It is very necessary =)
+5) - In the Supervisors need the ability to customize the output of operators. Or ticks, or in the config.
+        Operators of write status of "Talking", "freedom", "At half-time," "In Progress"
+6) - Tick, remember, huh?)
+7) + + In operlog want to have a filter on the actions ("challenges", "action")
+8) + + Reports operators do not choose NONE. NONE of the request to remove the «memberId IN ('..', '..', 'NONE', '..', '..')»
+* /
+
+/ / ------------------------------------------------ ---------------------------
+/ / TODO Task 7: Current
+/ / TODO Task 7.1: Time
+/ / SELECT MIN (NOW ()-datetime) FROM ((SELECT datetime, action FROM `agent_log` WHERE agentid = 1024 AND action IN ('Login', 'unpause', 'unaftercal') ORDER BY `agent_log`. `Datetime `DESC LIMIT 1) UNION ALL (SELECT timestamp as datetime, status AS action FROM call_status WHERE memberId = 1024 AND status LIKE 'COMPLETE%' ORDER BY timestamp DESC LIMIT 1)) AS temp;
+/ / + Check indexing records (at the same time and compare avtoifnormator, and call recording)
+/ / + Enable auto-update and sort where possible.
+/ / TODO Task Schedule 7.3 (Instead of making bets fact, we consider the total duration as a monthly statement) + export to xls.
+/ / TODO Task 7.4've stole a report on the working time of the lane + selection of lines by clicking a different color.
+/ / TODO Task 7.5 settings should queues.
+/ / Setup + answerphone
+/ / TODO Task 7.7 Different breaks (user)
+
+
+
+/ / ------------------------------------------------ ---------------------------
+/ / Wed while lifting the handset, s
+/ /
+/ / + + Status must finish the report with the plus sign (instead aftercall and unaftercall), time in HH: MM: SS (in duration of interruptions)
+/ / Time ticking away in the supervisor.
+/ / + + If you choose to record conversations in 100 or 500 records per page, the pages do not switch
+/ / + + The report Operators Workload check-cap (odinkaovyh two columns with different data)
+/ / Log (here you are free to do whatever you want, but it is necessary to restrict access)!
+/ /
+/ / Print_r ($ _SERVER);
 
  require_once 'protected/bootstrap.php';
 
