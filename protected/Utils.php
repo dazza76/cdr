@@ -18,7 +18,7 @@ class Utils {
     }
 
     /**
-     * Форматированное время H:I:S
+     * Time Format H:I:S
      * @param int $seconds
      * @return string
      *
@@ -43,7 +43,7 @@ class Utils {
     }
 
     /**
-     * Атрибуты для столбца с возможностью сортировки
+     * Sort Attributes
      * @param  string $name
      * @param  string $sort
      * @param  bool $desc
@@ -59,7 +59,7 @@ class Utils {
     }
 
     /**
-     * Пагинатор
+     * pages
      * @param int $count
      * @param int $offset
      * @param int $limit
