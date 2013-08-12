@@ -42,7 +42,7 @@ class Application {
     public $auth;
 
     /**
-     * Конструктор
+     * Designer
      * @param ACConfig $config
      * @throws ACException
      */
@@ -148,7 +148,7 @@ class App extends Application {
     }
 
     /**
-     * Тупо перезагружает страницу
+     * Stupid page reloader
      */
     public static function refresh() {
         $host = parent::$_instanse->request->host;
