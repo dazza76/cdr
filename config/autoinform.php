@@ -6,12 +6,12 @@
  */
 
 return array(
-    // Файл с настройками автоинформатора.
+    // Configuration for voicemail.
     //
-    // Путь являеться абсолютным, и должен начинаться с корня системы.
+    // Absolute Path.
     // Windows:     Z:/var/www/autoinform.conf
     // Unix:        /var/www/autoinform.conf
-    'file_conf' => 'Z:\home\localhost\html\cdr\config\autoinform.conf',
+    'file_conf' => '/var/www/html/cdr/config/autoinform.conf',
 
     // Кол. обрз. символов
     'ordernum'=>'addnum,cutnum', // порядок действий
